@@ -5,6 +5,8 @@
 
 using namespace thread;
 
+//Bredi
+
 int main(int argc, char *argv[]) {
 
 	MyThread thread;
