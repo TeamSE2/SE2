@@ -21,4 +21,12 @@
 #define BIT_6 0x40
 #define BIT_7 0x80
 
+//PORT_A
+#define MOTOR_STOP BIT_3
+#define MOTOR_RECHTS  BIT_0
+#define MOTOR_LINKS  BIT_1
+#define MOTOR_LANGSAM BIT_2
+#define WEICHE_AUF BIT_4
+
+
 #endif /* ADRESSEN_H_ */
