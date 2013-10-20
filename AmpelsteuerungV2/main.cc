@@ -1,6 +1,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <unistd.h>
+#include "HWaccess.h"
 #include "MyThread.h"
 
 using namespace thread;

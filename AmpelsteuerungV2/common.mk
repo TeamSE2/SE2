@@ -25,6 +25,10 @@ CCFLAGS+=-DSIMULATION
 #===== LIBS - a space-separated list of library items to be included in the link.
 LIBS+=ioaccess cpt_terminal ph fonts
 
+#===== EXTRA_INCVPATH - a space-separated list of directories to search for include files.
+EXTRA_INCVPATH+=$(PROJECT_ROOT)/Aktoren  \
+	$(PROJECT_ROOT)/Serialisierung
+
 include $(MKFILES_ROOT)/qmacros.mk
 ifndef QNX_INTERNAL
 QNX_INTERNAL=$(PROJECT_ROOT)/.qnx_internal.mk

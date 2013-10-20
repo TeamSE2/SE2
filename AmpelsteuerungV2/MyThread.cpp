@@ -25,7 +25,8 @@ namespace thread{
 	}
 
 	void MyThread::execute(void *arg){
-
+		// Probleme mit Headerdatei in anderen Verzeichnissen.
+		/*
 		Ampel *ampel = Ampel::getInstance();
 		cout << "Thread startet" << endl;
 
@@ -49,5 +50,6 @@ namespace thread{
 				cout << "Gruene Lampe Aus" << endl;
 				sleep(1);
 			}
+			*/
 	}
 }
