@@ -9,15 +9,38 @@
 #define AMPEL_H
 
 #include "HAL.h"
-
+/**
+ *
+ */
 class Ampel
 {
 public:
+	/**
+	 * Default Dekonstruktor
+	 */
 	virtual ~Ampel();
+	/**
+	 * Diese Methode steuert die gruene Signallampe an und bewirkt einen Zustandswechsel:
+	 *  an --> aus
+	 *  aus --> an
+	 */
 	void gruen();
+	/**
+	 * Diese Methode steuert die gelbe Signallampe an und bewirkt einen Zustandswechsel:
+	 *  an --> aus
+	 *  aus -> an
+	 */
 	void gelb();
+	/**
+	 * Diese Methode steuert die rote Signallampe an und bewirkt einen Zustandswechsel:
+	 *  an --> aus
+	 *  aus --> an
+	 */
 	void rot();
 private:
+	/**
+	 * Default Konstruktor
+	 */
 	Ampel();
 friend class HAL;
 };

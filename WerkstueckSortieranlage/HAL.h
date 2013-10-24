@@ -73,17 +73,56 @@ public:
 	static HAL& getInstance();
 	void out(uintptr_t port, uint8_t val);
 	uint8_t in(uintptr_t port);
+	/**
+	 * Liefert Informationen über die Lichtschranke am Laufband Anfang.
+	 * true	 = Werstueck im Einlauf
+	 * false = Kein Werkstueck im Einlauf
+	 */
 	bool lichtschrankeEinlauf();
+	/**
+	 * Liefert Informationen über die Lichtschranke am Laufband Ende.
+	 * true  = Werstueck im Einlauf
+	 * false = Kein Werkstueck im Einlauf
+	 */
 	bool lichtschrankeAuslauf();
+	/**
+	 * Liefert ein singleton Object des Bedienpanel.
+	 */
 	Bedienpanel getBedienpanel();
+	/**
+	 * Liefert ein singleton Object der Ampel.
+	 */
 	Ampel getAmpel();
+	/**
+	 * Liefert ein singleton Objec des Motors.
+	 */
 	Motor getMotor();
+	/**
+	 * Liefert ein singleton Object Weiche.
+	 */
 	Weiche getWeiche();
+	/**
+	 * Liefert ein singleton Object der Hoehenmeesung.
+	 */
 	Hoehenmesser getHoehenmesser();
+	/**
+	 * Liefert ein singleton Object des Metalldetektor.
+	 */
 	Metalldetektor getMetalldetektor();
+	/**
+	 * Liefert ein singleton Object der Rutsche.
+	 */
 	Rutsche getRutsche();
 private:
+	/**
+	 * Konstruktor
+	 * Initialisiert Mutexe und Control Register.
+	 */
 	HAL();
+	/**
+	 * Dekonstruktor
+	 * Zerstoert Mutexe
+	 */
 	virtual ~HAL();
 	mutexmap mutexe;
 	Bedienpanel* bedienpanel;

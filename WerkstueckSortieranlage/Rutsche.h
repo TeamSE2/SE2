@@ -13,9 +13,20 @@
 class Rutsche
 {
 public:
+	/**
+	 * Default Dekonstruktor
+	 */
 	virtual ~Rutsche();
+	/**
+	 * Liefert Informationen ueber die Rutsche.
+	 * true  = Rutsche ist nicht voll.
+	 * false = Rutsche ist voll.
+	 */
 	bool voll();
 private:
+	/**
+	 * Default Konstruktor
+	 */
 	Rutsche();
 friend class HAL;
 };

@@ -13,11 +13,26 @@
 class Komponententest
 {
 public:
+	/**
+	 * Startet die Komponententest.
+	 */
 	static void starten();
 private:
+	/**
+	 * Komponententest Ampel
+	 */
 	static void ampel();
+	/**
+	 * Komponententest Motor
+	 */
 	static void motor();
+	/**
+	 * Komponententest Weiche
+	 */
 	static void weiche();
+	/**
+	 * Komponententest Bedienpanel
+	 */
 	static void bedienpanel();
 };
 
