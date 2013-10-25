@@ -40,14 +40,17 @@ void SerielleSchnittstelle::empfangeWerkstueck(Werkstueck* werkstueck)
 void SerielleSchnittstelle::sendeDaten(const void* buf, ssize_t nbyte)
 {
 	int fileDescriptor;
+	int nbyteLeft = nbyte;
 
 	pthread_mutex_lock(&mutex);
 
 	fileDescriptor = open(DEVICE, O_RDWR | O_NOCTTY);
 
-	write(fileDescriptor, buf, nbyte);
+	do{
+		nbyteLeft -= write(fileDescriptor, buf, nbyte);
 
-	usleep(200000);
+		usleep(200000);
+	}while(nbyteLeft);
 
 	close(fileDescriptor);
 
@@ -57,12 +60,17 @@ void SerielleSchnittstelle::sendeDaten(const void* buf, ssize_t nbyte)
 void SerielleSchnittstelle::empfangeDaten(void* buf, ssize_t nbyte)
 {
 	int fileDescriptor;
+	int nbyteLeft = nbyte;
 
 	pthread_mutex_lock(&mutex);
 
 	fileDescriptor = open(DEVICE, O_RDWR | O_NOCTTY);
+	do{
 
-	readcond(fileDescriptor, buf, nbyte, nbyte, 1, 0);
+		nbyteLeft -= readcond(fileDescriptor, buf, nbyte, nbyte, 1, 0);
+
+	}while(nbyteLeft);
+
 
 	close(fileDescriptor);
 
