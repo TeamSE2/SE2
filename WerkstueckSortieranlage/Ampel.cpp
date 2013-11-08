@@ -13,19 +13,66 @@ Ampel::Ampel()
 
 Ampel::~Ampel()
 {
+	blinkerStopp(gruenBlinker);
+	blinkerStopp(gelbBlinker);
+	blinkerStopp(rotBlinker);
 }
 
-void Ampel::gruen()
+void Ampel::gruenBlinken(int millisekunden)
 {
-	HAL::getInstance().out(PORT_A, AMPEL_GRUEN);
+	blinkerStopp(gruenBlinker);
+
+	gruenBlinker = new Blinker(millisekunden, AMPEL_GRUEN);
+
+	gruenBlinker->start(NULL);
 }
 
-void Ampel::gelb()
+void Ampel::gelbBlinken(int millisekunden)
 {
-	HAL::getInstance().out(PORT_A, AMPEL_GELB);
+	blinkerStopp(gelbBlinker);
+
+	gelbBlinker = new Blinker(millisekunden, AMPEL_GELB);
+
+	gelbBlinker->start(NULL);
 }
 
-void Ampel::rot()
+void Ampel::rotBlinken(int millisekunden)
 {
-	HAL::getInstance().out(PORT_A, AMPEL_ROT);
+	blinkerStopp(rotBlinker);
+
+	rotBlinker = new Blinker(millisekunden, AMPEL_ROT);
+
+	rotBlinker->start(NULL);
+}
+
+void Ampel::gruen(bool ein)
+{
+	blinkerStopp(gruenBlinker);
+
+	HAL::getInstance().set(PORT_A, AMPEL_GRUEN, ein);
+}
+
+void Ampel::gelb(bool ein)
+{
+	blinkerStopp(gelbBlinker);
+
+	HAL::getInstance().set(PORT_A, AMPEL_GELB, ein);
+}
+
+void Ampel::rot(bool ein)
+{
+	blinkerStopp(rotBlinker);
+
+	HAL::getInstance().set(PORT_A, AMPEL_ROT, ein);
+}
+
+void Ampel::blinkerStopp(Blinker *blinker)
+{
+	if(blinker != NULL)
+	{
+		blinker->stop();
+		blinker->join();
+
+		delete blinker;
+	}
 }

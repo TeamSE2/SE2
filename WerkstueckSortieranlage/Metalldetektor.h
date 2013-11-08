@@ -13,20 +13,9 @@
 class Metalldetektor
 {
 public:
-	/**
-	 * Default Dekonstruktor
-	 */
 	virtual ~Metalldetektor();
-	/**
-	 * Liefert Material Informationen ueber das Werkstuecks.
-	 * true  = Werkstueck mit Metall.
-	 * false = Werkstueck ohne Metall
-	 */
 	bool check();
 private:
-	/**
-	 * Default Konstruktor
-	 */
 	Metalldetektor();
 friend class HAL;
 };

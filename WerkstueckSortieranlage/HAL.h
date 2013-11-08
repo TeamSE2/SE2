@@ -12,6 +12,7 @@
 #include <stdint.h>
 #include <map>
 
+#include "InterruptController.h"
 #include "Bedienpanel.h"
 #include "Ampel.h"
 #include "Motor.h"
@@ -25,6 +26,16 @@
 #define PORT_B (BASE + 0x01)
 #define PORT_C (BASE + 0x02)
 #define CONTROL (BASE + 0x03)
+#define INTERRUPT_STATUS (BASE + 0x0F)
+#define INTERRUPT_CONTROL (BASE + 0x0B)
+
+#define CONTROL_INITIALIZER 0x8A
+#define INTERRUPT_REQUEST 0x0B
+#define INTERRUPT_DISABLE 0x3F
+#define INTERRUPT_STATUS_PORT_B 0x02
+#define INTERRUPT_STATUS_PORT_C 0x08
+#define INTERRUPT_CONTROL_PORT_B 0x02
+#define INTERRUPT_CONTROL_PORT_C 0x04
 
 #define MOTOR_RECHTSLAUF 0x01
 #define MOTOR_LINKSLAUF 0x02
@@ -53,12 +64,11 @@
 #define TASTE_RESET 0x40
 #define TASTE_ESTOPP 0x80
 
-#define INITIALIZER 0x82
-
 using namespace std;
 
 typedef map<uintptr_t, pthread_mutex_t> mutexmap;
 
+class InterruptController;
 class Bedienpanel;
 class Ampel;
 class Motor;
@@ -71,67 +81,34 @@ class HAL
 {
 public:
 	static HAL& getInstance();
+	void set(uintptr_t port, uint8_t val, bool on);
+	bool isSet(uintptr_t port, uint8_t val);
+	bool lichtschrankeEinlauf();
+	bool lichtschrankeAuslauf();
+	InterruptController* getInterruptController();
+	Bedienpanel* getBedienpanel();
+	Ampel* getAmpel();
+	Motor* getMotor();
+	Weiche* getWeiche();
+	Hoehenmesser* getHoehenmesser();
+	Metalldetektor* getMetalldetektor();
+	Rutsche* getRutsche();
+private:
+	HAL();
+	virtual ~HAL();
+	void toggle(uintptr_t port, uint8_t val);
 	void out(uintptr_t port, uint8_t val);
 	uint8_t in(uintptr_t port);
-	/**
-	 * Liefert Informationen über die Lichtschranke am Laufband Anfang.
-	 * true	 = Werstueck im Einlauf
-	 * false = Kein Werkstueck im Einlauf
-	 */
-	bool lichtschrankeEinlauf();
-	/**
-	 * Liefert Informationen über die Lichtschranke am Laufband Ende.
-	 * true  = Werstueck im Einlauf
-	 * false = Kein Werkstueck im Einlauf
-	 */
-	bool lichtschrankeAuslauf();
-	/**
-	 * Liefert ein singleton Object des Bedienpanel.
-	 */
-	Bedienpanel getBedienpanel();
-	/**
-	 * Liefert ein singleton Object der Ampel.
-	 */
-	Ampel getAmpel();
-	/**
-	 * Liefert ein singleton Objec des Motors.
-	 */
-	Motor getMotor();
-	/**
-	 * Liefert ein singleton Object Weiche.
-	 */
-	Weiche getWeiche();
-	/**
-	 * Liefert ein singleton Object der Hoehenmeesung.
-	 */
-	Hoehenmesser getHoehenmesser();
-	/**
-	 * Liefert ein singleton Object des Metalldetektor.
-	 */
-	Metalldetektor getMetalldetektor();
-	/**
-	 * Liefert ein singleton Object der Rutsche.
-	 */
-	Rutsche getRutsche();
-private:
-	/**
-	 * Konstruktor
-	 * Initialisiert Mutexe und Control Register.
-	 */
-	HAL();
-	/**
-	 * Dekonstruktor
-	 * Zerstoert Mutexe
-	 */
-	virtual ~HAL();
 	mutexmap mutexe;
-	Bedienpanel* bedienpanel;
-	Ampel* ampel;
-	Motor* motor;
-	Weiche* weiche;
-	Hoehenmesser* hoehenmesser;
-	Metalldetektor* metalldetektor;
-	Rutsche* rutsche;
+	InterruptController *interruptController;
+	Bedienpanel *bedienpanel;
+	Ampel *ampel;
+	Motor *motor;
+	Weiche *weiche;
+	Hoehenmesser *hoehenmesser;
+	Metalldetektor *metalldetektor;
+	Rutsche *rutsche;
+friend class InterruptController;
 };
 
 #endif /* HAL_H */

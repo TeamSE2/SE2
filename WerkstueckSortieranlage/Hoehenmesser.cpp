@@ -17,10 +17,10 @@ Hoehenmesser::~Hoehenmesser()
 
 bool Hoehenmesser::check()
 {
-	return HAL::getInstance().in(PORT_B) & HOEHENMESSUNG_CHECK;
+	return HAL::getInstance().isSet(PORT_B, HOEHENMESSUNG_CHECK);
 }
 
 bool Hoehenmesser::lichtschranke()
 {
-	return HAL::getInstance().in(PORT_B) & LICHTSCHRANKE_HOEHENMESSUNG;
+	return HAL::getInstance().isSet(PORT_B, LICHTSCHRANKE_HOEHENMESSUNG);
 }

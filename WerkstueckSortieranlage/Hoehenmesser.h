@@ -13,26 +13,10 @@
 class Hoehenmesser
 {
 public:
-	/**
-	 * Default Dekonstruktor
-	 */
 	virtual ~Hoehenmesser();
-	/**
-	 * Liefert Informationen ueber die Hoehe des Werkstuecks.
-	 * true  = Werkstueck inerhalb des Toleranzbereich.
-	 * false = Werkstueck zu klein oder zu groﬂ
-	 */
 	bool check();
-	/**
-	 * Liefert Informationen ueber die Lichtschranke der Hoehenmessung.
-	 * true  = Werstueck in Hoehenmessung.
-	 * false = Kein Werstueck in Hoehenmessung.
-	**/
 	bool lichtschranke();
 private:
-	/**
-	 * Default Konstruktor
-	 */
 	Hoehenmesser();
 friend class HAL;
 };

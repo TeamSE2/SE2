@@ -14,42 +14,42 @@ Bedienpanel::Bedienpanel()
 Bedienpanel::~Bedienpanel()
 {
 }
-void Bedienpanel::led_Starttaste()
+void Bedienpanel::led_Starttaste(bool ein)
 {
-	HAL::getInstance().out(PORT_C, LED_STARTTASTE);
+	HAL::getInstance().set(PORT_C, LED_STARTTASTE, ein);
 }
 
-void Bedienpanel::led_Resettaste()
+void Bedienpanel::led_Resettaste(bool ein)
 {
-	HAL::getInstance().out(PORT_C, LED_RESETTASTE);
+	HAL::getInstance().set(PORT_C, LED_RESETTASTE, ein);
 }
 
-void Bedienpanel::led_Q1()
+void Bedienpanel::led_Q1(bool ein)
 {
-	HAL::getInstance().out(PORT_C, LED_Q1);
+	HAL::getInstance().set(PORT_C, LED_Q1, ein);
 }
 
-void Bedienpanel::led_Q2()
+void Bedienpanel::led_Q2(bool ein)
 {
-	HAL::getInstance().out(PORT_C, LED_Q2);
+	HAL::getInstance().set(PORT_C, LED_Q2, ein);
 }
 
 bool Bedienpanel::taste_Start()
 {
-	return HAL::getInstance().in(PORT_C) & TASTE_START;
+	return HAL::getInstance().isSet(PORT_C, TASTE_START);
 }
 
 bool Bedienpanel::taste_Stopp()
 {
-	return !(HAL::getInstance().in(PORT_C) & TASTE_STOPP);
+	return !(HAL::getInstance().isSet(PORT_C, TASTE_STOPP));
 }
 
 bool Bedienpanel::taste_Reset()
 {
-	return HAL::getInstance().in(PORT_C) & TASTE_RESET;
+	return HAL::getInstance().isSet(PORT_C, TASTE_RESET);
 }
 
 bool Bedienpanel::taste_EStopp()
 {
-	return !(HAL::getInstance().in(PORT_C) & TASTE_ESTOPP);
+	return !(HAL::getInstance().isSet(PORT_C, TASTE_ESTOPP));
 }

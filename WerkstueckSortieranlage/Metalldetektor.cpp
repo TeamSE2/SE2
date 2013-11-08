@@ -17,5 +17,5 @@ Metalldetektor::~Metalldetektor()
 
 bool check()
 {
-	return HAL::getInstance().in(PORT_B) & METALLDETEKTOR_CHECK;
+	return HAL::getInstance().isSet(PORT_B, METALLDETEKTOR_CHECK);
 }

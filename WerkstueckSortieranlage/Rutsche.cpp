@@ -17,5 +17,5 @@ Rutsche::~Rutsche()
 
 bool Rutsche::voll()
 {
-	return !(HAL::getInstance().in(PORT_B) & RUTSCHE_VOLL);
+	return !(HAL::getInstance().isSet(PORT_B, RUTSCHE_VOLL));
 }

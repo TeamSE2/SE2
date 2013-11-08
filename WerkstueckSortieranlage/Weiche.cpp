@@ -15,17 +15,17 @@ Weiche::~Weiche()
 {
 }
 
-void Weiche::auf()
+void Weiche::auf(bool ein)
 {
-	HAL::getInstance().out(PORT_A, WEICHE_AUF);
+	HAL::getInstance().set(PORT_A, WEICHE_AUF, ein);
 }
 
 bool Weiche::offen()
 {
-	return HAL::getInstance().in(PORT_B) & WEICHE_OFFEN;
+	return HAL::getInstance().isSet(PORT_B, WEICHE_OFFEN);
 }
 
 bool Weiche::lichtschranke()
 {
-	return HAL::getInstance().in(PORT_B) & LICHTSCHRANKE_WEICHE;
+	return HAL::getInstance().isSet(PORT_B, LICHTSCHRANKE_WEICHE);
 }

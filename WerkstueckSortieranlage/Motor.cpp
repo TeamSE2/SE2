@@ -15,22 +15,22 @@ Motor::~Motor()
 {
 }
 
-void Motor::rechtslauf()
+void Motor::rechtslauf(bool ein)
 {
-	HAL::getInstance().out(PORT_A, MOTOR_RECHTSLAUF);
+	HAL::getInstance().set(PORT_A, MOTOR_RECHTSLAUF, ein);
 }
 
-void Motor::linkslauf()
+void Motor::linkslauf(bool ein)
 {
-	HAL::getInstance().out(PORT_A, MOTOR_LINKSLAUF);
+	HAL::getInstance().set(PORT_A, MOTOR_LINKSLAUF, ein);
 }
 
-void Motor::langsam()
+void Motor::langsam(bool ein)
 {
-	HAL::getInstance().out(PORT_A, MOTOR_LANGSAM);
+	HAL::getInstance().set(PORT_A, MOTOR_LANGSAM, ein);
 }
 
-void Motor::stopp()
+void Motor::stopp(bool ein)
 {
-	HAL::getInstance().out(PORT_A, MOTOR_STOPP);
+	HAL::getInstance().set(PORT_A, MOTOR_STOPP, ein);
 }

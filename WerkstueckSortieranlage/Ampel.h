@@ -9,39 +9,26 @@
 #define AMPEL_H
 
 #include "HAL.h"
-/**
- *
- */
+#include "Blinker.h"
+
+class Blinker;
+
 class Ampel
 {
 public:
-	/**
-	 * Default Dekonstruktor
-	 */
 	virtual ~Ampel();
-	/**
-	 * Diese Methode steuert die gruene Signallampe an und bewirkt einen Zustandswechsel:
-	 *  an --> aus
-	 *  aus --> an
-	 */
-	void gruen();
-	/**
-	 * Diese Methode steuert die gelbe Signallampe an und bewirkt einen Zustandswechsel:
-	 *  an --> aus
-	 *  aus -> an
-	 */
-	void gelb();
-	/**
-	 * Diese Methode steuert die rote Signallampe an und bewirkt einen Zustandswechsel:
-	 *  an --> aus
-	 *  aus --> an
-	 */
-	void rot();
+	void gruenBlinken(int millisekunden);
+	void gelbBlinken(int millisekunden);
+	void rotBlinken(int millisekunden);
+	void gruen(bool ein);
+	void gelb(bool ein);
+	void rot(bool ein);
 private:
-	/**
-	 * Default Konstruktor
-	 */
 	Ampel();
+	void blinkerStopp(Blinker *blinker);
+	Blinker *gruenBlinker;
+	Blinker *gelbBlinker;
+	Blinker *rotBlinker;
 friend class HAL;
 };
 
