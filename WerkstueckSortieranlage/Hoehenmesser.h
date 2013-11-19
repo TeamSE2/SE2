@@ -1,8 +1,8 @@
-/*
- * Hoehenmesser.h
- *
- *  Created on: 20.10.2013
- *      Author: Ruben Christian Buhl
+/**
+ * @file    Hoehenmesser.h
+ * @date    20.10.2013
+ * @author  Ruben Christian Buhl
+ * @brief   Hoehenmesser Header
  */
 
 #ifndef HOEHENMESSER_H
@@ -14,8 +14,8 @@ class Hoehenmesser
 {
 public:
 	virtual ~Hoehenmesser();
-	bool check();
-	bool lichtschranke();
+//	bool check();
+//	bool lichtschranke();
 private:
 	Hoehenmesser();
 friend class HAL;

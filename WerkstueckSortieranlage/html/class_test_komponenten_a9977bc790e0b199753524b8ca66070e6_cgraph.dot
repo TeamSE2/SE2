@@ -1,0 +1,37 @@
+digraph "TestKomponenten::bedienpanel"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="TestKomponenten::bedienpanel",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled" fontcolor="black"];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="HAL::getBedienpanel",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_h_a_l.html#af2fa6aeb3012c178c634a28b5cb499c3"];
+  Node1 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="HAL::getInstance",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_h_a_l.html#a16c6da333746b6c43268051a96ed8eae"];
+  Node1 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="Bedienpanel::led_Q1",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_bedienpanel.html#a994a0fcd8c5337c44e65e3e03866bd89"];
+  Node4 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 -> Node5 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="HAL::set",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_h_a_l.html#a18858af674f3a3caf6d10dfabbde265c"];
+  Node5 -> Node6 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="HAL::isSet",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_h_a_l.html#a18077f070cc378fff4a13d1a799385c5"];
+  Node6 -> Node7 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node7 [label="HAL::in",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_h_a_l.html#ac8f92254b23b94d7b424cdcaccc9981a"];
+  Node5 -> Node8 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node8 [label="HAL::toggle",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_h_a_l.html#a021d96724f06e21abc60b5243411d0e8"];
+  Node8 -> Node7 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node8 -> Node9 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node9 [label="HAL::out",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_h_a_l.html#a276e92a943c7a0fa833d61c8181cc5cd"];
+  Node1 -> Node10 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node10 [label="Bedienpanel::led_Q2",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_bedienpanel.html#ad01bcb62793497533004ba978e3f599a"];
+  Node10 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node10 -> Node5 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node1 -> Node11 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node11 [label="Bedienpanel::led_Resettaste",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_bedienpanel.html#ae758b3613dc6c510addea6d0b94c2087"];
+  Node11 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node11 -> Node5 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node1 -> Node12 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node12 [label="Bedienpanel::led_Starttaste",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_bedienpanel.html#a24d519c898801aada4463d980eb99aff"];
+  Node12 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node12 -> Node5 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+}

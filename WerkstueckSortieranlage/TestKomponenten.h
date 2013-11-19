@@ -1,14 +1,20 @@
-/*
- * TestKomponenten.h
- *
- *  Created on: 20.10.2013
- *      Author: Ruben Christian Buhl
+/**
+ * @file    TestKomponenten.h
+ * @date    20.10.2013
+ * @author  Ruben Christian Buhl
+ * @brief   TestKomponenten Header
  */
 
 #ifndef TESTKOMPONENTEN_H
 #define TESTKOMPONENTEN_H
 
 #define WEICHE_AUF_SEKUNDEN_MAXIMUM 3
+
+/**
+ * Klasse zum Testen der Aktoren des HAL.
+ *
+ * Mit der statischen Methode starten() wird der Komponententest gestartet.
+ */
 
 class TestKomponenten
 {

@@ -2,23 +2,13 @@
  * @file    InterruptController.h
  * @date    03.11.2013
  * @author  Ruben Christian Buhl
- * @brief   Datei_Beschreibung_Kurz
- *
- * Datei_Beschreibung_Lang
- */
-
-/**
- * Funktion_Beschreibung_Kurz
- *
- * @param   Parameter_Name  Parameter_Beschreibung
- * @return  Rueckgabe_Beschreibung
- *
- * Funktion_Beschreibung_Lang
+ * @brief   InterruptController Header
  */
 
 #ifndef INTERRUPTCONTROLLER_H
 #define INTERRUPTCONTROLLER_H
 
+#include <pthread.h>
 #include <stdint.h>
 #include <map>
 
@@ -27,6 +17,13 @@
 
 const struct sigevent* interruptServiceRoutine(void *arg, int id);
 
+/**
+ * Der InterruptController ist fuer die Erkennung der Interrupts zustaendig.
+ *
+ * Diese Klasse erbt von der Klasse HAWThread und muss auch gestartet werden um zu funktionieren.
+ * Hier werden die Interrupts von der Interrupt Service Routine empfangen, aufbereitet und an den Signal Channel weitergeleitet.
+ */
+
 class InterruptController: public thread::HAWThread
 {
 public:
@@ -34,14 +31,16 @@ public:
 	virtual void execute(void *arg);
 	virtual void shutdown();
 	void stop();
+	int getSignalChannelID();
 private:
 	InterruptController();
-	void initialize();
-	void outputChange(uintptr_t port, uint8_t val);
+	void initialize(pthread_barrier_t *barrier);
 	struct sigevent event;
 	int interruptID;
 	int isrChannelID;
-	map<uintptr_t, uint8_t> vals;
+	int signalChannelID;
+	int signalConnectionID;
+	uint16_t sival;
 friend class HAL;
 };
 

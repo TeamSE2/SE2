@@ -2,18 +2,7 @@
  * @file    Blinker.h
  * @date    05.11.2013
  * @author  Ruben Christian Buhl
- * @brief   Datei_Beschreibung_Kurz
- *
- * Datei_Beschreibung_Lang
- */
-
-/**
- * Funktion_Beschreibung_Kurz
- *
- * @param   Parameter_Name  Parameter_Beschreibung
- * @return  Rueckgabe_Beschreibung
- *
- * Funktion_Beschreibung_Lang
+ * @brief   Blinker Header
  */
 
 #ifndef BLINKER_H
@@ -23,6 +12,13 @@
 
 #include "Ampel.h"
 #include "HAWThread.h"
+
+/**
+ * Ein Blinker wird von der Ampel gestartet, um eine bestimmte Lampe blinken zu lassen.
+ *
+ * Diese Klasse erbt von der Klasse HAWThread und muss auch gestartet werden um zu funktionieren.
+ * Hier wird eine bestimmte Lampe immer wieder ein- und ausgeschaltet, bis der Thread gestoppt wird.
+ */
 
 class Blinker: public thread::HAWThread
 {

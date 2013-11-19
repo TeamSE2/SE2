@@ -1,0 +1,16 @@
+digraph "HAL::set"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="HAL::set",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled" fontcolor="black"];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="HAL::isSet",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_h_a_l.html#a18077f070cc378fff4a13d1a799385c5"];
+  Node2 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="HAL::in",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_h_a_l.html#ac8f92254b23b94d7b424cdcaccc9981a"];
+  Node1 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="HAL::toggle",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_h_a_l.html#a021d96724f06e21abc60b5243411d0e8"];
+  Node4 -> Node5 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="HAL::out",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_h_a_l.html#a276e92a943c7a0fa833d61c8181cc5cd"];
+  Node4 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+}

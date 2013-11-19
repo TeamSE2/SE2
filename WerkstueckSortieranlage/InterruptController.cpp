@@ -1,19 +1,10 @@
 /**
+ * Diese Datei enthaelt die Implementierung der Klasse InterruptController und definiert die, fuer den Empfang der Interrupts, benoetigte Funktion.
+ *
  * @file    InterruptController.cpp
  * @date    03.11.2013
  * @author  Ruben Christian Buhl
- * @brief   Datei_Beschreibung_Kurz
- *
- * Datei_Beschreibung_Lang
- */
-
-/**
- * Funktion_Beschreibung_Kurz
- *
- * @param   Parameter_Name  Parameter_Beschreibung
- * @return  Rueckgabe_Beschreibung
- *
- * Funktion_Beschreibung_Lang
+ * @brief   InterruptController Implementierung
  */
 
 #include "InterruptController.h"
@@ -21,33 +12,38 @@
 
 int isrConnectionID;
 
+/**
+ * Interrupt Service Routine (ISR)
+ *
+ * @param   arg  Speicherbereich, welcher beim Aufruf von InterruptAttach() spezifiziert wurde.
+ * @param   id  ID, welche vom Aufruf von InterruptAttach() zurueckgegeben wurde.
+ * @return  Event Struktur, welche als Pulse Message an den Empfaenger der ISR gesendet wird.
+ *
+ * Zuerst wird festgestellt ob der Interrupt fuer unseren Zweck relevant ist.
+ * Dann wird der Interrupt Status Port zurueckgesetzt und anschliessend die Pulse Message initialisiert.
+ * Der Code der Pulse Message enthaelt das Interrupt Status Register, auf welchem der Interrupt aufgetreten ist.
+ * Der Wert der Pulse Message enthaelt den neuen Wert der Ports, welche von einem Interrupt betroffen sein koennten.
+ */
+
 const struct sigevent* interruptServiceRoutine(void *arg, int id)
 {
 	struct sigevent *event = (struct sigevent *) arg;
 
 	uint8_t status = in8(INTERRUPT_STATUS) & (INTERRUPT_STATUS_PORT_B | INTERRUPT_STATUS_PORT_C);
-	uint8_t val;
 
-	out8(INTERRUPT_STATUS, 0);
-
-	switch(status)
+	if(status > 0)
 	{
-		case (INTERRUPT_STATUS_PORT_B | INTERRUPT_STATUS_PORT_C):
-			val = in8(PORT_B);
-			SIGEV_PULSE_INIT(event, isrConnectionID, SIGEV_PULSE_PRIO_INHERIT, INTERRUPT_STATUS_PORT_B, val);
-			val = in8(PORT_C);
-			SIGEV_PULSE_INIT(event, isrConnectionID, SIGEV_PULSE_PRIO_INHERIT, INTERRUPT_STATUS_PORT_C, val);
-			break;
-		case INTERRUPT_STATUS_PORT_B:
-			val = in8(PORT_B);
-			SIGEV_PULSE_INIT(event, isrConnectionID, SIGEV_PULSE_PRIO_INHERIT, INTERRUPT_STATUS_PORT_B, val);
-			break;
-		case INTERRUPT_STATUS_PORT_C:
-			val = in8(PORT_C);
-			SIGEV_PULSE_INIT(event, isrConnectionID, SIGEV_PULSE_PRIO_INHERIT, INTERRUPT_STATUS_PORT_C, val);
-			break;
-		default:
-			event = NULL;
+		uint16_t val;
+
+		out8(INTERRUPT_STATUS, 0);
+
+		val = (in8(PORT_B) << 8) | (in8(PORT_C) & 0xF0);
+
+		SIGEV_PULSE_INIT(event, isrConnectionID, SIGEV_PULSE_PRIO_INHERIT, status, val);
+	}
+	else
+	{
+		event = NULL;
 	}
 
 	return event;
@@ -61,7 +57,20 @@ InterruptController::~InterruptController()
 {
 }
 
-void InterruptController::initialize()
+/**
+ * Initialisiert den InterruptController.
+ *
+ * @param   barrier  Die Barrier, an welcher sich die Methode meldet, wenn die Initialisierung abgeschlossen ist.
+ *
+ * Channels und Connections fuer das Interrupt Message Passing werden erstellt.
+ * Aktiviert Interrupts und bindet die Interrupts an die ISR.
+ * Setzt den Interrupt Status Port zurueckt.
+ * Initialisiert die Interrupt Control Register.
+ * Initialisiert sival.
+ * Meldet sich anschliessend an der Barrier.
+ */
+
+void InterruptController::initialize(pthread_barrier_t *barrier)
 {
 	isrChannelID = ChannelCreate(0);
 
@@ -96,93 +105,46 @@ void InterruptController::initialize()
 	HAL::getInstance().out(INTERRUPT_CONTROL, HAL::getInstance().in(INTERRUPT_CONTROL) | INTERRUPT_DISABLE);
 	HAL::getInstance().out(INTERRUPT_CONTROL, HAL::getInstance().in(INTERRUPT_CONTROL) & ~(INTERRUPT_CONTROL_PORT_B | INTERRUPT_CONTROL_PORT_C));
 
-	vals[PORT_B] = HAL::getInstance().in(PORT_B);
-	vals[PORT_C] = HAL::getInstance().in(PORT_C);
+	sival = (in8(PORT_B) << 8) | (in8(PORT_C) & 0xF0);
+
+	signalChannelID = ChannelCreate(0);
+
+	if(signalChannelID == -1)
+	{
+		perror("InterruptController: signalChannelID ChannelCreate fehlgeschlagen");
+
+		exit(EXIT_FAILURE);
+	}
+
+	signalConnectionID = ConnectAttach(0, 0, signalChannelID, _NTO_SIDE_CHANNEL, 0);
+
+	if(signalConnectionID == -1)
+	{
+		perror("InterruptController: signalConnectionID ConnectAttach fehlgeschlagen");
+
+		exit(EXIT_FAILURE);
+	}
+
+	pthread_barrier_wait(barrier);
 }
 
-void InterruptController::outputChange(uintptr_t port, uint8_t val)
-{
-	uint8_t change = val;
-
-	if(port == INTERRUPT_STATUS_PORT_B)
-	{
-		change = change ^ vals[PORT_B];
-	}
-	else if(port == INTERRUPT_STATUS_PORT_C)
-	{
-		change = change ^ vals[PORT_C];
-	}
-
-	for(uint8_t i = 0x80; i > 0; i = i >> 1)
-	{
-		if(port == INTERRUPT_STATUS_PORT_B)
-		{
-			switch(change & i)
-			{
-				case LICHTSCHRANKE_EINLAUF:
-					printf("LICHTSCHRANKE_EINLAUF");
-					break;
-				case LICHTSCHRANKE_HOEHENMESSUNG:
-					printf("LICHTSCHRANKE_HOEHENMESSUNG");
-					break;
-				case HOEHENMESSUNG_CHECK:
-					printf("HOEHENMESSUNG_CHECK");
-					break;
-				case LICHTSCHRANKE_WEICHE:
-					printf("LICHTSCHRANKE_WEICHE");
-					break;
-				case METALLDETEKTOR_CHECK:
-					printf("METALLDETEKTOR_CHECK");
-					break;
-				case WEICHE_OFFEN:
-					printf("WEICHE_OFFEN");
-					break;
-				case RUTSCHE_VOLL:
-					printf("RUTSCHE_VOLL");
-					break;
-				case LICHTSCHRANKE_AUSLAUF:
-					printf("LICHTSCHRANKE_AUSLAUF");
-					break;
-			}
-		}
-		else if(port == INTERRUPT_STATUS_PORT_C)
-		{
-			switch(change & i)
-			{
-				case TASTE_START:
-					printf("TASTE_START");
-					break;
-				case TASTE_STOPP:
-					printf("TASTE_STOPP");
-					break;
-				case TASTE_RESET:
-					printf("TASTE_RESET");
-					break;
-				case TASTE_ESTOPP:
-					printf("TASTE_ESTOPP");
-					break;
-			}
-		}
-
-		if((change & i) > 0)
-		{
-			if((val & i) > 0)
-			{
-				printf(" POSITIV\n");
-			}
-			else
-			{
-				printf(" NEGATIV\n");
-			}
-		}
-	}
-}
+/**
+ * Von HAWThread geerbte Methode, welche beim Starten des Thread aufgerufen wird.
+ *
+ * @param   arg  Der Parameter, welcher beim Starten des Thread uebergeben wird. Enthaelt die Barrier, welche an die Methode initialize(), zur Synchronisation uebergeben wird.
+ *
+ * Thread wird mit dem Aufruf von initialize() initialisiert.
+ * Schleife des Thread wird gestartet und laeuft bis der Thread gestoppt wird.
+ * In der Schleife werden die Pulse Messages der ISR empfangen, aufbereitet und mit einer weiteren Pulse Message an den Signal Channel gesendet.
+ * Der Code der neuen Pulse Message enthaelt die Information, ob der neue Wert des geaenderten Bit 1 oder 0 ist.
+ * Der Wert der neuen Pulse Message enthaelt das Bit, welches sich durch einen Interrupt geaendertet hat. Dabei ist der Wert als Port B konkatiniert mit Port C zu lesen.
+ */
 
 void InterruptController::execute(void *arg)
 {
 	struct _pulse pulse;
 
-	initialize();
+	initialize((pthread_barrier_t *) arg);
 
 	while(!isStopped())
 	{
@@ -199,10 +161,19 @@ void InterruptController::execute(void *arg)
 		}
 		else
 		{
-			outputChange(pulse.code, pulse.value.sival_int);
+			uint16_t val = pulse.value.sival_int ^ sival;
 
-			vals[PORT_B] = HAL::getInstance().in(PORT_B);
-			vals[PORT_C] = HAL::getInstance().in(PORT_C);
+			for(uint16_t i = 0x8000; i > 0; i = i >> 1)
+			{
+				if(val & i)
+				{
+					bool code = pulse.value.sival_int & i;
+
+					MsgSendPulse(signalConnectionID, SIGEV_PULSE_PRIO_INHERIT, code, val);
+				}
+			}
+
+			sival = pulse.value.sival_int;
 		}
 	}
 }
@@ -210,6 +181,14 @@ void InterruptController::execute(void *arg)
 void InterruptController::shutdown()
 {
 }
+
+/**
+ * Von HAWThread ueberschriebene Methode, welche zum Stoppen des Thread aufgerufen wird.
+ *
+ * Die entsprechende Methode von HAWThread wird aufgerufen.
+ * Channels und Connections fuer das Interrupt Message Passing werden zerstoert.
+ * Deaktiviert Interrupts.
+ */
 
 void InterruptController::stop()
 {
@@ -225,8 +204,33 @@ void InterruptController::stop()
 		perror("InterruptController: isrChannelID ChannelDestroy fehlgeschlagen");
 	}
 
-//	if(InterruptDetach(interruptID) == -1)
-//	{
-//		perror("InterruptController: interruptID InterruptDetach fehlgeschlagen");
-//	}
+	if(ConnectDetach(signalConnectionID) == -1)
+	{
+		perror("InterruptController: signalConnectionID ConnectDetach fehlgeschlagen");
+	}
+
+	if(ChannelDestroy(signalChannelID) == -1)
+	{
+		perror("InterruptController: signalChannelID ChannelDestroy fehlgeschlagen");
+	}
+
+	#ifndef SIMULATION
+		if(InterruptDetach(interruptID) == -1)
+		{
+			perror("InterruptController: interruptID InterruptDetach fehlgeschlagen");
+		}
+	#endif
+}
+
+/**
+ * Stellt den Signal Channel zur Verfuegung.
+ *
+ * @return  Enthaelt die Signal Channel ID.
+ *
+ * Liefert die Signal Channel ID, mit welcher sich andere Threads fuer den Empfang der Interrupt Informationen verbinden koennen.
+ */
+
+int InterruptController::getSignalChannelID()
+{
+	return signalChannelID;
 }

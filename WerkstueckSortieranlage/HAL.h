@@ -1,8 +1,10 @@
-/*
- * HAL.h
+/**
+ * Diese Datei enthaelt den Header der Klasse HAL und definiert die, fuer die Ansteuerung der Hardware, benoetigten Werte.
  *
- *  Created on: 19.10.2013
- *      Author: Ruben Christian Buhl
+ * @file    HAL.h
+ * @date    19.10.2013
+ * @author  Ruben Christian Buhl
+ * @brief   HAL Header
  */
 
 #ifndef HAL_H
@@ -77,10 +79,18 @@ class Hoehenmesser;
 class Metalldetektor;
 class Rutsche;
 
+/**
+ * Hardware Abstraction Layer (HAL)
+ *
+ * Diese Klasse ist als Singleton implementiert. Daher ist das einzige Objekt nur durch getInstance() erreichbar.
+ * Hier ist die gesamte Ansteuerung der Hardware konzentriert.
+ */
+
 class HAL
 {
 public:
 	static HAL& getInstance();
+	static void initialize();
 	void set(uintptr_t port, uint8_t val, bool on);
 	bool isSet(uintptr_t port, uint8_t val);
 	bool lichtschrankeEinlauf();
@@ -99,6 +109,7 @@ private:
 	void toggle(uintptr_t port, uint8_t val);
 	void out(uintptr_t port, uint8_t val);
 	uint8_t in(uintptr_t port);
+	pthread_barrier_t barrier;
 	mutexmap mutexe;
 	InterruptController *interruptController;
 	Bedienpanel *bedienpanel;

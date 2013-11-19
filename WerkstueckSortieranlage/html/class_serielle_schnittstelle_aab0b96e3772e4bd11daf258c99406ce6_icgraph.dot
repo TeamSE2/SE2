@@ -1,0 +1,11 @@
+digraph "SerielleSchnittstelle::sendeDaten"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="SerielleSchnittstelle\l::sendeDaten",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled" fontcolor="black"];
+  Node1 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="SerielleSchnittstelle\l::sendeWerkstueck",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_serielle_schnittstelle.html#ab5c90d92d498e9cb06355640524ba733"];
+  Node2 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="TestSerielleSchnittstelle\l::senden",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_test_serielle_schnittstelle.html#a4334f9a249302763572dd92adc38363c"];
+}

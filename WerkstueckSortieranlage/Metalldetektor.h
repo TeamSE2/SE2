@@ -1,8 +1,8 @@
-/*
- * Metalldetektor.h
- *
- *  Created on: 20.10.2013
- *      Author: Ruben Christian Buhl
+/**
+ * @file    Metalldetektor.h
+ * @date    20.10.2013
+ * @author  Ruben Christian Buhl
+ * @brief   Metalldetektor Header
  */
 
 #ifndef METALLDETEKTOR_H
@@ -14,7 +14,7 @@ class Metalldetektor
 {
 public:
 	virtual ~Metalldetektor();
-	bool check();
+//	bool check();
 private:
 	Metalldetektor();
 friend class HAL;

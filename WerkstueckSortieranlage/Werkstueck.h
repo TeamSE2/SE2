@@ -1,12 +1,21 @@
-/*
- * Werkstueck.h
+/**
+ * Diese Datei enthaelt den Header der Struktur Werkstueck und definiert die Enumeration WerkstueckTyp, welche in der Struktur Werkstueck enthalten ist.
  *
- *  Created on: 21.10.2013
- *      Author: Ruben Christian Buhl
+ * @file    Werkstueck.h
+ * @date    21.10.2013
+ * @author  Ruben Christian Buhl
+ * @brief   Werkstueck Header
  */
 
 #ifndef WERKSTUECK_H
 #define WERKSTUECK_H
+
+/**
+ * Beschreibt den Typ von einem Werkstueck.
+ *
+ * Enthaelt fuer jeden moeglichen Typ einen Wert.
+ * Ein Werkstueck kann eine Bohrung an der Ober- oder Unterseite haben, ueber einen Metalleinsatz verfuegen und zu flach sein.
+ */
 
 enum WerkstueckTyp
 {
@@ -16,6 +25,13 @@ enum WerkstueckTyp
 	BOHRUNG_UNTEN_METALL,
 	ZU_FLACH
 };
+
+/**
+ * Datenstruktur zu einem Werkstueck.
+ *
+ * Hier werden alle Daten zu einem Werkstueck abgelegt.
+ * Jedes Werkstueck erhaelt eine ID, ist von einem bestimmten Typ und hat zwei Hoehenmesswerte.
+ */
 
 struct Werkstueck
 {

@@ -1,8 +1,8 @@
-/*
- * Rutsche.h
- *
- *  Created on: 20.10.2013
- *      Author: Ruben Christian Buhl
+/**
+ * @file    Rutsche.h
+ * @date    20.10.2013
+ * @author  Ruben Christian Buhl
+ * @brief   Rutsche Header
  */
 
 #ifndef RUTSCHE_H
@@ -14,7 +14,7 @@ class Rutsche
 {
 public:
 	virtual ~Rutsche();
-	bool voll();
+//	bool voll();
 private:
 	Rutsche();
 friend class HAL;

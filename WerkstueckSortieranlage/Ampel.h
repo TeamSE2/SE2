@@ -1,8 +1,8 @@
-/*
- * Ampel.h
- *
- *  Created on: 20.10.2013
- *      Author: Ruben Christian Buhl
+/**
+ * @file    Ampel.h
+ * @date    20.10.2013
+ * @author  Ruben Christian Buhl
+ * @brief   Ampel Header
  */
 
 #ifndef AMPEL_H
@@ -12,6 +12,13 @@
 #include "Blinker.h"
 
 class Blinker;
+
+/**
+ * Ueber die Ampel werden die drei farbigen Lampen angesteuert.
+ *
+ * Hier werden Methoden zur Verfuegung gestellt, um die Ampel gruen, gelb oder rot leuchten oder blinken zu lassen.
+ * Fuer das Blinken wird jeweils ein eigener Thread der Klasse Blinker beauftragt.
+ */
 
 class Ampel
 {

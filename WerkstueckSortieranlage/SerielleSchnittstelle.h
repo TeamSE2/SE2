@@ -1,8 +1,8 @@
-/*
- * SerielleSchnittstelle.h
- *
- *  Created on: 20.10.2013
- *      Author: Ruben Christian Buhl
+/**
+ * @file    SerielleSchnittstelle.h
+ * @date    20.10.2013
+ * @author  Ruben Christian Buhl
+ * @brief   SerielleSchnittstelle Header
  */
 
 #ifndef SERIELLESCHNITTSTELLE_H
@@ -13,6 +13,13 @@
 #include "Werkstueck.h"
 
 #define DEVICE "/dev/ser1"
+
+/**
+ * Ueber die SerielleSchnittstelle kommunizieren die beiden Fliessbandanlagen miteinander.
+ *
+ * Diese Klasse ist als Singleton implementiert. Daher ist das einzige Objekt nur durch getInstance() erreichbar.
+ * Hier werden Methoden zur Verfuegung gestellt, um Daten ueber die SerielleSchnittstelle zu senden oder zu empfangen.
+ */
 
 class SerielleSchnittstelle
 {

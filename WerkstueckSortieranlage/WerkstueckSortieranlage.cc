@@ -7,6 +7,7 @@
 #include "TestKomponenten.h"
 #include "TestSerielleSchnittstelle.h"
 #include "TestInterruptController.h"
+#include "HAL.h"
 
 #define KOMMANDO_PRAEFIX '-'
 #define KOMMANDO_TEST "test"
@@ -27,6 +28,8 @@ int main(int argc, char *argv[])
 	{
 		return -1;
 	}
+
+	HAL::getInstance().initialize();
 
 	if(argc > 1)
 	{
