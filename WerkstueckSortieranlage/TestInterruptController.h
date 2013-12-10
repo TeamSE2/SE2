@@ -9,6 +9,7 @@
 #define TESTINTERRUPTCONTROLLER_H
 
 #include "HAWThread.h"
+#include "PulsNachricht.h"
 
 #define KOMMANDO_TEST_BEENDEN "beenden"
 
@@ -25,7 +26,8 @@ public:
 	virtual void execute(void *arg);
 	virtual void shutdown();
 private:
-	void ausgeben(bool code, int val);
+	void ausgeben(PulsNachricht *nachricht);
+	//void ausgeben(bool code, int val);
 	void initialize();
 	int signalChannelID;
 };

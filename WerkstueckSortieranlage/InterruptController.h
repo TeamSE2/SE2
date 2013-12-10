@@ -14,6 +14,7 @@
 
 #include "HAL.h"
 #include "HAWThread.h"
+#include "PulsNachricht.h"
 
 const struct sigevent* interruptServiceRoutine(void *arg, int id);
 
@@ -32,6 +33,7 @@ public:
 	virtual void shutdown();
 	void stop();
 	int getSignalChannelID();
+	int getSignalConnectionID();
 private:
 	InterruptController();
 	void initialize(pthread_barrier_t *barrier);

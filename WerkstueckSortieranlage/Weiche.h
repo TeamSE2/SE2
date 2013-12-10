@@ -16,16 +16,15 @@
  * Hier wird die Methode zur Verfuegung gestellt, um die Weiche zu oeffnen.
  */
 
-class Weiche
-{
+class Weiche {
 public:
 	virtual ~Weiche();
 	void auf(bool ein);
-//	bool offen();
-//	bool lichtschranke();
+	//	bool offen();
+	//	bool lichtschranke();
 private:
 	Weiche();
-friend class HAL;
+	friend class HAL;
 };
 
 #endif /* WEICHE_H */

@@ -12,6 +12,7 @@
 #include "TestInterruptController.h"
 #include "HAL.h"
 
+
 using namespace std;
 
 /**
@@ -65,53 +66,60 @@ void TestInterruptController::starten(bool automatik, unsigned int sekunden)
  * Wandelt den Code und den Wert der Pulse Message in lesbare Strings um und gibt sie aus.
  */
 
-void TestInterruptController::ausgeben(bool code, int val)
+void TestInterruptController::ausgeben(PulsNachricht *nachricht)
 {
-	switch(val >> 8)
+
+	if(nachricht->port == P_B)
 	{
-		case LICHTSCHRANKE_EINLAUF:
-			cout << "LICHTSCHRANKE_EINLAUF";
-			break;
-		case LICHTSCHRANKE_HOEHENMESSUNG:
-			cout << "LICHTSCHRANKE_HOEHENMESSUNG";
-			break;
-		case HOEHENMESSUNG_CHECK:
-			cout << "HOEHENMESSUNG_CHECK";
-			break;
-		case LICHTSCHRANKE_WEICHE:
-			cout << "LICHTSCHRANKE_WEICHE";
-			break;
-		case METALLDETEKTOR_CHECK:
-			cout << "METALLDETEKTOR_CHECK";
-			break;
-		case WEICHE_OFFEN:
-			cout << "WEICHE_OFFEN";
-			break;
-		case RUTSCHE_VOLL:
-			cout << "RUTSCHE_VOLL";
-			break;
-		case LICHTSCHRANKE_AUSLAUF:
-			cout << "LICHTSCHRANKE_AUSLAUF";
-			break;
+		switch(nachricht->iq)
+		{
+			case LICHTSCHRANKE_EINLAUF:
+				cout << "LICHTSCHRANKE_EINLAUF";
+				break;
+			case LICHTSCHRANKE_HOEHENMESSUNG:
+				cout << "LICHTSCHRANKE_HOEHENMESSUNG";
+				break;
+			case HOEHENMESSUNG_CHECK:
+				cout << "HOEHENMESSUNG_CHECK";
+				break;
+			case LICHTSCHRANKE_WEICHE:
+				cout << "LICHTSCHRANKE_WEICHE";
+				break;
+			case METALLDETEKTOR_CHECK:
+				cout << "METALLDETEKTOR_CHECK";
+				break;
+			case WEICHE_OFFEN:
+				cout << "WEICHE_OFFEN";
+				break;
+			case RUTSCHE_VOLL:
+				cout << "RUTSCHE_VOLL";
+				break;
+			case LICHTSCHRANKE_AUSLAUF:
+				cout << "LICHTSCHRANKE_AUSLAUF";
+				break;
+		}
 	}
 
-	switch(val)
+	if(nachricht->port == P_C)
 	{
-		case TASTE_START:
-			cout << "TASTE_START";
-			break;
-		case TASTE_STOPP:
-			cout << "TASTE_STOPP";
-			break;
-		case TASTE_RESET:
-			cout << "TASTE_RESET";
-			break;
-		case TASTE_ESTOPP:
-			cout << "TASTE_ESTOPP";
-			break;
+		switch(nachricht->iq)
+		{
+			case TASTE_START:
+				cout << "TASTE_START";
+				break;
+			case TASTE_STOPP:
+				cout << "TASTE_STOPP";
+				break;
+			case TASTE_RESET:
+				cout << "TASTE_RESET";
+				break;
+			case TASTE_ESTOPP:
+				cout << "TASTE_ESTOPP";
+				break;
+		}
 	}
 
-	if(code)
+	if(nachricht->state)
 	{
 		cout << " POSITIV" << endl;
 	}
@@ -145,6 +153,7 @@ void TestInterruptController::initialize()
 void TestInterruptController::execute(void *arg)
 {
 	struct _pulse pulse;
+	PulsNachricht *nachricht = NULL;
 
 	initialize();
 
@@ -163,7 +172,10 @@ void TestInterruptController::execute(void *arg)
 		}
 		else
 		{
-			ausgeben(pulse.code, pulse.value.sival_int);
+
+
+			nachricht = (PulsNachricht*) &pulse.value.sival_int;
+			ausgeben(nachricht);
 		}
 	}
 }

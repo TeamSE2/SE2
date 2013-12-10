@@ -33,11 +33,11 @@ enum WerkstueckTyp
  * Jedes Werkstueck erhaelt eine ID, ist von einem bestimmten Typ und hat zwei Hoehenmesswerte.
  */
 
-struct Werkstueck
+typedef struct Werkstueck
 {
 	long id;
 	WerkstueckTyp typ;
 	float hoehen[2];
-};
+} Werkstueck;
 
 #endif /* WERKSTUECK_H */

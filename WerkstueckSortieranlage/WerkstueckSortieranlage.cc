@@ -7,7 +7,9 @@
 #include "TestKomponenten.h"
 #include "TestSerielleSchnittstelle.h"
 #include "TestInterruptController.h"
+#include "SynBandEins.h"
 #include "HAL.h"
+
 
 #define KOMMANDO_PRAEFIX '-'
 #define KOMMANDO_TEST "test"
@@ -16,6 +18,7 @@
 #define PARAMETER_TEST_SERIELLESCHNITTSTELLE "schnittstelle"
 #define PARAMETER_TEST_INTERRUPTCONTROLLER "interrupts"
 
+using namespace PetriNetzBandEins;
 using namespace std;
 
 int main(int argc, char *argv[])
@@ -30,7 +33,7 @@ int main(int argc, char *argv[])
 	}
 
 	HAL::getInstance().initialize();
-
+	Dispatcher::getInstance();
 	if(argc > 1)
 	{
 		if(argv[1][0] == KOMMANDO_PRAEFIX && strlen(argv[1]) > 1)
@@ -107,7 +110,14 @@ int main(int argc, char *argv[])
 	else
 	{
 		cout << "WerkstueckSortieranlage: Normaler Betrieb" << endl;
+			Dispatcher::getInstance()->start(NULL);
+			SynBandEins::getInstance();
+			sleep(200);
+			Dispatcher::getInstance()->stop();
+			Dispatcher::getInstance()->join();
 	}
+
+
 
 	#ifdef SIMULATION
 		IOaccess_close();

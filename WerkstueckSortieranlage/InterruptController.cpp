@@ -143,6 +143,8 @@ void InterruptController::initialize(pthread_barrier_t *barrier)
 void InterruptController::execute(void *arg)
 {
 	struct _pulse pulse;
+	PulsNachricht nachricht;
+	int *val = NULL;
 
 	initialize((pthread_barrier_t *) arg);
 
@@ -161,15 +163,24 @@ void InterruptController::execute(void *arg)
 		}
 		else
 		{
-			uint16_t val = pulse.value.sival_int ^ sival;
+			uint16_t iq = pulse.value.sival_int ^ sival;
 
 			for(uint16_t i = 0x8000; i > 0; i = i >> 1)
 			{
-				if(val & i)
+				if(iq & i)
 				{
 					bool code = pulse.value.sival_int & i;
+					nachricht.state = code;
+					if(i < 0x100){
+						nachricht.port = P_C;
+						nachricht.iq = iq;
+					}else{
+						nachricht.port = P_B;
+						nachricht.iq = iq >> 8;
+					}
 
-					MsgSendPulse(signalConnectionID, SIGEV_PULSE_PRIO_INHERIT, code, val);
+					val = (int*)(&nachricht);
+					MsgSendPulse(signalConnectionID, SIGEV_PULSE_PRIO_INHERIT, code, *val);
 				}
 			}
 
@@ -233,4 +244,9 @@ void InterruptController::stop()
 int InterruptController::getSignalChannelID()
 {
 	return signalChannelID;
+}
+
+int InterruptController::getSignalConnectionID()
+{
+	return signalConnectionID;
 }
