@@ -7,8 +7,9 @@
 class Beobachter{
 public:
 	virtual ~Beobachter();
-	virtual void aktualisiereSignale(uint8_t iq, uint8_t state);
+	virtual bool aktualisiereSignale(uint8_t port, uint8_t iq, uint8_t state);
 	virtual void execute();
+	virtual void schreibeSignale();
 	bool operator==(const Beobachter& o);
 };
 #endif

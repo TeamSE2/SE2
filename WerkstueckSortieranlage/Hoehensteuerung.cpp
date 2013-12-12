@@ -8,13 +8,10 @@ Hoehensteuerung *Hoehensteuerung::instance = NULL;
 
 Hoehensteuerung::Hoehensteuerung(){
 	initNetz();
-	Dispatcher::getInstance()->anmelden(this, LICHTSCHRANKE_HOEHENMESSUNG, P_B);
-	Dispatcher::getInstance()->anmelden(this, HOEHENMESSUNG_CHECK, P_B);
-}
+	Dispatcher::getInstance()->anmelden(this);}
 
 Hoehensteuerung::~Hoehensteuerung(){
-	Dispatcher::getInstance()->abmelden(this, LICHTSCHRANKE_HOEHENMESSUNG, P_B);
-	Dispatcher::getInstance()->abmelden(this, HOEHENMESSUNG_CHECK, P_B);
+	Dispatcher::getInstance()->abmelden(this);
 
 	delete instance;
 	instance = NULL;
@@ -35,10 +32,13 @@ void Hoehensteuerung::initNetz(){
 	plaetze[CHECK_L_2] = 0;
 	eingang[LICHTSCHRANKE] = 1;
 	eingang[HOEHE] = 0;
+	eingang[LOCH_H] = 0;
 }
 
 void Hoehensteuerung::ladeWerkstueck(){
- temp_ws = SynBandEins::getInstance()->popWerkstueckHoehenmessung();
+	eingang[LOCH_H] = 0;
+	temp_ws = SynBandEins::getInstance()->popWerkstueckHoehenmessung();
+	cout << temp_ws << endl;
 }
 
 void Hoehensteuerung::sendeWerkstueck(){
@@ -46,24 +46,29 @@ void Hoehensteuerung::sendeWerkstueck(){
 	SynBandEins::getInstance()->pushWerkstueckDetektor(temp_ws);
 }
 
-void Hoehensteuerung::aktualisiereSignale(uint8_t iq, uint8_t state){
+bool Hoehensteuerung::aktualisiereSignale(uint8_t port, uint8_t iq, uint8_t state){
+	bool execute = false;
 
-	switch (iq) {
-		case LICHTSCHRANKE_HOEHENMESSUNG:
-//			cout << "lichtschranke: "<< endl;
-//			printf("%i",state);
-			eingang[LICHTSCHRANKE] = state;
-			break;
-		case HOEHENMESSUNG_CHECK:
-			eingang[HOEHE] = state;
-		default:
-			break;
+	if(port == P_B){
+		switch (iq) {
+				case LICHTSCHRANKE_HOEHENMESSUNG:
+					eingang[LICHTSCHRANKE] = state;
+					execute = true;
+					break;
+				case HOEHENMESSUNG_CHECK:
+					eingang[HOEHE] = state;
+					execute = true;
+				default:
+					break;
+			}
 	}
+
+	return execute;
 }
 
 void Hoehensteuerung::schreibeSignale(){
 
-	if(plaetze[CHECK_L_2]){
+	if(plaetze[CHECK_L_2] && !eingang[LOCH_H]){
 		if(checkLoch()){
 			eingang[LOCH_H] = 1;
 			(*temp_ws).typ = BOHRUNG_OBEN;
@@ -85,26 +90,11 @@ void Hoehensteuerung::schreibeSignale(){
 
 void Hoehensteuerung::transitionenAusfuehren(){
 	if (plaetze[GZ] && !plaetze[CHECK_T] && !eingang[LICHTSCHRANKE]) {
-		printf("1.1:  GZ: %i, CHECK_T: %i, CHECK_L_1: %i, CHECK_L_2: %i,   \n",plaetze[GZ], plaetze[CHECK_T], plaetze[CHECK_L_1], plaetze[CHECK_L_2]);
 		plaetze[GZ] = 0;
 		plaetze[CHECK_T] = 1;
 		printf("1.2:  GZ: %i, CHECK_T: %i, CHECK_L_1: %i, CHECK_L_2: %i,   \n",plaetze[GZ], plaetze[CHECK_T], plaetze[CHECK_L_1], plaetze[CHECK_L_2]);
-		printf("LS: %i, H: %i\n",eingang[LICHTSCHRANKE], eingang[HOEHE]);
 		ladeWerkstueck();
 	}
-
-//	if (plaetze[CHECK_T] && !plaetze[GZ] && eingang[LICHTSCHRANKE]) {
-//		plaetze[CHECK_T] = 0;
-//		plaetze[GZ] = 1;
-//		printf("2:  GZ: %i, CHECK_T: %i, CHECK_L_1: %i, CHECK_L_2: %i,   \n",plaetze[GZ], plaetze[CHECK_T], plaetze[CHECK_L_1], plaetze[CHECK_L_2]);
-//		sendeWerkstueck();
-//	}
-
-//	if(plaetze[CHECK_L_2] && !plaetze[CHECK_L_1] && !eingang[HOEHE] && !eingang[LOCH_H]){
-//		plaetze[CHECK_L_2] = 0;
-//		plaetze[CHECK_L_1] = 1;
-//		printf("4:  GZ: %i, CHECK_T: %i, CHECK_L_1: %i, CHECK_L_2: %i,   \n",plaetze[GZ], plaetze[CHECK_T], plaetze[CHECK_L_1], plaetze[CHECK_L_2]);
-//	}
 
 	if (plaetze[CHECK_T] && !plaetze[CHECK_L_2] && eingang[HOEHE]) {
 		plaetze[CHECK_T] = 0;

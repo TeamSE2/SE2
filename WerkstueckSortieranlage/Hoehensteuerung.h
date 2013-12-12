@@ -11,8 +11,8 @@
 #include "Beobachter.h"
 #include "Dispatcher.h"
 //init
-#define ANZ_PLAETZE_H 4
-#define ANZ_EINGAENGE_H 3
+#define ANZ_PLAETZE_H 10
+#define ANZ_EINGAENGE_H 5
 // Plaetze
 #define GZ 0
 #define CHECK_T 1
@@ -31,11 +31,11 @@ class Hoehensteuerung: public Beobachter{
 public:
 	virtual ~Hoehensteuerung();
 	static Hoehensteuerung* getInstance();
-	void aktualisiereSignale(uint8_t iq, uint8_t state);
+	bool aktualisiereSignale(uint8_t port, uint8_t iq, uint8_t state);
 	void execute();
 private:
-	uint8_t eingang[ANZ_EINGAENGE_H-1];
-	uint8_t plaetze[ANZ_PLAETZE_H-1];
+	uint8_t eingang[ANZ_EINGAENGE_H];
+	uint8_t plaetze[ANZ_PLAETZE_H];
 	Werkstueck *temp_ws;
 
 	static Hoehensteuerung *instance;

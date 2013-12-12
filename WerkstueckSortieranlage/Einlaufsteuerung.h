@@ -16,8 +16,6 @@
 // Ausgangs Signale
 #define RECHTSLAUF 1
 #define KEIN_RECHTSLAUF 0
-//Eingangs Signale
-#define EINLAUF_SENSOR 0
 // Plaetze
 #define GZ 0
 #define EINLAUF 1
@@ -29,14 +27,14 @@ class Einlaufsteuerung: public Beobachter {
 public:
 	~Einlaufsteuerung();
 	static Einlaufsteuerung* getInstance();
-	void aktualisiereSignale(uint8_t iq, uint8_t state);
+	bool aktualisiereSignale(uint8_t port, uint8_t iq, uint8_t state);
 	void execute();
 private:
 	static Einlaufsteuerung *instance;
 	static long werkstueck_id;
 	//Schaltbedingungen
 	bool lichtschranke_einlauf;
-	uint8_t plaetze[ANZ_PLAETZE_E-1];
+	uint8_t plaetze[ANZ_PLAETZE_E];
 
 	Einlaufsteuerung();
 	void initNetz();

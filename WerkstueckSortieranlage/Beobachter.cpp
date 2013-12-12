@@ -6,8 +6,10 @@
 	void Beobachter::execute(){
 	}
 
-	void Beobachter::aktualisiereSignale(uint8_t iq, uint8_t state){
+	bool Beobachter::aktualisiereSignale(uint8_t port, uint8_t iq, uint8_t state){
+	}
 
+	void Beobachter::schreibeSignale(){
 	}
 
 

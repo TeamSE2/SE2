@@ -21,177 +21,30 @@ Dispatcher* Dispatcher::getInstance(){
 	return instance;
 }
 
-void Dispatcher::modList(bool add, Beobachter *e, uint8_t iq, uint8_t port){
-
-	list<Beobachter*> *temp;
-
-
-	if(port == P_B){
-		switch (iq) {
-			case LICHTSCHRANKE_EINLAUF :
-				temp = &lichtschranke_einlauf;
-				break;
-			case LICHTSCHRANKE_HOEHENMESSUNG :
-				temp = &lichtschranke_hoehenmessung;
-				break;
-			case LICHTSCHRANKE_WEICHE :
-				temp = &lichtschranke_weiche;
-				break;
-			case LICHTSCHRANKE_AUSLAUF :
-				temp = &lichtschranke_auslauf;
-				break;
-			case HOEHENMESSUNG_CHECK :
-				temp = &hoehenmessung_check;
-				break;
-			case METALLDETEKTOR_CHECK :
-				temp = &metalldetektor_check;
-				break;
-			case WEICHE_OFFEN :
-				temp = &weiche_offen;
-				break;
-			case RUTSCHE_VOLL :
-				temp = &rutsche_voll;
-				break;
-			default:
-				break;
-		}
-	}
-
-	if(port == P_C){
-		switch (iq) {
-			case TASTE_START :
-				temp = &taste_start;
-				break;
-			case TASTE_STOPP :
-				temp = &taste_stopp;
-				break;
-			case TASTE_RESET :
-				temp = &taste_reset;
-				break;
-			case TASTE_ESTOPP :
-				temp = &taste_estopp;
-				break;
-			default:
-				break;
-		}
-	}
-
-	if(port == SYN_BAND_EINS){
-		switch (iq) {
-		case VERLASSEN :
-			temp = &syn_verlassen;
-			break;
-		case UEBERGABE_START :
-			temp = &syn_uebergabe_start;
-			break;
-		case UEBERGABE_ENDE :
-			temp = &syn_uebergabe_ende;
-			break;
-		default:
-			break;
-		}
-	}
-
-	if(add){
-		addElement(temp, e);
-	}else{
-		removeElement(temp, e);
-	}
-
+void Dispatcher::anmelden(Beobachter *e){
+	beobachter.push_front(e);
 }
 
-void Dispatcher::anmelden(Beobachter *e, uint8_t iq, uint8_t port){
-	modList(true, e, iq, port);
-
+void Dispatcher::abmelden(Beobachter *e){
+	beobachter.remove(e);
 }
 
-void Dispatcher::abmelden(Beobachter *e, uint8_t iq, uint8_t port){
-	modList(false, e, iq, port);
-}
 
 
 void Dispatcher::benachrichtige(PulsNachricht *nachricht){
-	list<Beobachter*> *temp = NULL;
-
-	if(nachricht->port == P_B){
-		switch(nachricht->iq){
-			case LICHTSCHRANKE_EINLAUF :
-				temp = &lichtschranke_einlauf;
-				break;
-			case LICHTSCHRANKE_HOEHENMESSUNG :
-				temp = &lichtschranke_hoehenmessung;
-				break;
-			case LICHTSCHRANKE_WEICHE :
-				temp = &lichtschranke_weiche;
-				break;
-			case LICHTSCHRANKE_AUSLAUF :
-				temp = &lichtschranke_auslauf;
-				break;
-			case HOEHENMESSUNG_CHECK :
-				temp = &hoehenmessung_check;
-				break;
-			case METALLDETEKTOR_CHECK :
-				temp = &metalldetektor_check;
-				break;
-			case WEICHE_OFFEN :
-				temp = &weiche_offen;
-				break;
-			case RUTSCHE_VOLL :
-				temp = &rutsche_voll;
-				break;
-			default:
-				break;
-		}
-	}
-
-	if(nachricht->port == P_C){
-		switch(nachricht->iq){
-			case TASTE_START :
-				temp = &taste_start;
-				break;
-			case TASTE_STOPP :
-				temp = &taste_stopp;
-				break;
-			case TASTE_RESET :
-				temp = &taste_reset;
-				break;
-			case TASTE_ESTOPP :
-				temp = &taste_estopp;
-				break;
-			default:
-				break;
-		}
-	}
-
-	if(nachricht->port == SYN_BAND_EINS){
-		switch (nachricht->iq) {
-		case VERLASSEN :
-			temp = &syn_verlassen;
-			break;
-		case UEBERGABE_START :
-			temp = &syn_uebergabe_start;
-			break;
-		case UEBERGABE_ENDE :
-			temp = &syn_uebergabe_ende;
-			break;
-		default:
-			break;
-		}
-	}
-
-	aktualisiereBeobachter(temp, nachricht->iq, nachricht->state);
-}
-
-void Dispatcher::aktualisiereBeobachter(list<Beobachter*> *l, uint8_t iq, uint8_t state){
-	list<Beobachter*>::iterator iter = (*l).begin();
-	list<Beobachter*>::iterator end = (*l).end();
+	list<Beobachter*>::iterator iter = beobachter.begin();
+	list<Beobachter*>::iterator end = beobachter.end();
+	bool execute = false;
 	for(; iter != end ; iter++){
-//		cout << &(*(*iter)) << endl;
-		(*iter)->aktualisiereSignale(iq, state);
-		(*iter)->execute();
+		execute = (*iter)->aktualisiereSignale(nachricht->port ,nachricht->iq, nachricht->state);
+		if(execute){
+			(*iter)->execute();
+		}else{
+			(*iter)->schreibeSignale();
+		}
 	}
-
 }
+
 
 void Dispatcher::execute(void *arg){
 	struct _pulse pulse;
@@ -231,18 +84,7 @@ void Dispatcher::initialize(){
 	signalChannelID = HAL::getInstance().getInterruptController()->getSignalChannelID();
 }
 
-void Dispatcher::addElement(list<Beobachter*> *l, Beobachter *e){
-//	cout << e << endl;
-	if (l != NULL) {
-		(*l).push_front(e);
-	}
-}
 
-void Dispatcher::removeElement(list<Beobachter*> *l, Beobachter *e){
-	if (l != NULL) {
-		(*l).remove(e);
-	}
-}
 
 void Dispatcher::ausgeben(PulsNachricht *nachricht)
 {
@@ -275,6 +117,22 @@ void Dispatcher::ausgeben(PulsNachricht *nachricht)
 			case LICHTSCHRANKE_AUSLAUF:
 				cout << "LICHTSCHRANKE_AUSLAUF";
 				break;
+		}
+	}
+
+	if(nachricht->port == SYN_BAND_EINS){
+		switch (nachricht->iq) {
+		case VERLASSEN :
+			cout << "VERLASSEN";
+			break;
+		case UEBERGABE_START :
+			cout << "UEBERGABE_START";
+			break;
+		case UEBERGABE_ENDE :
+			cout << "UEBERGABE_ENDE";
+			break;
+		default:
+			break;
 		}
 	}
 

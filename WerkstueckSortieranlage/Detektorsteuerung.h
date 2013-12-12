@@ -27,11 +27,11 @@ class Detektorsteuerung: public Beobachter{
 public:
 	virtual ~Detektorsteuerung();
 	static Detektorsteuerung* getInstance();
-	void aktualisiereSignale(uint8_t iq, uint8_t state);
+	bool aktualisiereSignale(uint8_t port, uint8_t iq, uint8_t state);
 	void execute();
 private:
-	uint8_t eingang[ANZ_EINGAENGE-1];
-	uint8_t plaetze[ANZ_PLAETZE-1];
+	uint8_t eingang[ANZ_EINGAENGE];
+	uint8_t plaetze[ANZ_PLAETZE];
 	Werkstueck *temp_ws;
 
 	static Detektorsteuerung *instance;

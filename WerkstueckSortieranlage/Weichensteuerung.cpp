@@ -14,12 +14,10 @@ Weichensteuerung *Weichensteuerung::instance = NULL;
 
 Weichensteuerung::Weichensteuerung() {
 	initNetz();
-	Dispatcher::getInstance()->anmelden(this, LICHTSCHRANKE_WEICHE, P_B);
-}
+	Dispatcher::getInstance()->anmelden(this);}
 
 Weichensteuerung::~Weichensteuerung() {
-	Dispatcher::getInstance()->abmelden(this, LICHTSCHRANKE_WEICHE, P_B);
-	delete instance;
+	Dispatcher::getInstance()->abmelden(this);	delete instance;
 	instance = NULL;
 }
 
@@ -39,15 +37,15 @@ void Weichensteuerung::initNetz(){
 	plaetze[FLANKE_P] = 1;
 	plaetze[FLANKE_N] = 0;
 	plaetze[SYN_FLANKE] = 0;
+	eingang[LICHTSCHRANKE] = 1;
+	eingang[RUTSCHE] = 1;
 }
 
 void Weichensteuerung::ladeWerkstueck(){
 	temp_ws = SynBandEins::getInstance()->popWerkstueckWeiche();
 	if ((*temp_ws).typ == ZU_FLACH) {
-		cout<< "zu flach" << endl;
 		eingang[HOEHE] = 0;
 	}else{
-		cout<< "nicht zu flach" << endl;
 		eingang[HOEHE] = 1;
 	}
 }
@@ -57,14 +55,32 @@ void Weichensteuerung::sendeWerkstueck(){
 	SynBandEins::getInstance()->pushWerkstueckUebergabe(temp_ws);
 }
 
-void Weichensteuerung::aktualisiereSignale(uint8_t iq, uint8_t state){
+bool Weichensteuerung::aktualisiereSignale(uint8_t port, uint8_t iq, uint8_t state){
+	bool execute = false;
 
-	 if(iq == LICHTSCHRANKE_WEICHE){
-		 eingang[LICHTSCHRANKE] = state;
-	 }
+	if(port == P_B){
+		if(iq == LICHTSCHRANKE_WEICHE){
+			eingang[LICHTSCHRANKE] = state;
+			execute = true;
+		}
+	}
+
+	if(port == P_B){
+		switch (iq) {
+				case LICHTSCHRANKE_WEICHE:
+					eingang[LICHTSCHRANKE] = state;
+					execute = true;
+					break;
+				case RUTSCHE_VOLL:
+					eingang[RUTSCHE] = state;
+					execute = true;
+				default:
+					break;
+			}
+	}
+
+	 return execute;
 }
-
-
 
 void Weichensteuerung::schreibeSignale(){
 	if(plaetze[TB_1] || plaetze[TB_2]){
@@ -100,7 +116,7 @@ void Weichensteuerung::transitionenAusfuehren(){
 	// Weiche
 	if(plaetze[SYN_FLANKE] && plaetze[GZ] && !plaetze[CHECK]){
 		plaetze[SYN_FLANKE] = 0;
-		plaetze[GZ] = plaetze[GZ] -1;
+		plaetze[GZ]--;
 		plaetze[CHECK] = 1;
 
 		ladeWerkstueck();
@@ -110,8 +126,18 @@ void Weichensteuerung::transitionenAusfuehren(){
 					plaetze[CHECK], plaetze[TB_1], plaetze[TB_2]);
 	}
 
-	if(plaetze[CHECK] && plaetze[GZ] < ANZ_MARKEN_W && eingang[LICHTSCHRANKE] && !eingang[HOEHE]){
+	if(plaetze[CHECK] && !plaetze[CHECK_R] && eingang[LICHTSCHRANKE] && !eingang[HOEHE]){
 		plaetze[CHECK] = 0;
+		plaetze[CHECK_R] = 1;
+		sendeWerkstueck();
+		printf("4: FLANKE_P: %i, FLANKE_N: %i, SYN_FLANKE: % i,  \n"
+				"GZ: %i, CHECK: %i, TB_1: %i, TB_2: %i\n"
+				" \n",plaetze[FLANKE_P], plaetze[FLANKE_N], plaetze[SYN_FLANKE], plaetze[GZ],
+					plaetze[CHECK], plaetze[TB_1], plaetze[TB_2]);
+	}
+
+	if(plaetze[CHECK_R] && plaetze[GZ] < ANZ_MARKEN_W && !eingang[RUTSCHE]){
+		plaetze[CHECK_R] = 0;
 		plaetze[GZ]++;
 		SynBandEins::getInstance()->inkrementSynVerlassen();
 		sendeWerkstueck();

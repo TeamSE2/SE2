@@ -12,14 +12,13 @@
 
 //init
 #define ANZ_PLAETZE_U 3
-#define ANZ_EINGAENGE_U 2
+#define ANZ_EINGAENGE_U 1
 // Plaetze
 #define GZ 0
 #define LESE 1
-#define WARTE_U 8
+#define WARTE_U 2
 // Eingangs Signale
 #define LICHTSCHRANKE 0
-#define READY 1
 
 namespace PetriNetzBandEins{
 
@@ -27,12 +26,12 @@ class Uebergabesteuerung: public Beobachter{
 public:
 	virtual ~Uebergabesteuerung();
 	static Uebergabesteuerung* getInstance();
-	void aktualisiereSignale(uint8_t iq, uint8_t state);
+	bool aktualisiereSignale(uint8_t port, uint8_t iq, uint8_t state);
 	void execute();
 private:
 	static Uebergabesteuerung *instance;
-	uint8_t eingang[ANZ_EINGAENGE_U-1];
-	uint8_t plaetze[ANZ_PLAETZE_U-1];
+	uint8_t eingang[ANZ_EINGAENGE_U];
+	uint8_t plaetze[ANZ_PLAETZE_U];
 	Werkstueck *temp_ws;
 
 	Uebergabesteuerung();

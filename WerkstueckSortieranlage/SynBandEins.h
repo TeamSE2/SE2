@@ -14,10 +14,12 @@
 #include "Uebergabesteuerung.h"
 #include "Auslaufsteuerung.h"
 
-#define ANZ_SYN 3
+// Laufband 1 Synchronisations Plaetze
+#define ANZ_SYN 4
 #define VERLASSEN 0
 #define UEBERGABE_START 1
 #define UEBERGABE_ENDE 2
+#define UEBERGABE_BEREIT 3
 
 using namespace std;
 namespace PetriNetzBandEins{
@@ -31,14 +33,17 @@ public:
 	void inkrementSynVerlassen();
 	void inkrementSynUebergabeStart();
 	void inkrementSynUebergabeEnde();
+	void inkrementSynUebergabeBereit();
 
 	void dekrementSynVerlassen();
 	void dekrementSynUebergabeStart();
 	void dekrementSynUebergabeEnde();
+	void dekrementSynUebergabeBereit();
 
 	uint8_t getSynVerlassen();
 	uint8_t getSynUebergabeStart();
 	uint8_t getSynUebergabeEnde();
+	uint8_t getSynUebergabeBereit();
 
 	void pushWerkstueckWeiche(struct Werkstueck *element);
 	void pushWerkstueckAuslauf(struct Werkstueck *element);
@@ -57,14 +62,13 @@ public:
 	struct Werkstueck* popWerkstueckDetektor();
 	struct Werkstueck* popWerkstueckUebergabe();
 
-
 	virtual ~SynBandEins();
 private:
 
 	int signalConnectionID;
 	bool motor_stop;
-	pthread_mutex_t mutex[ANZ_SYN-1];
-	uint8_t syn[ANZ_SYN-1];
+	pthread_mutex_t mutex[ANZ_SYN];
+	uint8_t syn[ANZ_SYN];
 	static SynBandEins *instance;
 
 	queue<struct Werkstueck*> queue_weiche;

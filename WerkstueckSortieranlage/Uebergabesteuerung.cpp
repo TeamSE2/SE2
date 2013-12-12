@@ -6,12 +6,10 @@ namespace PetriNetzBandEins {
 Uebergabesteuerung *Uebergabesteuerung::instance = NULL;
 
 Uebergabesteuerung::Uebergabesteuerung(){
-	Dispatcher::getInstance()->anmelden(this, LICHTSCHRANKE_AUSLAUF, P_B);
-}
+	Dispatcher::getInstance()->anmelden(this);}
 
 Uebergabesteuerung::~Uebergabesteuerung(){
-	Dispatcher::getInstance()->abmelden(this, LICHTSCHRANKE_AUSLAUF, P_B);
-
+	Dispatcher::getInstance()->abmelden(this);
 	delete instance;
 	instance = NULL;
 }
@@ -35,11 +33,30 @@ void Uebergabesteuerung::ladeWerkstueck(){
 	temp_ws = SynBandEins::getInstance()->popWerkstueckUebergabe();
 }
 
-void Uebergabesteuerung::aktualisiereSignale(uint8_t iq, uint8_t state){
+bool Uebergabesteuerung::aktualisiereSignale(uint8_t port, uint8_t iq, uint8_t state){
+	bool execute = false;
 
-	 if(iq == LICHTSCHRANKE_EINLAUF){
-		 eingang[LICHTSCHRANKE] = state;
-	 }
+ 	 if(port == P_B){
+ 		 if(iq == LICHTSCHRANKE_EINLAUF){
+ 			 eingang[LICHTSCHRANKE] = state;
+ 			 execute = true;
+ 		 }
+ 	 }
+
+ 	 if(port == SYN_BAND_EINS){
+ 		 switch (iq) {
+			case UEBERGABE_ENDE:
+				execute = true;
+				break;
+			case UEBERGABE_BEREIT:
+				execute = true;
+				break;
+			default:
+				break;
+		}
+ 	 }
+
+ 	 return execute;
 }
 
 void Uebergabesteuerung::schreibeSignale(){
@@ -63,7 +80,8 @@ void Uebergabesteuerung::transitionenAusfuehren(){
 		ladeWerkstueck();
 	}
 
-	if (plaetze[LESE] && !plaetze[WARTE_U] && eingang[READY]) {
+	if (plaetze[LESE] && !plaetze[WARTE_U] && SynBandEins::getInstance()->getSynUebergabeBereit()) {
+		SynBandEins::getInstance()->dekrementSynUebergabeBereit();
 		plaetze[LESE] = 0;
 		plaetze[WARTE_U] = 1;
 		SynBandEins::getInstance()->inkrementSynUebergabeStart();
