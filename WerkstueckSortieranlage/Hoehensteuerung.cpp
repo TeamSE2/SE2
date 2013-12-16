@@ -8,7 +8,8 @@ Hoehensteuerung *Hoehensteuerung::instance = NULL;
 
 Hoehensteuerung::Hoehensteuerung(){
 	initNetz();
-	Dispatcher::getInstance()->anmelden(this);}
+	Dispatcher::getInstance()->anmelden(this);
+}
 
 Hoehensteuerung::~Hoehensteuerung(){
 	Dispatcher::getInstance()->abmelden(this);

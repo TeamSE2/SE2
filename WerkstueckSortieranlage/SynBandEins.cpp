@@ -210,8 +210,8 @@ void SynBandEins::resetSignale(){
 
 void SynBandEins::aktualisiereSignale(){
 	HAL::getInstance().getMotor()->stopp(motor_stop);
+	Timer::getInstance().warten(motor_stop);
 	HAL::getInstance().getBedienpanel()->led_Resettaste(reset_led_an);
-	//todo timer stop
 }
 
 void SynBandEins::setMotorStop(){
