@@ -68,16 +68,24 @@ bool Hoehensteuerung::aktualisiereSignale(uint8_t port, uint8_t iq, uint8_t stat
 
 void Hoehensteuerung::schreibeSignale(){
 
-	if(plaetze[CHECK_L_2] && !eingang[LOCH_H]){
+	if(plaetze[CHECK_L_1] && !eingang[LOCH_H]){
 		if(checkLoch()){
 			eingang[LOCH_H] = 1;
-			(*temp_ws).typ = BOHRUNG_OBEN;
+
 		}else{
 			eingang[LOCH_H] = 0;
-			(*temp_ws).typ = BOHRUNG_UNTEN;
+
 		}
 
 		// todo: lese und speicher hoehenwert.
+	}
+
+	if(plaetze[CHECK_L_2]){
+		if(eingang[LOCH_H]){
+			(*temp_ws).typ = BOHRUNG_OBEN;
+		}else{
+			(*temp_ws).typ = BOHRUNG_UNTEN;
+		}
 	}
 
 	if(plaetze[CHECK_T] || plaetze[CHECK_L_1] || plaetze[CHECK_L_2]){

@@ -32,6 +32,32 @@ SynBandEins* SynBandEins::getInstance(){
 	return instance;
 }
 
+void SynBandEins::resetNetz(){
+	syn[VERLASSEN] = 0;
+	syn[UEBERGABE_START] = 0;
+	syn[UEBERGABE_ENDE] = 0;
+	syn[UEBERGABE_BEREIT] = 0;
+	queueClear(queue_weiche);
+	queueClear(queue_auslauf);
+	queueClear(queue_hoehenmessung);
+	queueClear(queue_detektor);
+	queueClear(queue_uebergabe);
+	resetSignale();
+
+	Einlaufsteuerung::getInstance()->initNetz();
+	Hoehensteuerung::getInstance()->initNetz();
+	Weichensteuerung::getInstance()->initNetz();
+	Detektorsteuerung::getInstance()->initNetz();
+	Uebergabesteuerung::getInstance()->initNetz();
+	Auslaufsteuerung::getInstance()->initNetz();
+}
+
+void SynBandEins::queueClear(queue<struct Werkstueck*> q){
+	while(!q.empty()){
+		q.pop();
+	}
+}
+
 void SynBandEins::inkrementSynVerlassen(){
 	syn[VERLASSEN]++;
 	sendeZustandswechsel(VERLASSEN);
@@ -137,6 +163,18 @@ struct Werkstueck* SynBandEins::popWerkstueckUebergabe(){
 	return popElement(&queue_uebergabe);
 }
 
+struct Werkstueck* SynBandEins::getWerkstueckWeiche(){
+	return getElement(&queue_weiche);
+}
+
+struct Werkstueck* SynBandEins::getWerkstueckAuslauf(){
+	return getElement(&queue_auslauf);
+}
+
+struct Werkstueck* SynBandEins::getWerkstueckHoehenmessung(){
+	return getElement(&queue_hoehenmessung);
+}
+
 
 void SynBandEins::pushElement(queue<struct Werkstueck*> *q, struct Werkstueck *element){
 	if(element != NULL){
@@ -155,28 +193,33 @@ struct Werkstueck* SynBandEins::popElement(queue<struct Werkstueck*> *q){
 	return temp;
 }
 
+struct Werkstueck* SynBandEins::getElement(queue<struct Werkstueck*> *q){
+	Werkstueck* temp = NULL;
+
+	if(!q->empty()){
+		temp = q->front();
+	}
+
+	return temp;
+}
+
 void SynBandEins::resetSignale(){
-	resetMotorStop();
+	motor_stop = false;
+	reset_led_an = false;
 }
 
 void SynBandEins::aktualisiereSignale(){
-	aktualisiereMotor();
+	HAL::getInstance().getMotor()->stopp(motor_stop);
+	HAL::getInstance().getBedienpanel()->led_Resettaste(reset_led_an);
+	//todo timer stop
 }
 
 void SynBandEins::setMotorStop(){
 	motor_stop = true;
 }
 
-void SynBandEins::resetMotorStop(){
-	motor_stop = false;
-}
-
-void SynBandEins::aktualisiereMotor(){
-	if(motor_stop){
-		HAL::getInstance().getMotor()->stopp(true);
-	} else{
-		HAL::getInstance().getMotor()->stopp(false);
-	}
+void SynBandEins::setResetLED(){
+	reset_led_an = true;
 }
 
 void SynBandEins::initialize(){

@@ -28,6 +28,7 @@ public:
 	static Uebergabesteuerung* getInstance();
 	bool aktualisiereSignale(uint8_t port, uint8_t iq, uint8_t state);
 	void execute();
+	void initNetz();
 private:
 	static Uebergabesteuerung *instance;
 	uint8_t eingang[ANZ_EINGAENGE_U];
@@ -35,7 +36,6 @@ private:
 	Werkstueck *temp_ws;
 
 	Uebergabesteuerung();
-	void initNetz();
 	void ladeWerkstueck();
 	void schreibeSignale();
 	void transitionenAusfuehren();

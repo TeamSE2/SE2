@@ -25,6 +25,7 @@ Einlaufsteuerung::~Einlaufsteuerung(){
 }
 
 void Einlaufsteuerung::initNetz(){
+	werkstueck_id = 1;
 	plaetze[GZ] = ANZ_MARKEN_E;
 	plaetze[EINLAUF] = 0;
 	plaetze[WARTE_E] = 0;

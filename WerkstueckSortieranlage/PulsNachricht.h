@@ -13,6 +13,7 @@
 #define P_B 1 //Port B
 #define P_C 2 //Port C
 #define SYN_BAND_EINS 3 // Laufband 1 Synchronisations
+#define SYN_BAND_ZWEI 4 // Laufband 2 Synchronisations
 
 typedef struct puls_nachricht{
 	uint8_t port: 8;

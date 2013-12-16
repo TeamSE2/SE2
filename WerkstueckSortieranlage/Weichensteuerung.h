@@ -43,6 +43,7 @@ public:
 	static Weichensteuerung* getInstance();
 	bool aktualisiereSignale(uint8_t port, uint8_t iq, uint8_t state);
 	void execute();
+	void initNetz();
 private:
 	uint8_t eingang[ANZ_EINGAENGE_W];
 	uint8_t plaetze[ANZ_PLAETZE_W];
@@ -50,7 +51,6 @@ private:
 
 	static Weichensteuerung *instance;
 	Weichensteuerung();
-	void initNetz();
 	void ladeWerkstueck();
 	void sendeWerkstueck();
 	void schreibeSignale();

@@ -33,6 +33,7 @@ public:
 	static Auslaufsteuerung* getInstance();
 	bool aktualisiereSignale(uint8_t port, uint8_t iq, uint8_t state);
 	void execute();
+	void initNetz();
 private:
 	Auslaufsteuerung();
 	uint8_t eingang[ANZ_EINGAENGE_A];
@@ -40,7 +41,7 @@ private:
 	Werkstueck *temp_ws;
 
 	static Auslaufsteuerung *instance;
-	void initNetz();
+
 	void ladeWerkstueck();
 	void schreibeSignale();
 	void transitionenAusfuehren();

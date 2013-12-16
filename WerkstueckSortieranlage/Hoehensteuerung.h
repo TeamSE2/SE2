@@ -33,6 +33,7 @@ public:
 	static Hoehensteuerung* getInstance();
 	bool aktualisiereSignale(uint8_t port, uint8_t iq, uint8_t state);
 	void execute();
+	void initNetz();
 private:
 	uint8_t eingang[ANZ_EINGAENGE_H];
 	uint8_t plaetze[ANZ_PLAETZE_H];
@@ -40,7 +41,6 @@ private:
 
 	static Hoehensteuerung *instance;
 	Hoehensteuerung();
-	void initNetz();
 	void ladeWerkstueck();
 	void sendeWerkstueck();
 	void schreibeSignale();

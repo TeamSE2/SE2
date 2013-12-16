@@ -30,6 +30,7 @@ public:
 
 
 	static SynBandEins* getInstance();
+	void resetNetz();
 	void inkrementSynVerlassen();
 	void inkrementSynUebergabeStart();
 	void inkrementSynUebergabeEnde();
@@ -53,8 +54,7 @@ public:
 	void resetSignale();
 	void aktualisiereSignale();
 	void setMotorStop();
-	void resetMotorStop();
-	void aktualisiereMotor();
+	void setResetLED();
 
 	struct Werkstueck* popWerkstueckWeiche();
 	struct Werkstueck* popWerkstueckAuslauf();
@@ -62,11 +62,16 @@ public:
 	struct Werkstueck* popWerkstueckDetektor();
 	struct Werkstueck* popWerkstueckUebergabe();
 
+	struct Werkstueck* getWerkstueckWeiche();
+	struct Werkstueck* getWerkstueckAuslauf();
+	struct Werkstueck* getWerkstueckHoehenmessung();
+
 	virtual ~SynBandEins();
 private:
 
 	int signalConnectionID;
 	bool motor_stop;
+	bool reset_led_an;
 	pthread_mutex_t mutex[ANZ_SYN];
 	uint8_t syn[ANZ_SYN];
 	static SynBandEins *instance;
@@ -82,7 +87,9 @@ private:
 	struct Werkstueck* popElement();
 	void pushElement(queue<struct Werkstueck*> *q, struct Werkstueck *element);
 	struct Werkstueck* popElement(queue<struct Werkstueck*> *q);
+	struct Werkstueck* getElement(queue<struct Werkstueck*> *q);
 	void sendeZustandswechsel(uint8_t iq);
+	void queueClear(queue<struct Werkstueck*> q);
 };
 }
 #endif

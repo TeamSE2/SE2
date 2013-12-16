@@ -83,6 +83,11 @@ void Auslaufsteuerung::schreibeSignale(){
 		SynBandEins::getInstance()->setMotorStop();
 		//stop Timer
 	}
+	if(plaetze[WENDEN_1] || plaetze[WENDEN_2]){
+		HAL::getInstance().getAmpel()->gelbBlinken(1000);
+	}else{
+		HAL::getInstance().getAmpel()->gelb(false);
+	}
 
 
 }

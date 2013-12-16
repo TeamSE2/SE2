@@ -29,6 +29,7 @@ public:
 	static Einlaufsteuerung* getInstance();
 	bool aktualisiereSignale(uint8_t port, uint8_t iq, uint8_t state);
 	void execute();
+	void initNetz();
 private:
 	static Einlaufsteuerung *instance;
 	static long werkstueck_id;
@@ -37,13 +38,9 @@ private:
 	uint8_t plaetze[ANZ_PLAETZE_E];
 
 	Einlaufsteuerung();
-	void initNetz();
-	void leseSignale();
 	void schreibeSignale();
 	void transitionenAusfuehren();
 	void registriereWerkstueck();
-
-
 };
 
 }
