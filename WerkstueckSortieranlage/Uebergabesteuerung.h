@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include "HAWThread.h"
-#include "Werkstueck.h"
+#include "WerkstueckDaten.h"
 #include "Beobachter.h"
 #include "SynBandEins.h"
 #include "HAL.h"
@@ -33,7 +33,7 @@ private:
 	static Uebergabesteuerung *instance;
 	uint8_t eingang[ANZ_EINGAENGE_U];
 	uint8_t plaetze[ANZ_PLAETZE_U];
-	Werkstueck *temp_ws;
+	WerkstueckDaten *temp_ws;
 
 	Uebergabesteuerung();
 	void ladeWerkstueck();

@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include "SynBandEins.h"
-#include "Werkstueck.h"
+#include "WerkstueckDaten.h"
 #include "HAWThread.h"
 #include "Beobachter.h"
 #include "HAL.h"
@@ -33,7 +33,7 @@ public:
 private:
 	uint8_t eingang[ANZ_EINGAENGE];
 	uint8_t plaetze[ANZ_PLAETZE];
-	Werkstueck *temp_ws;
+	WerkstueckDaten *temp_ws;
 
 	static Detektorsteuerung *instance;
 	Detektorsteuerung();

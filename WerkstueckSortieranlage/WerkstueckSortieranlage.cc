@@ -112,7 +112,13 @@ int main(int argc, char *argv[])
 		cout << "WerkstueckSortieranlage: Normaler Betrieb" << endl;
 			Dispatcher::getInstance()->start(NULL);
 			SynBandEins::getInstance();
-			sleep(200);
+
+			string text = NULL;
+			while(text != "exit"){
+				cin >> text;
+			}
+//			sleep(200);
+
 			Dispatcher::getInstance()->stop();
 			Dispatcher::getInstance()->join();
 	}

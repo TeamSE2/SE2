@@ -10,7 +10,7 @@
 
 #include <stdint.h>
 #include <stdlib.h>
-#include "Werkstueck.h"
+#include "WerkstueckDaten.h"
 #include "HAWThread.h"
 #include "SynBandEins.h"
 #include "HAL.h"
@@ -47,7 +47,7 @@ public:
 private:
 	uint8_t eingang[ANZ_EINGAENGE_W];
 	uint8_t plaetze[ANZ_PLAETZE_W];
-	Werkstueck *temp_ws;
+	WerkstueckDaten *temp_ws;
 
 	static Weichensteuerung *instance;
 	Weichensteuerung();

@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <queue>
-#include "Werkstueck.h"
+#include "WerkstueckDaten.h"
 #include "PulsNachricht.h"
 #include "HAL.h"
 #include "Einlaufsteuerung.h"
@@ -13,7 +13,8 @@
 #include "Detektorsteuerung.h"
 #include "Uebergabesteuerung.h"
 #include "Auslaufsteuerung.h"
-#include "timer.h"
+//#include "timer.h"
+#include "SerielleSchnittstelle.h"
 
 // Laufband 1 Synchronisations Plaetze
 #define ANZ_SYN 4
@@ -56,6 +57,7 @@ public:
 	void aktualisiereSignale();
 	void setMotorStop();
 	void setResetLED();
+	void setAmpelGruenAus();
 
 	struct Werkstueck* popWerkstueckWeiche();
 	struct Werkstueck* popWerkstueckAuslauf();
@@ -73,6 +75,7 @@ private:
 	int signalConnectionID;
 	bool motor_stop;
 	bool reset_led_an;
+	bool ampel_gruen;
 	pthread_mutex_t mutex[ANZ_SYN];
 	uint8_t syn[ANZ_SYN];
 	static SynBandEins *instance;

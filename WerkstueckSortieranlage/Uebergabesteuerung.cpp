@@ -62,12 +62,11 @@ bool Uebergabesteuerung::aktualisiereSignale(uint8_t port, uint8_t iq, uint8_t s
 void Uebergabesteuerung::schreibeSignale(){
 
 	if (plaetze[WARTE_U]) {
-		//Timer start
+		SerielleSchnittstelle::getInstance().sendeWerkstueckDaten(temp_ws);
 	}
 
 	if(plaetze[LESE]){
 		SynBandEins::getInstance()->setMotorStop();
-		//Timer pause
 	}
 
 }

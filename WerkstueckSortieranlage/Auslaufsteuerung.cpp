@@ -85,6 +85,7 @@ void Auslaufsteuerung::schreibeSignale(){
 	}
 	if(plaetze[WENDEN_1] || plaetze[WENDEN_2]){
 		HAL::getInstance().getAmpel()->gelbBlinken(1000);
+		SynBandEins::getInstance()->setAmpelGruenAus();
 	}else{
 		HAL::getInstance().getAmpel()->gelb(false);
 	}

@@ -12,7 +12,7 @@
 
 #include "TestSerielleSchnittstelle.h"
 #include "SerielleSchnittstelle.h"
-#include "Werkstueck.h"
+#include "WerkstueckDaten.h"
 
 using namespace std;
 
@@ -77,7 +77,7 @@ void TestSerielleSchnittstelle::senden()
 	werkstueck.hoehen[0] = (rand() % 100000) / 10000.0;
 	werkstueck.hoehen[1] = (rand() % 100000) / 10000.0;
 
-	SerielleSchnittstelle::getInstance().sendeWerkstueck(&werkstueck);
+	SerielleSchnittstelle::getInstance().sendeWerkstueckDaten(&werkstueck);
 
 	cout << "Werkstueck gesendet" << endl;
 	cout << "    ID: " << werkstueck.id << endl;
@@ -97,7 +97,7 @@ void TestSerielleSchnittstelle::empfangen()
 {
 	struct Werkstueck werkstueck;
 
-	SerielleSchnittstelle::getInstance().empfangeWerkstueck(&werkstueck);
+	SerielleSchnittstelle::getInstance().empfangeWerkstueckDaten(&werkstueck);
 
 	cout << "Werkstueck empfangen" << endl;
 	cout << "    ID: " << werkstueck.id << endl;

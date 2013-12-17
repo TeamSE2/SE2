@@ -20,6 +20,9 @@ public:
 	void abmelden(Beobachter *e);
 	void benachrichtige(PulsNachricht *nachricht);
 
+	int getDispatcherConnectionID();
+	int getDispatcherChannelID();
+
 	void execute(void *arg);
 	void shutdown();
 private:
@@ -27,7 +30,8 @@ private:
 
 	list<Beobachter*> beobachter;
 
-	int signalChannelID;
+	int dispatcherConnectionID;
+	int dispatcherChannelID;
 
 	Dispatcher();
 	void initialize();

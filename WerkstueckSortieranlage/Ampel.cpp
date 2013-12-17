@@ -141,7 +141,7 @@ void Ampel::blinkerStopp(Blinker *blinker)
 	if(blinker != NULL)
 	{
 		blinker->stop();
-		blinker->join();
+//		blinker->join();
 
 		delete blinker;
 	}

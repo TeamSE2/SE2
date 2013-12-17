@@ -9,6 +9,8 @@
 #include <libc.h>
 
 #include "SerielleSchnittstelle.h"
+#include "HAL.h"
+#include "Dispatcher.h"
 
 /**
  * SerielleSchnittstelle Konstruktor
@@ -47,6 +49,94 @@ SerielleSchnittstelle& SerielleSchnittstelle::getInstance()
 	return serielleSchnittstelle;
 }
 
+void SerielleSchnittstelle::initialize()
+{
+	/*
+	dispatcherConnectionID = ConnectAttach(0, 0, Dispatcher::getInstance().getDispatcherChannelID(), _NTO_SIDE_CHANNEL, 0);
+
+	if(dispatcherConnectionID == -1)
+	{
+		perror("SerielleSchnittstelle: dispatcherConnectionID ConnectAttach fehlgeschlagen");
+
+		exit(EXIT_FAILURE);
+	}
+	*/
+
+	dispatcherConnectionID = Dispatcher::getInstance()->getDispatcherConnectionID();
+}
+
+void SerielleSchnittstelle::execute(void *arg)
+{
+	Nachricht nachricht;
+
+	initialize();
+
+	while(!isStopped())
+	{
+		empfangeNachricht(&nachricht);
+
+		switch(nachricht)
+		{
+			case RESET_P:
+				sendePulsMessage(nachricht, 1);
+				break;
+			case RESET_N:
+				sendePulsMessage(nachricht, 0);
+				break;
+			case ESTOPP_P:
+				sendePulsMessage(nachricht, 1);
+				break;
+			case ESTOPP_N:
+				sendePulsMessage(nachricht, 0);
+				break;
+			case WERKSTUECK:
+				empfangeWerkstueckDaten(&werkstueckDaten);
+				break;
+			case EMPFANGS_BEREIT:
+				PetriNetzBandEins::SynBandEins::getInstance()->inkrementSynUebergabeBereit();
+				break;
+		}
+//		MsgSendPulse(dispatcherConnectionID, SIGEV_PULSE_PRIO_INHERIT, SERIAL_PULSE_CODE, nachricht);
+	}
+}
+
+void SerielleSchnittstelle::shutdown()
+{
+}
+
+void SerielleSchnittstelle::sendePulsMessage(uint8_t iq, uint8_t state){
+	PulsNachricht nachricht;
+	int *val = NULL;
+	int code = state;
+
+	nachricht.port = FEHLER;
+	nachricht.iq = iq;
+	nachricht.state = state;
+	val = (int*)(&nachricht);
+
+	MsgSendPulse(dispatcherConnectionID, SIGEV_PULSE_PRIO_INHERIT, code, *val);
+}
+
+void SerielleSchnittstelle::stop()
+{
+	HAWThread::stop();
+
+	if(ConnectDetach(dispatcherConnectionID) == -1)
+	{
+		perror("SerielleSchnittstelle: dispatcherConnectionID ConnectDetach fehlgeschlagen");
+	}
+}
+
+void SerielleSchnittstelle::sendeNachricht(const Nachricht nachricht)
+{
+	sendeDaten(&nachricht, sizeof(Nachricht));
+}
+
+void SerielleSchnittstelle::empfangeNachricht(Nachricht* nachricht)
+{
+	empfangeDaten(nachricht, sizeof(Nachricht));
+}
+
 /**
  * Sendet die Daten zu einem Werkstueck.
  *
@@ -55,9 +145,9 @@ SerielleSchnittstelle& SerielleSchnittstelle::getInstance()
  * Sendet das Werkstueck mittels sendeDaten().
  */
 
-void SerielleSchnittstelle::sendeWerkstueck(const Werkstueck* werkstueck)
+void SerielleSchnittstelle::sendeWerkstueckDaten(const WerkstueckDaten* werkstueckDaten)
 {
-	sendeDaten(werkstueck, sizeof(Werkstueck));
+	sendeDaten(werkstueckDaten, sizeof(WerkstueckDaten));
 }
 
 /**
@@ -68,9 +158,14 @@ void SerielleSchnittstelle::sendeWerkstueck(const Werkstueck* werkstueck)
  * Empfaengt das Werkstueck mittels empfangeDaten().
  */
 
-void SerielleSchnittstelle::empfangeWerkstueck(Werkstueck* werkstueck)
+void SerielleSchnittstelle::empfangeWerkstueckDaten(WerkstueckDaten* werkstueckDaten)
 {
-	empfangeDaten(werkstueck, sizeof(Werkstueck));
+	empfangeDaten(werkstueckDaten, sizeof(WerkstueckDaten));
+}
+
+WerkstueckDaten SerielleSchnittstelle::getWerkstueckDaten()
+{
+	return werkstueckDaten;
 }
 
 /**
@@ -121,7 +216,7 @@ void SerielleSchnittstelle::empfangeDaten(void* buf, ssize_t nbyte)
 {
 	int fileDescriptor;
 
-	pthread_mutex_lock(&mutex);
+//	pthread_mutex_lock(&mutex);
 
 	fileDescriptor = open(DEVICE, O_RDWR | O_NOCTTY);
 
@@ -129,5 +224,5 @@ void SerielleSchnittstelle::empfangeDaten(void* buf, ssize_t nbyte)
 
 	close(fileDescriptor);
 
-	pthread_mutex_unlock(&mutex);
+//	pthread_mutex_unlock(&mutex);
 }

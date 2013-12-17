@@ -2,7 +2,7 @@
 #define AUSLAUFSTEUERUNG_H
 #include <stdint.h>
 #include <stdlib.h>
-#include "Werkstueck.h"
+#include "WerkstueckDaten.h"
 #include "HAWThread.h"
 #include "Beobachter.h"
 #include "SynBandEins.h"
@@ -38,7 +38,7 @@ private:
 	Auslaufsteuerung();
 	uint8_t eingang[ANZ_EINGAENGE_A];
 	uint8_t plaetze[ANZ_PLAETZE_A];
-	Werkstueck *temp_ws;
+	WerkstueckDaten *temp_ws;
 
 	static Auslaufsteuerung *instance;
 

@@ -20,6 +20,8 @@ SynBandEins::~SynBandEins(){
 	delete Detektorsteuerung::getInstance();
 	delete Uebergabesteuerung::getInstance();
 	delete Auslaufsteuerung::getInstance();
+//	delete Fehlersteuerung::getInstance();
+//	delete Notaussteuerung::getInstance();
 
 }
 
@@ -206,12 +208,14 @@ struct Werkstueck* SynBandEins::getElement(queue<struct Werkstueck*> *q){
 void SynBandEins::resetSignale(){
 	motor_stop = false;
 	reset_led_an = false;
+	ampel_gruen = true;
 }
 
 void SynBandEins::aktualisiereSignale(){
 	HAL::getInstance().getMotor()->stopp(motor_stop);
-	Timer::getInstance().warten(motor_stop);
+//	Timer::getInstance().warten(motor_stop);
 	HAL::getInstance().getBedienpanel()->led_Resettaste(reset_led_an);
+	HAL::getInstance().getAmpel()->gruen(ampel_gruen);
 }
 
 void SynBandEins::setMotorStop(){
@@ -220,6 +224,10 @@ void SynBandEins::setMotorStop(){
 
 void SynBandEins::setResetLED(){
 	reset_led_an = true;
+}
+
+void SynBandEins::setAmpelGruenAus(){
+	ampel_gruen = false;
 }
 
 void SynBandEins::initialize(){
@@ -231,6 +239,8 @@ void SynBandEins::initialize(){
 	Detektorsteuerung::getInstance();
 	Uebergabesteuerung::getInstance();
 	Auslaufsteuerung::getInstance();
+//	Fehlersteuerung::getInstance();
+//	Notaussteuerung::getInstance();
 }
 
 }

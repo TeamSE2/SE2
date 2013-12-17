@@ -10,9 +10,21 @@
 
 #include <pthread.h>
 
-#include "Werkstueck.h"
+#include "HAWThread.h"
+#include "WerkstueckDaten.h"
+#include "SynBandEins.h"
 
 #define DEVICE "/dev/ser1"
+
+enum Nachricht
+{
+	RESET_P,
+	RESET_N,
+	ESTOPP_P,
+	ESTOPP_N,
+	WERKSTUECK,
+	EMPFANGS_BEREIT
+};
 
 /**
  * Ueber die SerielleSchnittstelle kommunizieren die beiden Fliessbandanlagen miteinander.
@@ -21,18 +33,28 @@
  * Hier werden Methoden zur Verfuegung gestellt, um Daten ueber die SerielleSchnittstelle zu senden oder zu empfangen.
  */
 
-class SerielleSchnittstelle
+class SerielleSchnittstelle: public thread::HAWThread
 {
 public:
 	static SerielleSchnittstelle& getInstance();
-	void sendeWerkstueck(const Werkstueck* werkstueck);
-	void empfangeWerkstueck(Werkstueck* werkstueck);
+	virtual void execute(void *arg);
+	virtual void shutdown();
+	void stop();
+	void sendeNachricht(const Nachricht nachricht);
+	void empfangeNachricht(Nachricht* nachricht);
+	void sendeWerkstueckDaten(const WerkstueckDaten* werkstueckDaten);
+	void empfangeWerkstueckDaten(WerkstueckDaten* werkstueckDaten);
+	WerkstueckDaten getWerkstueckDaten();
 private:
 	SerielleSchnittstelle();
 	virtual ~SerielleSchnittstelle();
+	void initialize();
 	void sendeDaten(const void* buf, ssize_t nbyte);
 	void empfangeDaten(void* buf, ssize_t nbyte);
+	void sendePulsMessage(uint8_t iq, uint8_t state);
+	int dispatcherConnectionID;
 	pthread_mutex_t mutex;
+	WerkstueckDaten werkstueckDaten;
 };
 
 #endif /* SERIELLESCHNITTSTELLE_H */

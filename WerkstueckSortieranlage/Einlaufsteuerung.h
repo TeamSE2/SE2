@@ -7,8 +7,9 @@
 #include "Beobachter.h"
 #include "SynBandEins.h"
 #include "Dispatcher.h"
-#include "Werkstueck.h"
+#include "WerkstueckDaten.h"
 #include "HAL.h"
+
 //init
 #define ANZ_PLAETZE_E 3
 #define ANZ_EINGABE_E 2

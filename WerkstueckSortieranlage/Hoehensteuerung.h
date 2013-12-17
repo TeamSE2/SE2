@@ -4,7 +4,7 @@
 #define HOEHENSTEUERUNG_H_
 #include <stdint.h>
 #include <stdlib.h>
-#include "Werkstueck.h"
+#include "WerkstueckDaten.h"
 #include "HAWThread.h"
 #include "SynBandEins.h"
 #include "HAL.h"
@@ -37,7 +37,7 @@ public:
 private:
 	uint8_t eingang[ANZ_EINGAENGE_H];
 	uint8_t plaetze[ANZ_PLAETZE_H];
-	Werkstueck *temp_ws;
+	WerkstueckDaten *temp_ws;
 
 	static Hoehensteuerung *instance;
 	Hoehensteuerung();

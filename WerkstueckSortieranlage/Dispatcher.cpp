@@ -52,7 +52,7 @@ void Dispatcher::execute(void *arg){
 	initialize();
 	while(!isStopped())
 	{
-		if(MsgReceivePulse(signalChannelID, &pulse, sizeof(pulse), NULL) == -1)
+		if(MsgReceivePulse(dispatcherChannelID, &pulse, sizeof(pulse), NULL) == -1)
 		{
 			if(isStopped())
 			{
@@ -81,9 +81,19 @@ void Dispatcher::shutdown(){
 }
 
 void Dispatcher::initialize(){
-	signalChannelID = HAL::getInstance().getInterruptController()->getSignalChannelID();
+	dispatcherChannelID = HAL::getInstance().getInterruptController()->getSignalChannelID();
+	dispatcherConnectionID = HAL::getInstance().getInterruptController()->getSignalConnectionID();
 }
 
+int Dispatcher::getDispatcherConnectionID()
+{
+	return dispatcherChannelID;
+}
+
+int Dispatcher::getDispatcherChannelID()
+{
+	return dispatcherChannelID;
+}
 
 
 void Dispatcher::ausgeben(PulsNachricht *nachricht)
