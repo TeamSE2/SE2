@@ -111,13 +111,15 @@ int main(int argc, char *argv[])
 	{
 		cout << "WerkstueckSortieranlage: Normaler Betrieb" << endl;
 			Dispatcher::getInstance()->start(NULL);
+			SerielleSchnittstelle::getInstance().start(NULL);
 			SynBandEins::getInstance();
 
-			string text = NULL;
-			while(text != "exit"){
-				cin >> text;
+			string eingabe;
+			do
+			{
+				getline(cin, eingabe);
 			}
-//			sleep(200);
+			while(eingabe.compare("exit") != 0);
 
 			Dispatcher::getInstance()->stop();
 			Dispatcher::getInstance()->join();

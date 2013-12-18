@@ -27,7 +27,7 @@
 typedef struct puls_nachricht{
 	uint8_t port: 8;
 	uint8_t state: 1;
-	int iq: 23;
+	uint32_t iq: 23;
 
 } PulsNachricht;
 

@@ -6,6 +6,7 @@ namespace PetriNetzBandEins {
 Uebergabesteuerung *Uebergabesteuerung::instance = NULL;
 
 Uebergabesteuerung::Uebergabesteuerung(){
+	initNetz();
 	Dispatcher::getInstance()->anmelden(this);}
 
 Uebergabesteuerung::~Uebergabesteuerung(){
@@ -26,6 +27,7 @@ void Uebergabesteuerung::initNetz(){
 	plaetze[GZ] = 1;
 	plaetze[LESE] = 0;
 	plaetze[WARTE_U] = 0;
+	eingang[LICHTSCHRANKE] = 1;
 }
 
 void Uebergabesteuerung::ladeWerkstueck(){
@@ -37,7 +39,7 @@ bool Uebergabesteuerung::aktualisiereSignale(uint8_t port, uint8_t iq, uint8_t s
 	bool execute = false;
 
  	 if(port == P_B){
- 		 if(iq == LICHTSCHRANKE_EINLAUF){
+ 		 if(iq == LICHTSCHRANKE_AUSLAUF){
  			 eingang[LICHTSCHRANKE] = state;
  			 execute = true;
  		 }
@@ -61,10 +63,6 @@ bool Uebergabesteuerung::aktualisiereSignale(uint8_t port, uint8_t iq, uint8_t s
 
 void Uebergabesteuerung::schreibeSignale(){
 
-	if (plaetze[WARTE_U]) {
-		SerielleSchnittstelle::getInstance().sendeWerkstueckDaten(temp_ws);
-	}
-
 	if(plaetze[LESE]){
 		SynBandEins::getInstance()->setMotorStop();
 	}
@@ -77,6 +75,8 @@ void Uebergabesteuerung::transitionenAusfuehren(){
 		plaetze[GZ] = 0;
 		plaetze[LESE] = 1;
 		ladeWerkstueck();
+		printf("\nUebergabe: 1:  GZ: %i, LESE: %i, WARTE_U: %i\n",plaetze[GZ], plaetze[LESE], plaetze[WARTE_U]);
+
 	}
 
 	if (plaetze[LESE] && !plaetze[WARTE_U] && SynBandEins::getInstance()->getSynUebergabeBereit()) {
@@ -84,12 +84,16 @@ void Uebergabesteuerung::transitionenAusfuehren(){
 		plaetze[LESE] = 0;
 		plaetze[WARTE_U] = 1;
 		SynBandEins::getInstance()->inkrementSynUebergabeStart();
+		printf("\nUebergabe: 2:  GZ: %i, LESE: %i, WARTE_U: %i\n",plaetze[GZ], plaetze[LESE], plaetze[WARTE_U]);
 	}
 
 	if (plaetze[WARTE_U] && !plaetze[GZ] && SynBandEins::getInstance()->getSynUebergabeEnde()) {
 		plaetze[WARTE_U] = 0;
 		SynBandEins::getInstance()->dekrementSynUebergabeEnde();
+		SerielleSchnittstelle::getInstance().sendeNachricht(WERKSTUECK);
+		SerielleSchnittstelle::getInstance().sendeWerkstueckDaten(temp_ws);
 		plaetze[GZ] = 1;
+		printf("\nUebergabe: 3:  GZ: %i, LESE: %i, WARTE_U: %i\n",plaetze[GZ], plaetze[LESE], plaetze[WARTE_U]);
 	}
 }
 

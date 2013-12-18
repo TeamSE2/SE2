@@ -39,6 +39,7 @@ const struct sigevent* interruptServiceRoutine(void *arg, int id)
 
 		val = (in8(PORT_B) << 8) | (in8(PORT_C) & 0xF0);
 
+
 		SIGEV_PULSE_INIT(event, isrConnectionID, SIGEV_PULSE_PRIO_INHERIT, status, val);
 	}
 	else
@@ -178,6 +179,7 @@ void InterruptController::execute(void *arg)
 						nachricht.port = P_B;
 						nachricht.iq = iq >> 8;
 					}
+//					printf("\nController:  Port: %i, IQ: %i, State: %i !!!!!!!!!!!!!!!!!!!\n",nachricht.port, nachricht.iq, nachricht.state);
 
 					val = (int*)(&nachricht);
 					MsgSendPulse(signalConnectionID, SIGEV_PULSE_PRIO_INHERIT, code, *val);

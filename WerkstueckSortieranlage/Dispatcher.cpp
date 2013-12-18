@@ -66,6 +66,8 @@ void Dispatcher::execute(void *arg){
 		else
 		{
 			nachricht = (PulsNachricht*) &pulse.value.sival_int;
+//			printf("\nDispatcher:  Port: %i, IQ: %i, State: %i !!!!!!!!!!!!!!!!!!!\n",nachricht->port, nachricht->iq, nachricht->state);
+
 			ausgeben(nachricht);
 			SynBandEins::getInstance()->resetSignale();
 			benachrichtige(nachricht);
@@ -130,21 +132,7 @@ void Dispatcher::ausgeben(PulsNachricht *nachricht)
 		}
 	}
 
-	if(nachricht->port == SYN_BAND_EINS){
-		switch (nachricht->iq) {
-		case VERLASSEN :
-			cout << "VERLASSEN";
-			break;
-		case UEBERGABE_START :
-			cout << "UEBERGABE_START";
-			break;
-		case UEBERGABE_ENDE :
-			cout << "UEBERGABE_ENDE";
-			break;
-		default:
-			break;
-		}
-	}
+
 
 	if(nachricht->port == P_C)
 	{

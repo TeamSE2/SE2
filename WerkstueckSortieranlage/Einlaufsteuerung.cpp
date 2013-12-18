@@ -53,6 +53,7 @@ bool Einlaufsteuerung::aktualisiereSignale(uint8_t port, uint8_t iq, uint8_t sta
 
 void Einlaufsteuerung::registriereWerkstueck(){
 	WerkstueckDaten *neues_ws = NULL;
+
 	neues_ws = (WerkstueckDaten*) malloc(sizeof(WerkstueckDaten));
 
 	(*neues_ws).id = (werkstueck_id % MAX_ID);
