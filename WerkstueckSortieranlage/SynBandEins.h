@@ -13,8 +13,8 @@
 #include "Detektorsteuerung.h"
 #include "Uebergabesteuerung.h"
 #include "Auslaufsteuerung.h"
-//#include "timer.h"
-#include "SerielleSchnittstelle.h"
+#include "Fehlersteuerung.h"
+#include "Notaussteuerung.h"
 
 // Laufband 1 Synchronisations Plaetze
 #define ANZ_SYN 4

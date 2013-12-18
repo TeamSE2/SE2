@@ -107,9 +107,8 @@ void SerielleSchnittstelle::shutdown()
 void SerielleSchnittstelle::sendePulsMessage(uint8_t iq, uint8_t state){
 	PulsNachricht nachricht;
 	int *val = NULL;
-	int code = state;
+	int code = FEHLER;
 
-	nachricht.port = FEHLER;
 	nachricht.iq = iq;
 	nachricht.state = state;
 	val = (int*)(&nachricht);

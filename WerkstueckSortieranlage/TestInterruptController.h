@@ -26,7 +26,7 @@ public:
 	virtual void execute(void *arg);
 	virtual void shutdown();
 private:
-	void ausgeben(PulsNachricht *nachricht);
+	void ausgeben(uint8_t port, PulsNachricht *nachricht);
 	//void ausgeben(bool code, int val);
 	void initialize();
 	int signalChannelID;

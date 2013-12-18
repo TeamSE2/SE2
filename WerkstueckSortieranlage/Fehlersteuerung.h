@@ -55,6 +55,15 @@
 #define TB_W 14
 #define TB_A 15
 
+// Spezielle Interrupt quellen fuer Timer
+#define ANZ_LS_TIMER 5
+#define T_E 0
+#define T_H 1
+#define T_W 2
+#define T_A 3
+#define T_R 4
+
+
 #define RESET 16
 
 namespace PetriNetzBandEins{
@@ -74,7 +83,8 @@ private:
 	//Schaltbedingungen
 	uint8_t plaetze[ANZ_PLAETZE_F];
 	uint8_t eingaenge[ANZ_EINGAENGE_F];
-
+	timespec ls_timer[ANZ_LS_TIMER];
+	int ls_timer_id[ANZ_LS_TIMER];
 	Werkstueck *ws_h;
 	Werkstueck *ws_w;
 	Werkstueck *ws_a;
@@ -96,7 +106,7 @@ private:
 	void werkstueckTimerFehler(uint8_t ls, uint8_t timer_int_ws, uint8_t check, uint8_t tb);
 	void lichtschrankeTimerFehler(uint8_t ls, uint8_t timer_int, uint8_t check);
 	void fehlerBehandlung(uint8_t reset_2);
-	bool checkToleranzbereich(int timer, int tb);
+	bool checkToleranzbereich(timespec timer, int tb);
 
 
 };

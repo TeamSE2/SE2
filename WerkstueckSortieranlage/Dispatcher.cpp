@@ -31,12 +31,12 @@ void Dispatcher::abmelden(Beobachter *e){
 
 
 
-void Dispatcher::benachrichtige(PulsNachricht *nachricht){
+void Dispatcher::benachrichtige(uint8_t port, PulsNachricht *nachricht){
 	list<Beobachter*>::iterator iter = beobachter.begin();
 	list<Beobachter*>::iterator end = beobachter.end();
 	bool execute = false;
 	for(; iter != end ; iter++){
-		execute = (*iter)->aktualisiereSignale(nachricht->port ,nachricht->iq, nachricht->state);
+		execute = (*iter)->aktualisiereSignale(port ,nachricht->iq, nachricht->state);
 		if(execute){
 			(*iter)->execute();
 		}else{
@@ -66,11 +66,10 @@ void Dispatcher::execute(void *arg){
 		else
 		{
 			nachricht = (PulsNachricht*) &pulse.value.sival_int;
-//			printf("\nDispatcher:  Port: %i, IQ: %i, State: %i !!!!!!!!!!!!!!!!!!!\n",nachricht->port, nachricht->iq, nachricht->state);
 
-			ausgeben(nachricht);
+			ausgeben(pulse.code, nachricht);
 			SynBandEins::getInstance()->resetSignale();
-			benachrichtige(nachricht);
+			benachrichtige(pulse.code, nachricht);
 			SynBandEins::getInstance()->aktualisiereSignale();
 		}
 	}
@@ -98,10 +97,10 @@ int Dispatcher::getDispatcherChannelID()
 }
 
 
-void Dispatcher::ausgeben(PulsNachricht *nachricht)
+void Dispatcher::ausgeben(uint8_t port, PulsNachricht *nachricht)
 {
 
-	if(nachricht->port == P_B)
+	if(port == P_B)
 	{
 		switch(nachricht->iq)
 		{
@@ -134,7 +133,7 @@ void Dispatcher::ausgeben(PulsNachricht *nachricht)
 
 
 
-	if(nachricht->port == P_C)
+	if(port == P_C)
 	{
 		switch(nachricht->iq)
 		{

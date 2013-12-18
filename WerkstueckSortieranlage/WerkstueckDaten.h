@@ -40,6 +40,7 @@ typedef struct Werkstueck
 	long id;
 	WerkstueckTyp typ;
 	float hoehen[2];
+	int timer_id;
 } WerkstueckDaten;
 
 #endif /* WERKSTUECK_H */

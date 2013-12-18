@@ -10,25 +10,20 @@
 
 #include <stdint.h>
 //PORTS
-#define P_B 1 //Port B
-#define P_C 2 //Port C
-#define SYN_BAND_EINS 3 // Laufband 1 Synchronisations
-#define SYN_BAND_ZWEI 4 // Laufband 2 Synchronisations
-#define FEHLER 5
-#define TIMER 6
-// Spezielle Interrupt quellen fuer Timer
-#define IQ_E (MAX_ID + 1)
-#define IQ_H (MAX_ID + 2)
-#define IQ_W (MAX_ID + 3)
-#define IQ_A (MAX_ID + 4)
-#define IQ_R (MAX_ID + 5)
 
+#define INTERRUPT1_PULSE_CODE _PULSE_CODE_MINAVAIL
+#define INTERRUPT0_PULSE_CODE (_PULSE_CODE_MINAVAIL + 1)
+#define SERIAL_PULSE_CODE (_PULSE_CODE_MINAVAIL + 2)
+#define TIMER_PULSE_CODE (_PULSE_CODE_MINAVAIL + 3)
+#define P_B (_PULSE_CODE_MINAVAIL + 4) //Port B
+#define P_C (_PULSE_CODE_MINAVAIL + 5)//Port C
+#define SYN_BAND_EINS (_PULSE_CODE_MINAVAIL + 6) // Laufband 1 Synchronisations
+#define SYN_BAND_ZWEI (_PULSE_CODE_MINAVAIL + 7) // Laufband 2 Synchronisations
+#define FEHLER (_PULSE_CODE_MINAVAIL + 8)
 
 typedef struct puls_nachricht{
-	uint8_t port: 8;
+	uint32_t iq: 31;
 	uint8_t state: 1;
-	uint32_t iq: 23;
-
 } PulsNachricht;
 
 #endif /* PULSNACHRICHT_H_ */

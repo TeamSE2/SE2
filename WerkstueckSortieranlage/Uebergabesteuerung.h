@@ -9,6 +9,7 @@
 #include "SynBandEins.h"
 #include "HAL.h"
 #include "Dispatcher.h"
+#include "SerielleSchnittstelle.h"
 
 //init
 #define ANZ_PLAETZE_U 3

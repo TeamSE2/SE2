@@ -35,7 +35,9 @@ void Einlaufsteuerung::initNetz(){
 bool Einlaufsteuerung::aktualisiereSignale(uint8_t port, uint8_t iq, uint8_t state){
 	bool execute = false;
 	if(port == P_B){
+//		printf("iq:%i  state:%i", iq, state);
 		if(iq == LICHTSCHRANKE_EINLAUF){
+
 			lichtschranke_einlauf = state;
 			execute = true;
 		}

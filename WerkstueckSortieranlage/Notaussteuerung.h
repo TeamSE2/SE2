@@ -9,6 +9,7 @@
 #include "WerkstueckDaten.h"
 #include "SynBandEins.h"
 #include "HAL.h"
+#include "SerielleSchnittstelle.h"
 
 //zeiten
 #define LS_UNTERBRECHUNGS_ZEIT 3 // todo: zeit ermitteln

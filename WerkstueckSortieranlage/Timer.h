@@ -12,33 +12,41 @@
 
 #include "HAWThread.h"
 
-#define TV_NSEC 10000000
+class Timer;
 
-typedef map<int, long> timermap;
+typedef map<long, Timer*> timermap;
 
-class Timer: public thread::HAWThread
+class Timer
 {
 public:
-	static Timer& getInstance();
-	virtual void execute(void *arg);
-	virtual void shutdown();
-	void stop();
-	void starten(int id, long millisekunden);
-	void stoppen(int id);
-	void warten(bool warten);
-	long get(int id);
+	static int starten(timespec time);
+//	static int starten(time_t sekunden, long nanosekunden);
+	static void stoppen(int id);
+	static void alle_anhalten();
+	static void alle_fortsetzen();
+	static timespec gettime(int id);
+	static timespec getelapsedtime(int id);
+//	static long getNanosekunden(int id);
+//	static time_t getSekunden(int id);
 private:
-	Timer();
+	Timer(timespec time);
+//	Timer(time_t sekunden, long nanosekunden);
 	virtual ~Timer();
-	void initialize();
-	void sendePulsMessage(uint8_t iq);
-	struct sigevent event;
-	int timerChannelID;
-	int timerConnectionID;
-	int dispatcherConnectionID;
+	void anhalten();
+	void fortsetzen();
+	long getID();
+	timespec gettime();
+	timespec getelapsedtime();
+//	long getNanosekunden();
+//	time_t getSekunden();
+	static long new_id;
+	static timermap timer;
+	sigevent event;
+	itimerspec initial_timerspec;
+	itimerspec timerspec;
+	long id;
 	int timerID;
-	bool ein;
-	timermap timer;
+	int dispatcherConnectionID;
 };
 
 #endif /* TIMER_H */

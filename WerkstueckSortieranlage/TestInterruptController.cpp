@@ -66,10 +66,10 @@ void TestInterruptController::starten(bool automatik, unsigned int sekunden)
  * Wandelt den Code und den Wert der Pulse Message in lesbare Strings um und gibt sie aus.
  */
 
-void TestInterruptController::ausgeben(PulsNachricht *nachricht)
+void TestInterruptController::ausgeben(uint8_t port, PulsNachricht *nachricht)
 {
 
-	if(nachricht->port == P_B)
+	if(port == P_B)
 	{
 		switch(nachricht->iq)
 		{
@@ -100,7 +100,7 @@ void TestInterruptController::ausgeben(PulsNachricht *nachricht)
 		}
 	}
 
-	if(nachricht->port == P_C)
+	if(port == P_C)
 	{
 		switch(nachricht->iq)
 		{
@@ -175,7 +175,7 @@ void TestInterruptController::execute(void *arg)
 
 
 			nachricht = (PulsNachricht*) &pulse.value.sival_int;
-			ausgeben(nachricht);
+			ausgeben(pulse.code, nachricht);
 		}
 	}
 }

@@ -170,13 +170,14 @@ void InterruptController::execute(void *arg)
 			{
 				if(iq & i)
 				{
-					bool code = pulse.value.sival_int & i;
-					nachricht.state = code;
+					bool state_temp = pulse.value.sival_int & i;
+					int code = 0;
+					nachricht.state = state_temp;
 					if(i < 0x100){
-						nachricht.port = P_C;
+						code = P_C;
 						nachricht.iq = iq;
 					}else{
-						nachricht.port = P_B;
+						code = P_B;
 						nachricht.iq = iq >> 8;
 					}
 //					printf("\nController:  Port: %i, IQ: %i, State: %i !!!!!!!!!!!!!!!!!!!\n",nachricht.port, nachricht.iq, nachricht.state);

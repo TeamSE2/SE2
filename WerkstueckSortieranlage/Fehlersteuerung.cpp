@@ -6,6 +6,8 @@
  */
 
 #include "Fehlersteuerung.h"
+#include "WerkstueckDaten.h"
+#include "PulsNachricht.h"
 
 namespace PetriNetzBandEins {
 
@@ -69,44 +71,44 @@ bool Fehlersteuerung::aktualisiereSignale(uint8_t port, uint8_t iq,
 		}
 	}
 
-	if (port == TIMER) {
+	if (port == TIMER_PULSE_CODE) {
+//
+//		switch (iq) {
+//		case IQ_E:
+//			eingaenge[TIMER_INT_E] = 1;
+//			execute = true;
+//			break;
+//		case IQ_H:
+//			eingaenge[TIMER_INT_H] = 1;
+//			execute = true;
+//			break;
+//		case IQ_W:
+//			eingaenge[TIMER_INT_W] = 1;
+//			execute = true;
+//			break;
+//		case IQ_A:
+//			eingaenge[TIMER_INT_A] = 1;
+//			execute = true;
+//			break;
+//		case IQ_R:
+//			eingaenge[TIMER_INT_R] = 1;
+//			execute = true;
+//			break;
+//		default:
+//			break;
+//		}
 
-		switch (iq) {
-		case IQ_E:
-			eingaenge[TIMER_INT_E] = 1;
-			execute = true;
-			break;
-		case IQ_H:
-			eingaenge[TIMER_INT_H] = 1;
-			execute = true;
-			break;
-		case IQ_W:
-			eingaenge[TIMER_INT_W] = 1;
-			execute = true;
-			break;
-		case IQ_A:
-			eingaenge[TIMER_INT_A] = 1;
-			execute = true;
-			break;
-		case IQ_R:
-			eingaenge[TIMER_INT_R] = 1;
-			execute = true;
-			break;
-		default:
-			break;
-		}
-
-		if (ws_h->id) {
+		if (iq == ws_h->timer_id) {
 			eingaenge[TIMER_INT_WS_H] = 1;
 			execute = true;
 		}
 
-		if (ws_w->id) {
+		if (iq == ws_w->timer_id) {
 			eingaenge[TIMER_INT_WS_W] = 1;
 			execute = true;
 		}
 
-		if (ws_a->id) {
+		if (iq == ws_a->timer_id) {
 			eingaenge[TIMER_INT_WS_A] = 1;
 			execute = true;
 		}
@@ -148,15 +150,45 @@ void Fehlersteuerung::initNetz() {
 }
 
 void Fehlersteuerung::ladeWerkstueckHoehenmessung() {
-	this->ws_h = SynBandEins::getInstance()->getWerkstueckHoehenmessung();
+
+	WerkstueckDaten *neues_ws = NULL;
+
+	neues_ws = (WerkstueckDaten*) malloc(sizeof(WerkstueckDaten));
+
+	(*neues_ws).id = 1;
+	(*neues_ws).typ = ZU_FLACH;
+	(*neues_ws).hoehen[0] = 0;
+	(*neues_ws).hoehen[1] = 0;
+	this->ws_h = neues_ws;
+//	this->ws_h = SynBandEins::getInstance()->getWerkstueckHoehenmessung();
 }
 
 void Fehlersteuerung::ladeWerkstueckWeiche() {
-	this->ws_h = SynBandEins::getInstance()->getWerkstueckWeiche();
+
+	WerkstueckDaten *neues_ws = NULL;
+
+	neues_ws = (WerkstueckDaten*) malloc(sizeof(WerkstueckDaten));
+
+	(*neues_ws).id = 2;
+	(*neues_ws).typ = ZU_FLACH;
+	(*neues_ws).hoehen[0] = 0;
+	(*neues_ws).hoehen[1] = 0;
+	this->ws_h = neues_ws;
+//	this->ws_h = SynBandEins::getInstance()->getWerkstueckWeiche();
 }
 
 void Fehlersteuerung::ladeWerkstueckAuslauf() {
-	this->ws_h = SynBandEins::getInstance()->getWerkstueckAuslauf();
+
+	WerkstueckDaten *neues_ws = NULL;
+
+	neues_ws = (WerkstueckDaten*) malloc(sizeof(WerkstueckDaten));
+
+	(*neues_ws).id = 3;
+	(*neues_ws).typ = ZU_FLACH;
+	(*neues_ws).hoehen[0] = 0;
+	(*neues_ws).hoehen[1] = 0;
+	this->ws_h = neues_ws;
+//	this->ws_h = SynBandEins::getInstance()->getWerkstueckAuslauf();
 }
 
 void Fehlersteuerung::schreibeSignale() {
@@ -219,16 +251,16 @@ void Fehlersteuerung::werkstueckTimerFehler(uint8_t ls, uint8_t timer_int_ws,
 		//todo: Tolleranzbereich checken
 		switch (timer_int_ws) {
 		case TIMER_INT_WS_H:
-			eingaenge[TB_H] = checkToleranzbereich(Timer::getInstance().get(
-					ws_h->id), 500);
+			ladeWerkstueckHoehenmessung();
+			eingaenge[TB_H] = checkToleranzbereich(Timer::gettime(ws_h->timer_id), 500);
 			break;
 		case TIMER_INT_WS_W:
-			eingaenge[TB_W] = checkToleranzbereich(Timer::getInstance().get(
-					ws_w->id), 500);
+			ladeWerkstueckWeiche();
+			eingaenge[TB_W] = checkToleranzbereich(Timer::gettime(ws_w->timer_id), 500);
 			break;
 		case TIMER_INT_WS_A:
-			eingaenge[TB_A] = checkToleranzbereich(Timer::getInstance().get(
-					ws_a->id), 500);
+			ladeWerkstueckAuslauf();
+			eingaenge[TB_A] = checkToleranzbereich(Timer::gettime(ws_a->timer_id), 500);
 			break;
 		default:
 			break;
@@ -271,36 +303,21 @@ void Fehlersteuerung::lichtschrankeTimerFehler(uint8_t ls, uint8_t timer_int,
 	if (plaetze[GZ] && !plaetze[check] && !eingaenge[ls]) {
 		plaetze[GZ]--;
 		plaetze[check] = 1;
+		printf("\n LS FEHLER 1: GZ: %i, CHECK: %i, FEHLER: %i \n",plaetze[GZ], plaetze[check], plaetze[FEHLER_F]);
+		ls_timer_id[ls] = Timer::starten(ls_timer[ls]);
 
-		switch (ls) {
-		case LS_E:
-			Timer::getInstance().starten(IQ_E, 3);
-			break;
-		case LS_H:
-			Timer::getInstance().starten(IQ_H, 3);
-			break;
-		case LS_W:
-			Timer::getInstance().starten(IQ_W, 3);
-			break;
-		case LS_A:
-			Timer::getInstance().starten(IQ_A, 3);
-			break;
-		case LS_R:
-			Timer::getInstance().starten(IQ_R, 3);
-			break;
-		default:
-			break;
-		}
 	}
 
 	if (plaetze[check] && plaetze[GZ] < ANZ_MARKEN_F && eingaenge[ls]) {
 		plaetze[check] = 0;
 		plaetze[GZ]++;
+		printf("\n LS FEHLER 2: GZ: %i, CHECK: %i, FEHLER: %i \n",plaetze[GZ], plaetze[check], plaetze[FEHLER_F]);
 	}
 
 	if (plaetze[check] && !plaetze[FEHLER_F] && eingaenge[timer_int]) {
 		plaetze[check] = 0;
 		plaetze[FEHLER_F] = 1;
+		printf("\n LS FEHLER 3: GZ: %i, CHECK: %i, FEHLER: %i \n",plaetze[GZ], plaetze[check], plaetze[FEHLER_F]);
 		switch (timer_int) {
 		case TIMER_INT_E:
 			eingaenge[TIMER_INT_E] = 0;
@@ -330,6 +347,8 @@ void Fehlersteuerung::fehlerBehandlung(uint8_t reset_2) {
 		if (plaetze[FEHLER_F] && !plaetze[RESET_1] && eingaenge[LS_R]) {
 			plaetze[FEHLER_F] = 0;
 			plaetze[RESET_1] = 1;
+			printf("\nFehlerbehandlung 1.1: GZ: %i, FEHLER: %i, RESET_1: %i, RESET_2: %i",plaetze[GZ], plaetze[FEHLER_F], plaetze[RESET_1], plaetze[RESET_2]);
+
 		}
 
 	} else {
@@ -339,6 +358,8 @@ void Fehlersteuerung::fehlerBehandlung(uint8_t reset_2) {
 				&& eingaenge[LS_R]) {
 			plaetze[FEHLER_F] = 0;
 			plaetze[RESET_1] = 1;
+			printf("\nFehlerbehandlung 1.2: GZ: %i, FEHLER: %i, RESET_1: %i, RESET_2: %i",plaetze[GZ], plaetze[FEHLER_F], plaetze[RESET_1], plaetze[RESET_2]);
+
 		}
 
 	}
@@ -346,16 +367,20 @@ void Fehlersteuerung::fehlerBehandlung(uint8_t reset_2) {
 	if (plaetze[RESET_1] && !plaetze[reset_2] && eingaenge[RESET]) {
 		plaetze[RESET_1] = 0;
 		plaetze[reset_2] = 1;
+		printf("\nFehlerbehandlung 2: GZ: %i, FEHLER: %i, RESET_1: %i, RESET_2: %i",plaetze[GZ], plaetze[FEHLER_F], plaetze[RESET_1], plaetze[RESET_2]);
+
 	}
 
 	if (plaetze[reset_2] && plaetze[GZ] < ANZ_MARKEN_F && !eingaenge[RESET]) {
 		plaetze[reset_2] = 0;
 		plaetze[GZ]++;
+		printf("\nFehlerbehandlung 3: GZ: %i, FEHLER: %i, RESET_1: %i, RESET_2: %i",plaetze[GZ], plaetze[FEHLER_F], plaetze[RESET_1], plaetze[RESET_2]);
+
 	}
 }
 
-bool Fehlersteuerung::checkToleranzbereich(int timer, int tb) {
-	return (timer - tb) > 0 ? false : true;
+bool Fehlersteuerung::checkToleranzbereich(timespec timer, int tb) {
+	return (timer.tv_nsec - tb) > 0 ? false : true;
 }
 
 void Fehlersteuerung::execute(){

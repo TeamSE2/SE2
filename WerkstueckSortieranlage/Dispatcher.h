@@ -10,15 +10,13 @@
 #include "iterator"
 
 
-
-
 class Dispatcher: public thread::HAWThread{
 public:
 	~Dispatcher();
 	static Dispatcher* getInstance();
 	void anmelden(Beobachter *e);
 	void abmelden(Beobachter *e);
-	void benachrichtige(PulsNachricht *nachricht);
+	void benachrichtige(uint8_t port, PulsNachricht *nachricht);
 
 	int getDispatcherConnectionID();
 	int getDispatcherChannelID();
@@ -36,7 +34,7 @@ private:
 	Dispatcher();
 	void initialize();
 
-	void ausgeben(PulsNachricht *nachricht);
+	void ausgeben(uint8_t port, PulsNachricht *nachricht);
 };
  
 #endif

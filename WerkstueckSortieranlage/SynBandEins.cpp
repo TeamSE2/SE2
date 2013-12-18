@@ -1,6 +1,7 @@
 
 
 #include "SynBandEins.h"
+
 using namespace std;
 namespace PetriNetzBandEins{
 
@@ -20,7 +21,7 @@ SynBandEins::~SynBandEins(){
 	delete Detektorsteuerung::getInstance();
 	delete Uebergabesteuerung::getInstance();
 	delete Auslaufsteuerung::getInstance();
-//	delete Fehlersteuerung::getInstance();
+	delete Fehlersteuerung::getInstance();
 //	delete Notaussteuerung::getInstance();
 
 }
@@ -83,9 +84,8 @@ void SynBandEins::inkrementSynUebergabeBereit(){
 void SynBandEins::sendeZustandswechsel(uint8_t iq){
 	PulsNachricht nachricht;
 	int *val = NULL;
-	int code = 1;
+	int code = SYN_BAND_EINS;
 
-	nachricht.port = SYN_BAND_EINS;
 	nachricht.iq = iq;
 	nachricht.state = 1;
 	val = (int*)(&nachricht);
@@ -213,8 +213,11 @@ void SynBandEins::resetSignale(){
 
 void SynBandEins::aktualisiereSignale(){
 	HAL::getInstance().getMotor()->stopp(motor_stop);
-//	Timer::getInstance().warten(motor_stop);
-//	HAL::getInstance().getBedienpanel()->led_Resettaste(reset_led_an);
+	if(motor_stop){
+		Timer::alle_anhalten();
+	}
+
+	HAL::getInstance().getBedienpanel()->led_Resettaste(reset_led_an);
 	HAL::getInstance().getAmpel()->gruen(ampel_gruen);
 }
 
