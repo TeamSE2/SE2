@@ -82,6 +82,7 @@ void Uebergabesteuerung::transitionenAusfuehren(){
 	}
 
 	if(plaetze[SENDE_1] && !plaetze[SENDE_2] && SynBandEins::getInstance()->getSynUebergabeBereit()){
+		SynBandEins::getInstance()->dekrementSynUebergabeBereit();
 		plaetze[SENDE_1] = 0;
 		plaetze[SENDE_2] = 1;
 		ladeWerkstueck();
