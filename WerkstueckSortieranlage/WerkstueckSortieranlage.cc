@@ -111,7 +111,7 @@ int main(int argc, char *argv[])
 	{
 		cout << "WerkstueckSortieranlage: Normaler Betrieb" << endl;
 			Dispatcher::getInstance()->start(NULL);
-//			SerielleSchnittstelle::getInstance().start(NULL);
+			SerielleSchnittstelle::getInstance().start(NULL);
 			SynBandEins::getInstance();
 
 			string eingabe;
