@@ -12,12 +12,13 @@
 #include "SerielleSchnittstelle.h"
 
 //init
-#define ANZ_PLAETZE_U 3
+#define ANZ_PLAETZE_U 4
 #define ANZ_EINGAENGE_U 1
 // Plaetze
 #define GZ 0
-#define LESE 1
-#define WARTE_U 2
+#define SENDE_1 1
+#define SENDE_2 2
+#define WARTE_U 3
 // Eingangs Signale
 #define LICHTSCHRANKE 0
 
