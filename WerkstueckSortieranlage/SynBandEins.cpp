@@ -38,7 +38,7 @@ void SynBandEins::resetNetz(){
 	syn[VERLASSEN] = 0;
 	syn[UEBERGABE_START] = 0;
 	syn[UEBERGABE_ENDE] = 0;
-	syn[UEBERGABE_BEREIT] = 1;
+	syn[UEBERGABE_BEREIT] = 0;
 	queueClear(queue_weiche);
 	queueClear(queue_auslauf);
 	queueClear(queue_hoehenmessung);
@@ -231,7 +231,6 @@ void SynBandEins::setAmpelGruenAus(){
 }
 
 void SynBandEins::initialize(){
-	syn[UEBERGABE_BEREIT] = 1;
 	signalConnectionID = HAL::getInstance().getInterruptController()->getSignalConnectionID();
 	HAL::getInstance().getAmpel()->gruen(true);
 	Einlaufsteuerung::getInstance();
