@@ -79,7 +79,7 @@ bool Auslaufsteuerung::aktualisiereSignale(uint8_t port, uint8_t iq, uint8_t sta
  	 }
 
  	 if(port == TIMER_PULSE_CODE){
- 		 printf("Timer ID: %i", timer_id);
+ 		 printf("\nTimer ID: %i !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n", timer_id);
  		 if(iq == timer_id){
  			 eingang[TIMER_INT] = 1;
  			 execute = true;
