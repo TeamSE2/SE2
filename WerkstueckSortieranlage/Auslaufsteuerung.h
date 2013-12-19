@@ -11,7 +11,7 @@
 
 //init
 #define ANZ_PLAETZE_A 7
-#define ANZ_EINGAENGE_A 5
+#define ANZ_EINGAENGE_A 4
 // Plaetze
 #define GZ 0
 #define CHECK_1 1
@@ -25,8 +25,7 @@
 #define METALL_A 0
 #define LOCH 1
 #define LICHTSCHRANKE_A 2
-#define LICHTSCHRANKE_W 3
-#define TIMER_INT 4
+#define TIMER_INT 3
 
 namespace PetriNetzBandEins{
 class Auslaufsteuerung: public Beobachter {
