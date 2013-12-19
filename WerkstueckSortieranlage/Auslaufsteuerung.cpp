@@ -68,7 +68,7 @@ bool Auslaufsteuerung::aktualisiereSignale(uint8_t port, uint8_t iq, uint8_t sta
  		 if(iq == LICHTSCHRANKE_AUSLAUF){
  			 eingang[LICHTSCHRANKE_A] = state;
  			 execute = true;
- 		 }zz
+ 		 }
  	 }
 
  	 if(port == SYN_BAND_EINS){
