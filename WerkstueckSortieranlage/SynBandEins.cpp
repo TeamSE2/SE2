@@ -236,12 +236,18 @@ void SynBandEins::setAmpelGruenAus(){
 void SynBandEins::initialize(){
 	signalConnectionID = HAL::getInstance().getInterruptController()->getSignalConnectionID();
 	HAL::getInstance().getAmpel()->gruen(true);
-	Einlaufsteuerung::getInstance();
-	Hoehensteuerung::getInstance();
+
+	Auslaufsteuerung::getInstance();
+	Uebergabesteuerung::getInstance();
 	Weichensteuerung::getInstance();
 	Detektorsteuerung::getInstance();
-	Uebergabesteuerung::getInstance();
-	Auslaufsteuerung::getInstance();
+	Hoehensteuerung::getInstance();
+	Einlaufsteuerung::getInstance();
+
+
+
+
+
 //	Fehlersteuerung::getInstance();
 //	Notaussteuerung::getInstance();
 }
