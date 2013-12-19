@@ -67,7 +67,7 @@ void Dispatcher::execute(void *arg){
 		{
 			nachricht = (PulsNachricht*) &pulse.value.sival_int;
 
-			ausgeben(pulse.code, nachricht);
+//			ausgeben(pulse.code, nachricht);
 			SynBandEins::getInstance()->resetSignale();
 			benachrichtige(pulse.code, nachricht);
 			SynBandEins::getInstance()->aktualisiereSignale();

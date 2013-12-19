@@ -9,6 +9,7 @@
 
 #include "InterruptController.h"
 #include "HWaccess.h"
+#include "sys/time.h"
 
 int isrConnectionID;
 
@@ -180,6 +181,12 @@ void InterruptController::execute(void *arg)
 						code = P_B;
 						nachricht.iq = iq >> 8;
 					}
+
+
+//					struct timeval tv;
+//					gettimeofday(&tv,NULL);
+//				    cout << "controller" << endl;
+//				    printf("s:%i, us:%i", tv.tv_sec, tv.tv_usec);
 
 					val = (int*)(&nachricht);
 					MsgSendPulse(signalConnectionID, SIGEV_PULSE_PRIO_INHERIT, code, *val);

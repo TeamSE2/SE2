@@ -237,8 +237,9 @@ void SynBandEins::initialize(){
 	signalConnectionID = HAL::getInstance().getInterruptController()->getSignalConnectionID();
 	HAL::getInstance().getAmpel()->gruen(true);
 
-	Auslaufsteuerung::getInstance();
+
 	Uebergabesteuerung::getInstance();
+	Auslaufsteuerung::getInstance();
 	Weichensteuerung::getInstance();
 	Detektorsteuerung::getInstance();
 	Hoehensteuerung::getInstance();

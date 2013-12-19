@@ -1,4 +1,5 @@
 #include "Auslaufsteuerung.h"
+#include "sys/time.h"
 
 
 namespace PetriNetzBandEins {
@@ -89,7 +90,18 @@ bool Auslaufsteuerung::aktualisiereSignale(uint8_t port, uint8_t iq, uint8_t sta
 
 void Auslaufsteuerung::schreibeSignale(){
 
+//	struct timeval tv;
+//	gettimeofday(&tv,NULL);
+//    cout << "auslauf" << endl;
+//    printf("s:%i, us:%i", tv.tv_sec, tv.tv_usec);
+
+
 	if(plaetze[WENDEN_1] || plaetze[WENDEN_2] || plaetze[UEBERGABE]){
+
+//		gettimeofday(&tv,NULL);
+//	    cout << "motor stop" << endl;
+//	    printf("s:%i, us:%i", tv.tv_sec, tv.tv_usec);
+
 		SynBandEins::getInstance()->setMotorStop();
 		//stop Timer
 	}
@@ -174,7 +186,7 @@ void Auslaufsteuerung::transitionenAusfuehren(){
 	}
 
 	//todo: hier warten bis Werkstueck Band verlassen hat.
-	if(plaetze[WARTE_A] && !plaetze[GZ] && !eingang[LICHTSCHRANKE_A]){
+	if(plaetze[WARTE_A] && !plaetze[GZ] && eingang[LICHTSCHRANKE_A]){
 		SynBandEins::getInstance()->inkrementSynUebergabeEnde();
 		SynBandEins::getInstance()->inkrementSynVerlassen();
 		plaetze[WARTE_A] = 0;
