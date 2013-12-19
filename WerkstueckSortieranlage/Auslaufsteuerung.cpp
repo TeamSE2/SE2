@@ -79,8 +79,7 @@ bool Auslaufsteuerung::aktualisiereSignale(uint8_t port, uint8_t iq, uint8_t sta
  	 }
 
  	 if(port == TIMER_PULSE_CODE){
- 		 printf("\nTimer ID: %i !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n", timer_id);
- 		 if(iq == timer_id){
+  		 if(iq == timer_id){
  			 eingang[TIMER_INT] = 1;
  			 execute = true;
  		 }
@@ -176,7 +175,8 @@ void Auslaufsteuerung::transitionenAusfuehren(){
 	}
 
 	//todo: hier warten bis Werkstueck Band verlassen hat.
-	if(plaetze[WARTE_A] && !plaetze[GZ] && !eingang[LICHTSCHRANKE_A]){
+	if(plaetze[WARTE_A] && !plaetze[GZ] && eingang[TIMER_INT]){
+		eingang[TIMER_INT] = 0;
 		SynBandEins::getInstance()->inkrementSynUebergabeEnde();
 		SynBandEins::getInstance()->inkrementSynVerlassen();
 		plaetze[WARTE_A] = 0;
