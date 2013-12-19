@@ -39,6 +39,10 @@ void Weichensteuerung::initNetz(){
 	plaetze[SYN_FLANKE] = 0;
 	eingang[LICHTSCHRANKE] = 1;
 	eingang[RUTSCHE] = 1;
+	eingang[TIMER_INT] = 0;
+	timer.tv_nsec = 0;
+	timer.tv_sec = 1;
+
 }
 
 void Weichensteuerung::ladeWerkstueck(){
@@ -78,6 +82,13 @@ bool Weichensteuerung::aktualisiereSignale(uint8_t port, uint8_t iq, uint8_t sta
 					break;
 			}
 	}
+
+	 if(port == TIMER_PULSE_CODE){
+ 		 if(iq == timer_id){
+			 eingang[TIMER_INT] = 1;
+			 execute = true;
+		 }
+	 }
 
 	 return execute;
 }
@@ -129,7 +140,6 @@ void Weichensteuerung::transitionenAusfuehren(){
 	if(plaetze[CHECK] && !plaetze[CHECK_R] && eingang[LICHTSCHRANKE] && !eingang[HOEHE]){
 		plaetze[CHECK] = 0;
 		plaetze[CHECK_R] = 1;
-		sendeWerkstueck();
 		printf("Weiche: 4: FLANKE_P: %i, FLANKE_N: %i, SYN_FLANKE: % i,  \n"
 				"GZ: %i, CHECK: %i, TB_1: %i, TB_2: %i\n"
 				" \n",plaetze[FLANKE_P], plaetze[FLANKE_N], plaetze[SYN_FLANKE], plaetze[GZ],
@@ -165,7 +175,7 @@ void Weichensteuerung::transitionenAusfuehren(){
 	}
 
 	// todo: hier Timer Implementieren
-	if(eingang[LICHTSCHRANKE] && plaetze[TB_2] && plaetze[GZ] < ANZ_MARKEN_W){
+	if(plaetze[TB_2] && plaetze[GZ] < ANZ_MARKEN_W && eingang[TIMER_INT]){
 		plaetze[TB_2] = 0;
 		plaetze[GZ]++;
 		sendeWerkstueck();

@@ -20,7 +20,7 @@
 //init
 #define ANZ_MARKEN_W 3
 #define ANZ_PLAETZE_W 8
-#define ANZ_EINGAENGE_W 3
+#define ANZ_EINGAENGE_W 4
 // Plaetze
 #define GZ 0
 #define CHECK 1
@@ -34,6 +34,7 @@
 #define LICHTSCHRANKE 0
 #define HOEHE 1
 #define RUTSCHE 2
+#define TIMER_INT 3
 
 namespace PetriNetzBandEins {
 
@@ -48,6 +49,8 @@ private:
 	uint8_t eingang[ANZ_EINGAENGE_W];
 	uint8_t plaetze[ANZ_PLAETZE_W];
 	WerkstueckDaten *temp_ws;
+	timespec timer;
+	int timer_id;
 
 	static Weichensteuerung *instance;
 	Weichensteuerung();
