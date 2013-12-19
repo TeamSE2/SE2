@@ -97,7 +97,7 @@ void Weichensteuerung::transitionenAusfuehren(){
 		plaetze[FLANKE_P] = 0;
 		plaetze[SYN_FLANKE]= 1;
 		plaetze[FLANKE_N] = 1;
-		printf("1: FLANKE_P: %i, FLANKE_N: %i, SYN_FLANKE: % i,  \n"
+		printf("Weiche: 1: FLANKE_P: %i, FLANKE_N: %i, SYN_FLANKE: % i,  \n"
 				"GZ: %i, CHECK: %i, TB_1: %i, TB_2: %i\n"
 				" \n",plaetze[FLANKE_P], plaetze[FLANKE_N], plaetze[SYN_FLANKE], plaetze[GZ],
 					plaetze[CHECK], plaetze[TB_1], plaetze[TB_2]);
@@ -107,7 +107,7 @@ void Weichensteuerung::transitionenAusfuehren(){
 	if(plaetze[FLANKE_N] && !plaetze[FLANKE_P] && eingang[LICHTSCHRANKE] ){
 		plaetze[FLANKE_N] = 0;
 		plaetze[FLANKE_P] = 1;
-		printf("2: FLANKE_P: %i, FLANKE_N: %i, SYN_FLANKE: % i,  \n"
+		printf("Weiche: 2: FLANKE_P: %i, FLANKE_N: %i, SYN_FLANKE: % i,  \n"
 				"GZ: %i, CHECK: %i, TB_1: %i, TB_2: %i\n"
 				" \n",plaetze[FLANKE_P], plaetze[FLANKE_N], plaetze[SYN_FLANKE], plaetze[GZ],
 					plaetze[CHECK], plaetze[TB_1], plaetze[TB_2]);
@@ -120,7 +120,7 @@ void Weichensteuerung::transitionenAusfuehren(){
 		plaetze[CHECK] = 1;
 
 		ladeWerkstueck();
-		printf("3: FLANKE_P: %i, FLANKE_N: %i, SYN_FLANKE: % i,  \n"
+		printf("Weiche: 3: FLANKE_P: %i, FLANKE_N: %i, SYN_FLANKE: % i,  \n"
 				"GZ: %i, CHECK: %i, TB_1: %i, TB_2: %i\n"
 				" \n",plaetze[FLANKE_P], plaetze[FLANKE_N], plaetze[SYN_FLANKE], plaetze[GZ],
 					plaetze[CHECK], plaetze[TB_1], plaetze[TB_2]);
@@ -130,7 +130,7 @@ void Weichensteuerung::transitionenAusfuehren(){
 		plaetze[CHECK] = 0;
 		plaetze[CHECK_R] = 1;
 		sendeWerkstueck();
-		printf("4: FLANKE_P: %i, FLANKE_N: %i, SYN_FLANKE: % i,  \n"
+		printf("Weiche: 4: FLANKE_P: %i, FLANKE_N: %i, SYN_FLANKE: % i,  \n"
 				"GZ: %i, CHECK: %i, TB_1: %i, TB_2: %i\n"
 				" \n",plaetze[FLANKE_P], plaetze[FLANKE_N], plaetze[SYN_FLANKE], plaetze[GZ],
 					plaetze[CHECK], plaetze[TB_1], plaetze[TB_2]);
@@ -141,7 +141,7 @@ void Weichensteuerung::transitionenAusfuehren(){
 		plaetze[GZ]++;
 		SynBandEins::getInstance()->inkrementSynVerlassen();
 		sendeWerkstueck();
-		printf("4: FLANKE_P: %i, FLANKE_N: %i, SYN_FLANKE: % i,  \n"
+		printf("Weiche: 4: FLANKE_P: %i, FLANKE_N: %i, SYN_FLANKE: % i,  \n"
 				"GZ: %i, CHECK: %i, TB_1: %i, TB_2: %i\n"
 				" \n",plaetze[FLANKE_P], plaetze[FLANKE_N], plaetze[SYN_FLANKE], plaetze[GZ],
 					plaetze[CHECK], plaetze[TB_1], plaetze[TB_2]);
@@ -150,7 +150,7 @@ void Weichensteuerung::transitionenAusfuehren(){
 	if(plaetze[CHECK] && !plaetze[TB_1] && eingang[HOEHE]){
 		plaetze[CHECK] = 0;
 		plaetze[TB_1] = 1;
-		printf("5: FLANKE_P: %i, FLANKE_N: %i, SYN_FLANKE: % i,  \n"
+		printf("Weiche: 5: FLANKE_P: %i, FLANKE_N: %i, SYN_FLANKE: % i,  \n"
 				"GZ: %i, CHECK: %i, TB_1: %i, TB_2: %i\n"
 				" \n",plaetze[FLANKE_P], plaetze[FLANKE_N], plaetze[SYN_FLANKE], plaetze[GZ],
 					plaetze[CHECK], plaetze[TB_1], plaetze[TB_2]);
@@ -159,7 +159,7 @@ void Weichensteuerung::transitionenAusfuehren(){
 	if(plaetze[TB_1] && !plaetze[TB_2] && eingang[LICHTSCHRANKE]){
 		plaetze[TB_1] = 0;
 		plaetze[TB_2] = 1;
-		printf("6: FLANKE_P: %i, FLANKE_N: %i, SYN_FLANKE: % i,  \n"
+		printf("Weiche: 6: FLANKE_P: %i, FLANKE_N: %i, SYN_FLANKE: % i,  \n"
 				"GZ: %i, CHECK: %i, TB_1: %i, TB_2: %i\n"
 				" \n",plaetze[FLANKE_P], plaetze[FLANKE_N], plaetze[SYN_FLANKE], plaetze[GZ],
 					plaetze[CHECK], plaetze[TB_1], plaetze[TB_2]);
@@ -170,7 +170,7 @@ void Weichensteuerung::transitionenAusfuehren(){
 		plaetze[TB_2] = 0;
 		plaetze[GZ]++;
 		sendeWerkstueck();
-		printf("7: FLANKE_P: %i, FLANKE_N: %i, SYN_FLANKE: % i,  \n"
+		printf("Weiche: 7: FLANKE_P: %i, FLANKE_N: %i, SYN_FLANKE: % i,  \n"
 				"GZ: %i, CHECK: %i, TB_1: %i, TB_2: %i\n"
 				" \n",plaetze[FLANKE_P], plaetze[FLANKE_N], plaetze[SYN_FLANKE], plaetze[GZ],
 					plaetze[CHECK], plaetze[TB_1], plaetze[TB_2]);

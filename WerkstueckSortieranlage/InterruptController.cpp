@@ -180,7 +180,6 @@ void InterruptController::execute(void *arg)
 						code = P_B;
 						nachricht.iq = iq >> 8;
 					}
-//					printf("\nController:  Port: %i, IQ: %i, State: %i !!!!!!!!!!!!!!!!!!!\n",nachricht.port, nachricht.iq, nachricht.state);
 
 					val = (int*)(&nachricht);
 					MsgSendPulse(signalConnectionID, SIGEV_PULSE_PRIO_INHERIT, code, *val);

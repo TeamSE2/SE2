@@ -75,9 +75,8 @@ void Uebergabesteuerung::transitionenAusfuehren(){
 	if(plaetze[GZ] && !plaetze[SENDE_1] && !eingang[LICHTSCHRANKE]){
 		plaetze[GZ] = 0;
 		plaetze[SENDE_1] = 1;
-		ladeWerkstueck();
 		SerielleSchnittstelle::getInstance().sendeNachricht(WERKSTUECK);
-		printf("\nUebergabe: 1:  GZ: %i, SENDE_1: %i, SENDE_2: %i, WARTE_U: %i\n",plaetze[GZ], plaetze[SENDE_1], plaetze[SENDE_2], plaetze[WARTE_U]);
+		printf("Uebergabe: 1:  GZ: %i, SENDE_1: %i, SENDE_2: %i, WARTE_U: %i\n",plaetze[GZ], plaetze[SENDE_1], plaetze[SENDE_2], plaetze[WARTE_U]);
 
 	}
 
@@ -87,7 +86,7 @@ void Uebergabesteuerung::transitionenAusfuehren(){
 		plaetze[SENDE_2] = 1;
 		ladeWerkstueck();
 		SerielleSchnittstelle::getInstance().sendeWerkstueckDaten(temp_ws);
-		printf("\nUebergabe: 2:  GZ: %i, SENDE_1: %i, SENDE_2: %i, WARTE_U: %i\n",plaetze[GZ], plaetze[SENDE_1], plaetze[SENDE_2], plaetze[WARTE_U]);
+		printf("Uebergabe: 2:  GZ: %i, SENDE_1: %i, SENDE_2: %i, WARTE_U: %i\n",plaetze[GZ], plaetze[SENDE_1], plaetze[SENDE_2], plaetze[WARTE_U]);
 	}
 
 	if (plaetze[SENDE_2] && !plaetze[WARTE_U] && SynBandEins::getInstance()->getSynUebergabeBereit()) {
@@ -95,15 +94,14 @@ void Uebergabesteuerung::transitionenAusfuehren(){
 		plaetze[SENDE_2] = 0;
 		plaetze[WARTE_U] = 1;
 		SynBandEins::getInstance()->inkrementSynUebergabeStart();
-		printf("\nUebergabe: 3:  GZ: %i, SENDE_1: %i, SENDE_2: %i, WARTE_U: %i\n",plaetze[GZ], plaetze[SENDE_1], plaetze[SENDE_2], plaetze[WARTE_U]);
+		printf("Uebergabe: 3:  GZ: %i, SENDE_1: %i, SENDE_2: %i, WARTE_U: %i\n",plaetze[GZ], plaetze[SENDE_1], plaetze[SENDE_2], plaetze[WARTE_U]);
 	}
 
 	if (plaetze[WARTE_U] && !plaetze[GZ] && SynBandEins::getInstance()->getSynUebergabeEnde()) {
 		plaetze[WARTE_U] = 0;
 		SynBandEins::getInstance()->dekrementSynUebergabeEnde();
-
 		plaetze[GZ] = 1;
-		printf("\nUebergabe: 4:  GZ: %i, SENDE_1: %i, SENDE_2: %i, WARTE_U: %i\n",plaetze[GZ], plaetze[SENDE_1], plaetze[SENDE_2], plaetze[WARTE_U]);
+		printf("Uebergabe: 4:  GZ: %i, SENDE_1: %i, SENDE_2: %i, WARTE_U: %i\n",plaetze[GZ], plaetze[SENDE_1], plaetze[SENDE_2], plaetze[WARTE_U]);
 	}
 }
 

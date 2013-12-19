@@ -11,7 +11,7 @@
 
 //init
 #define ANZ_PLAETZE_A 7
-#define ANZ_EINGAENGE_A 3
+#define ANZ_EINGAENGE_A 4
 // Plaetze
 #define GZ 0
 #define CHECK_1 1
@@ -25,6 +25,7 @@
 #define METALL_A 0
 #define LOCH 1
 #define LICHTSCHRANKE_A 2
+#define TIMER_INT 3
 
 namespace PetriNetzBandEins{
 class Auslaufsteuerung: public Beobachter {
@@ -39,7 +40,8 @@ private:
 	uint8_t eingang[ANZ_EINGAENGE_A];
 	uint8_t plaetze[ANZ_PLAETZE_A];
 	WerkstueckDaten *temp_ws;
-
+	timespec timer;
+	int timer_id;
 	static Auslaufsteuerung *instance;
 
 	void ladeWerkstueck();

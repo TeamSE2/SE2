@@ -57,7 +57,6 @@ bool Detektorsteuerung::aktualisiereSignale(uint8_t port, uint8_t iq, uint8_t st
 
 void Detektorsteuerung::schreibeSignale(){
 	if (plaetze[WARTE]) {
-		cout << "Metall!!!!"<< endl;
 		(*temp_ws).typ = BOHRUNG_OBEN_METALL;
 	}
 }
@@ -68,25 +67,25 @@ void Detektorsteuerung::transitionenAusfuehren(){
 		plaetze[GZ] = 0;
 		plaetze[CHECK_M] = 1;
 		ladeWerkstueck();
-		printf("1: GZ: %i, CHECK_M: %i, WARTE: %i ",plaetze[GZ], plaetze[CHECK_M], plaetze[WARTE]);
+		printf("Detektor: 1: GZ: %i, CHECK_M: %i, WARTE: %i ",plaetze[GZ], plaetze[CHECK_M], plaetze[WARTE]);
 	}
 
 	if (plaetze[CHECK_M] && !plaetze[GZ] && eingang[LICHTSCHRANKE]) {
 		plaetze[CHECK_M] = 0;
 		plaetze[GZ] = 1;
-		printf("2: GZ: %i, CHECK_M: %i, WARTE: %i ",plaetze[GZ], plaetze[CHECK_M], plaetze[WARTE]);
+		printf("Detektor: 2: GZ: %i, CHECK_M: %i, WARTE: %i ",plaetze[GZ], plaetze[CHECK_M], plaetze[WARTE]);
 	}
 
 	if (plaetze[CHECK_M] && !plaetze[WARTE] && eingang[METALL]) {
 		plaetze[CHECK_M] = 0;
 		plaetze[WARTE] = 1;
-		printf("3: GZ: %i, CHECK_M: %i, WARTE: %i ",plaetze[GZ], plaetze[CHECK_M], plaetze[WARTE]);
+		printf("Detektor: 3: GZ: %i, CHECK_M: %i, WARTE: %i ",plaetze[GZ], plaetze[CHECK_M], plaetze[WARTE]);
 	}
 
 	if (plaetze[WARTE] && !plaetze[GZ] && eingang[LICHTSCHRANKE]) {
 		plaetze[WARTE] = 0;
 		plaetze[GZ] = 1;
-		printf("4: GZ: %i, CHECK_M: %i, WARTE: %i ",plaetze[GZ], plaetze[CHECK_M], plaetze[WARTE]);
+		printf("Detektor: 4: GZ: %i, CHECK_M: %i, WARTE: %i ",plaetze[GZ], plaetze[CHECK_M], plaetze[WARTE]);
 	}
 }
 
