@@ -32,7 +32,7 @@ Timer::Timer(timespec time)
 	initial_timerspec = timerspec;
 
 //	dispatcherConnectionID = ConnectAttach(0, 0, Dispatcher::getInstance().getDispatcherChannelID(), _NTO_SIDE_CHANNEL, 0);
-	dispatcherConnectionID =  Dispatcher::getInstance()->getDispatcherConnectionID();
+	dispatcherConnectionID =  HAL::getInstance().getInterruptController()->getSignalConnectionID();
 //	if(dispatcherConnectionID == -1)
 //	{
 //		perror("Timer: dispatcherConnectionID ConnectAttach fehlgeschlagen");

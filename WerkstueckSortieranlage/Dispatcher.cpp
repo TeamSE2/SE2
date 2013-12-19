@@ -66,7 +66,9 @@ void Dispatcher::execute(void *arg){
 		else
 		{
 			nachricht = (PulsNachricht*) &pulse.value.sival_int;
-
+			if(pulse.code == TIMER_PULSE_CODE){
+				cout<<"TIMER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
+			}
 //			ausgeben(pulse.code, nachricht);
 			SynBandEins::getInstance()->resetSignale();
 			benachrichtige(pulse.code, nachricht);
