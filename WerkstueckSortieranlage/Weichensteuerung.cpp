@@ -168,6 +168,7 @@ void Weichensteuerung::transitionenAusfuehren(){
 	if(plaetze[TB_1] && !plaetze[TB_2] && eingang[LICHTSCHRANKE]){
 		plaetze[TB_1] = 0;
 		plaetze[TB_2] = 1;
+		timer_id = Timer::starten(timer);
 		printf("Weiche: 6: FLANKE_P: %i, FLANKE_N: %i, SYN_FLANKE: % i,  \n"
 				"GZ: %i, CHECK: %i, TB_1: %i, TB_2: %i\n"
 				" \n",plaetze[FLANKE_P], plaetze[FLANKE_N], plaetze[SYN_FLANKE], plaetze[GZ],
