@@ -33,12 +33,12 @@ Timer::Timer(timespec time)
 
 //	dispatcherConnectionID = ConnectAttach(0, 0, Dispatcher::getInstance().getDispatcherChannelID(), _NTO_SIDE_CHANNEL, 0);
 	dispatcherConnectionID =  Dispatcher::getInstance()->getDispatcherConnectionID();
-	if(dispatcherConnectionID == -1)
-	{
-		perror("Timer: dispatcherConnectionID ConnectAttach fehlgeschlagen");
-
-		exit(EXIT_FAILURE);
-	}
+//	if(dispatcherConnectionID == -1)
+//	{
+//		perror("Timer: dispatcherConnectionID ConnectAttach fehlgeschlagen");
+//
+//		exit(EXIT_FAILURE);
+//	}
 
 	PulsNachricht nachricht;
 	int *val = NULL;
