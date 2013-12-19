@@ -238,8 +238,9 @@ void SynBandEins::initialize(){
 	HAL::getInstance().getAmpel()->gruen(true);
 
 
-	Uebergabesteuerung::getInstance();
+
 	Auslaufsteuerung::getInstance();
+	Uebergabesteuerung::getInstance();
 	Weichensteuerung::getInstance();
 	Detektorsteuerung::getInstance();
 	Hoehensteuerung::getInstance();
