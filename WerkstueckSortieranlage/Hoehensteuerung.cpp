@@ -129,6 +129,7 @@ void Hoehensteuerung::transitionenAusfuehren(){
 	if (plaetze[CHECK_L_1] && !plaetze[GZ] && eingang[LICHTSCHRANKE]) {
 		plaetze[CHECK_L_1] = 0;
 		plaetze[GZ] = 1;
+		sendeWerkstueck();
 		printf("Hoehenmessung : 5:  GZ: %i, CHECK_T: %i, CHECK_L_1: %i, CHECK_L_2: %i,   \n",plaetze[GZ], plaetze[CHECK_T], plaetze[CHECK_L_1], plaetze[CHECK_L_2]);
 		printf("LS: %i, H: %i\n",eingang[LICHTSCHRANKE], eingang[HOEHE]);
 	}
