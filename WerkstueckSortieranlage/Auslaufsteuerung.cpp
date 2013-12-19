@@ -169,11 +169,6 @@ void Auslaufsteuerung::transitionenAusfuehren(){
 							,plaetze[GZ], plaetze[CHECK_1], plaetze[CHECK_2], plaetze[WENDEN_1], plaetze[WENDEN_2], plaetze[UEBERGABE], plaetze[WARTE_A]);
 	}
 
-	if(eingang[TIMER_INT]){
-		eingang[TIMER_INT] = 0;
-		cout << "Zeit Abgelaufen !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
-	}
-
 	//todo: hier warten bis Werkstueck Band verlassen hat.
 	if(plaetze[WARTE_A] && !plaetze[GZ] && eingang[TIMER_INT]){
 		eingang[TIMER_INT] = 0;
