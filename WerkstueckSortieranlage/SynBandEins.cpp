@@ -36,6 +36,7 @@ SynBandEins* SynBandEins::getInstance(){
 }
 
 void SynBandEins::resetNetz(){
+	syn[NEXT] = 1;
 	syn[VERLASSEN] = 0;
 	syn[UEBERGABE_START] = 0;
 	syn[UEBERGABE_ENDE] = 0;
@@ -247,6 +248,7 @@ void SynBandEins::setAmpelGruenAus(){
 }
 
 void SynBandEins::initialize(){
+	syn[NEXT] = 1;
 	signalConnectionID = HAL::getInstance().getInterruptController()->getSignalConnectionID();
 	HAL::getInstance().getAmpel()->gruen(true);
 
