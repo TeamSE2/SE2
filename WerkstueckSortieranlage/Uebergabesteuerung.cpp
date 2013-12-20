@@ -86,7 +86,6 @@ void Uebergabesteuerung::transitionenAusfuehren(){
 
 			if(plaetze[WARTE_U] && !plaetze[SENDE_1]){
 				ladeWerkstueck();
-				SynBandEins::getInstance()->dekrementSynUebergabeBereit();
 				plaetze[WARTE_U]--;
 				plaetze[SENDE_1] = 1;
 				SerielleSchnittstelle::getInstance().sendeNachricht(WERKSTUECK);
