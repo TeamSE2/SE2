@@ -72,7 +72,7 @@ void Uebergabesteuerung::schreibeSignale(){
 
 void Uebergabesteuerung::transitionenAusfuehren(){
 
-		if(plaetze[GZ] && !plaetze[WARTE_U] < ANZ_MARKEN_U && SynBandEins::getInstance()->getSynUebergabeStart()){
+		if(plaetze[GZ] && plaetze[WARTE_U] < ANZ_MARKEN_U && SynBandEins::getInstance()->getSynUebergabeStart()){
 
 			if(temp_ws != NULL){
 				plaetze[GZ]--;
