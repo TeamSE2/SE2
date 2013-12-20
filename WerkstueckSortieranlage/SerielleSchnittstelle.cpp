@@ -89,6 +89,9 @@ void SerielleSchnittstelle::execute(void *arg)
 			case ESTOPP_N:
 				sendePulsMessage(nachricht, 0);
 				break;
+			case START_MOTOR:
+				sendePulsMessage(nachricht, 0);
+				break;
 			case WERKSTUECK:
 				empfangeWerkstueckDaten(&werkstueckDaten);
 				break;

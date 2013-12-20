@@ -77,7 +77,6 @@ void Uebergabesteuerung::transitionenAusfuehren(){
 		plaetze[SENDE_1] = 1;
 		SerielleSchnittstelle::getInstance().sendeNachricht(WERKSTUECK);
 		printf("Uebergabe: 1:  GZ: %i, SENDE_1: %i, SENDE_2: %i, WARTE_U: %i\n",plaetze[GZ], plaetze[SENDE_1], plaetze[SENDE_2], plaetze[WARTE_U]);
-
 	}
 
 	if(plaetze[SENDE_1] && !plaetze[SENDE_2] && SynBandEins::getInstance()->getSynUebergabeBereit()){
