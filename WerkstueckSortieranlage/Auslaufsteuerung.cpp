@@ -120,7 +120,7 @@ void Auslaufsteuerung::transitionenAusfuehren(){
 
 		}
 
-		if(temp_ws != NULL){
+	if(temp_ws != NULL){
 		if(plaetze[CHECK_1] && !plaetze[CHECK_2] && eingang[LOCH]){
 			plaetze[CHECK_1] = 0;
 			plaetze[CHECK_2] = 1;
@@ -169,8 +169,6 @@ void Auslaufsteuerung::transitionenAusfuehren(){
 			plaetze[UEBERGABE] = 0;
 			plaetze[WARTE_A] = 1;
 			SerielleSchnittstelle::getInstance().sendeNachricht(START_MOTOR);
-			free(temp_ws);
-			temp_ws = NULL;
 			timer_id = Timer::starten(timer);
 			printf("Auslauf: 8:  GZ: %i,CHECK_1: %i, CHECK_2: %i, WENDEN_1: %i, WENDEN_2: %i, UEBERGABE: %i, WARTE_A: %i\n"
 								,plaetze[GZ], plaetze[CHECK_1], plaetze[CHECK_2], plaetze[WENDEN_1], plaetze[WENDEN_2], plaetze[UEBERGABE], plaetze[WARTE_A]);
@@ -185,6 +183,7 @@ void Auslaufsteuerung::transitionenAusfuehren(){
 			plaetze[GZ] = 1;
 	//		printf("Auslauf: 9:  GZ: %i,CHECK_1: %i, CHECK_2: %i, WENDEN_1: %i, WENDEN_2: %i, UEBERGABE: %i, WARTE_A: %i\n"
 	//							,plaetze[GZ], plaetze[CHECK_1], plaetze[CHECK_2], plaetze[WENDEN_1], plaetze[WENDEN_2], plaetze[UEBERGABE], plaetze[WARTE_A]);
+			free(temp_ws);
 			temp_ws = NULL;
 		}
 	}
