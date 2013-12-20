@@ -104,7 +104,7 @@ void Weichensteuerung::schreibeSignale(){
 }
 
 void Weichensteuerung::transitionenAusfuehren(){
-	if(temp_ws != NULL){
+
 		//Flanken detektor
 		if(plaetze[FLANKE_P] && !plaetze[FLANKE_N] && !eingang[LICHTSCHRANKE]){
 			plaetze[FLANKE_P] = 0;
@@ -128,17 +128,20 @@ void Weichensteuerung::transitionenAusfuehren(){
 
 		// Weiche
 		if(plaetze[SYN_FLANKE] && plaetze[GZ] && !plaetze[CHECK]){
-			plaetze[SYN_FLANKE] = 0;
-			plaetze[GZ]--;
-			plaetze[CHECK] = 1;
-
 			ladeWerkstueck();
+			if(temp_ws != NULL){
+				plaetze[SYN_FLANKE] = 0;
+				plaetze[GZ]--;
+				plaetze[CHECK] = 1;
+			}
+
+
 			printf("Weiche: 3: FLANKE_P: %i, FLANKE_N: %i, SYN_FLANKE: % i,  \n"
 					"GZ: %i, CHECK: %i, TB_1: %i, TB_2: %i\n"
 					" \n",plaetze[FLANKE_P], plaetze[FLANKE_N], plaetze[SYN_FLANKE], plaetze[GZ],
 						plaetze[CHECK], plaetze[TB_1], plaetze[TB_2]);
 		}
-
+	if(temp_ws != NULL){
 		if(plaetze[CHECK] && !plaetze[CHECK_R] && eingang[LICHTSCHRANKE] && !eingang[HOEHE]){
 			plaetze[CHECK] = 0;
 			plaetze[CHECK_R] = 1;

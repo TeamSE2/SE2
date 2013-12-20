@@ -71,19 +71,23 @@ void Uebergabesteuerung::schreibeSignale(){
 }
 
 void Uebergabesteuerung::transitionenAusfuehren(){
-	if(temp_ws != NULL){
+
 		if(plaetze[GZ] && !plaetze[SENDE_1] && !eingang[LICHTSCHRANKE]){
-			plaetze[GZ] = 0;
-			plaetze[SENDE_1] = 1;
-			SerielleSchnittstelle::getInstance().sendeNachricht(WERKSTUECK);
+			ladeWerkstueck();
+			if(temp_ws != NULL){
+				plaetze[GZ] = 0;
+				plaetze[SENDE_1] = 1;
+				SerielleSchnittstelle::getInstance().sendeNachricht(WERKSTUECK);
+			}
+
 			printf("Uebergabe: 1:  GZ: %i, SENDE_1: %i, SENDE_2: %i, WARTE_U: %i\n",plaetze[GZ], plaetze[SENDE_1], plaetze[SENDE_2], plaetze[WARTE_U]);
 		}
 
+	if(temp_ws != NULL){
 		if(plaetze[SENDE_1] && !plaetze[SENDE_2] && SynBandEins::getInstance()->getSynUebergabeBereit()){
 			SynBandEins::getInstance()->dekrementSynUebergabeBereit();
 			plaetze[SENDE_1] = 0;
 			plaetze[SENDE_2] = 1;
-			ladeWerkstueck();
 			SerielleSchnittstelle::getInstance().sendeWerkstueckDaten(temp_ws);
 			printf("Uebergabe: 2:  GZ: %i, SENDE_1: %i, SENDE_2: %i, WARTE_U: %i\n",plaetze[GZ], plaetze[SENDE_1], plaetze[SENDE_2], plaetze[WARTE_U]);
 		}

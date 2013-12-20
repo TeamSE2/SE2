@@ -99,14 +99,17 @@ void Hoehensteuerung::schreibeSignale(){
 }
 
 void Hoehensteuerung::transitionenAusfuehren(){
-	if(temp_ws != NULL){
+
 		if (plaetze[GZ] && !plaetze[CHECK_T] && !eingang[LICHTSCHRANKE]) {
-			plaetze[GZ] = 0;
-			plaetze[CHECK_T] = 1;
-			printf("Hoehenmessung : 1:  GZ: %i, CHECK_T: %i, CHECK_L_1: %i, CHECK_L_2: %i,   \n",plaetze[GZ], plaetze[CHECK_T], plaetze[CHECK_L_1], plaetze[CHECK_L_2]);
 			ladeWerkstueck();
+			if(temp_ws != NULL){
+				plaetze[GZ] = 0;
+				plaetze[CHECK_T] = 1;
+			}
+			printf("Hoehenmessung : 1:  GZ: %i, CHECK_T: %i, CHECK_L_1: %i, CHECK_L_2: %i,   \n",plaetze[GZ], plaetze[CHECK_T], plaetze[CHECK_L_1], plaetze[CHECK_L_2]);
 		}
 
+	if(temp_ws != NULL){
 		if (plaetze[CHECK_T] && !plaetze[CHECK_L_2] && eingang[HOEHE]) {
 			plaetze[CHECK_T] = 0;
 			plaetze[CHECK_L_2] = 1;

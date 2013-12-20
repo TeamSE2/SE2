@@ -107,17 +107,20 @@ void Auslaufsteuerung::schreibeSignale(){
 }
 
 void Auslaufsteuerung::transitionenAusfuehren(){
-	if(temp_ws != NULL){
+
 		if(plaetze[GZ] && !plaetze[CHECK_1] && !eingang[LICHTSCHRANKE_A]){
-			plaetze[GZ] = 0;
-			plaetze[CHECK_1] = 1;
 			ladeWerkstueck();
+			if(temp_ws != NULL){
+				plaetze[GZ] = 0;
+				plaetze[CHECK_1] = 1;
+			}
 
 			printf("Auslauf: 1:  GZ: %i,CHECK_1: %i, CHECK_2: %i, WENDEN_1: %i, WENDEN_2: %i, UEBERGABE: %i, WARTE_A: %i\n"
 								,plaetze[GZ], plaetze[CHECK_1], plaetze[CHECK_2], plaetze[WENDEN_1], plaetze[WENDEN_2], plaetze[UEBERGABE], plaetze[WARTE_A]);
 
 		}
 
+		if(temp_ws != NULL){
 		if(plaetze[CHECK_1] && !plaetze[CHECK_2] && eingang[LOCH]){
 			plaetze[CHECK_1] = 0;
 			plaetze[CHECK_2] = 1;
