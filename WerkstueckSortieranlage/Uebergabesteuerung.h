@@ -13,6 +13,7 @@
 
 //init
 #define ANZ_PLAETZE_U 4
+#define ANZ_MARKEN_U 4
 #define ANZ_EINGAENGE_U 1
 // Plaetze
 #define GZ 0

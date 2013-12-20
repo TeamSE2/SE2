@@ -24,7 +24,7 @@ Uebergabesteuerung* Uebergabesteuerung::getInstance(){
 }
 
 void Uebergabesteuerung::initNetz(){
-	plaetze[GZ] = 1;
+	plaetze[GZ] = ANZ_MARKEN_U;
 	plaetze[SENDE_1] = 0;
 	plaetze[SENDE_2] = 0;
 	plaetze[WARTE_U] = 0;
@@ -75,7 +75,7 @@ void Uebergabesteuerung::transitionenAusfuehren(){
 		if(plaetze[GZ] && !plaetze[SENDE_1] && SynBandEins::getInstance()->getSynUebergabeStart()){
 			ladeWerkstueck();
 			if(temp_ws != NULL){
-				plaetze[GZ] = 0;
+				plaetze[GZ]--;
 				plaetze[SENDE_1] = 1;
 				SynBandEins::getInstance()->dekrementSynUebergabeStart();
 				SerielleSchnittstelle::getInstance().sendeNachricht(WERKSTUECK);
@@ -93,10 +93,10 @@ void Uebergabesteuerung::transitionenAusfuehren(){
 			printf("Uebergabe: 2:  GZ: %i, SENDE_1: %i, SENDE_2: %i, WARTE_U: %i\n",plaetze[GZ], plaetze[SENDE_1], plaetze[SENDE_2], plaetze[WARTE_U]);
 		}
 
-		if (plaetze[SENDE_2] && !plaetze[GZ] && SynBandEins::getInstance()->getSynUebergabeBereit()) {
+		if (plaetze[SENDE_2] && plaetze[GZ] < ANZ_MARKEN_U && SynBandEins::getInstance()->getSynUebergabeBereit()) {
 			SynBandEins::getInstance()->dekrementSynUebergabeBereit();
 			plaetze[SENDE_2] = 0;
-			plaetze[GZ] = 1;
+			plaetze[GZ]++;
 			SynBandEins::getInstance()->inkrementSynUebergabeEnde();
 			temp_ws = NULL;
 			printf("Uebergabe: 3:  GZ: %i, SENDE_1: %i, SENDE_2: %i, WARTE_U: %i\n",plaetze[GZ], plaetze[SENDE_1], plaetze[SENDE_2], plaetze[WARTE_U]);
