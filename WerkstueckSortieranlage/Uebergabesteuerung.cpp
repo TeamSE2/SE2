@@ -105,6 +105,7 @@ void Uebergabesteuerung::transitionenAusfuehren(){
 			SynBandEins::getInstance()->dekrementSynUebergabeEnde();
 			plaetze[GZ] = 1;
 			printf("Uebergabe: 4:  GZ: %i, SENDE_1: %i, SENDE_2: %i, WARTE_U: %i\n",plaetze[GZ], plaetze[SENDE_1], plaetze[SENDE_2], plaetze[WARTE_U]);
+			temp_ws = NULL;
 		}
 	}
 }

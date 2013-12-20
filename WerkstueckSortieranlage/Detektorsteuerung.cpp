@@ -90,6 +90,7 @@ if(temp_ws != NULL){
 		if (plaetze[WARTE] && !plaetze[GZ] && eingang[LICHTSCHRANKE]) {
 			plaetze[WARTE] = 0;
 			plaetze[GZ] = 1;
+			temp_ws = NULL;
 			printf("Detektor: 4: GZ: %i, CHECK_M: %i, WARTE: %i ",plaetze[GZ], plaetze[CHECK_M], plaetze[WARTE]);
 		}
 	}

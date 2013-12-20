@@ -185,6 +185,7 @@ void Auslaufsteuerung::transitionenAusfuehren(){
 			plaetze[GZ] = 1;
 	//		printf("Auslauf: 9:  GZ: %i,CHECK_1: %i, CHECK_2: %i, WENDEN_1: %i, WENDEN_2: %i, UEBERGABE: %i, WARTE_A: %i\n"
 	//							,plaetze[GZ], plaetze[CHECK_1], plaetze[CHECK_2], plaetze[WENDEN_1], plaetze[WENDEN_2], plaetze[UEBERGABE], plaetze[WARTE_A]);
+			temp_ws = NULL;
 		}
 	}
 }

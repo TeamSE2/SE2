@@ -59,6 +59,7 @@ void Weichensteuerung::ladeWerkstueck(){
 void Weichensteuerung::sendeWerkstueck(){
 	SynBandEins::getInstance()->pushWerkstueckAuslauf(temp_ws);
 	SynBandEins::getInstance()->pushWerkstueckUebergabe(temp_ws);
+	temp_ws = NULL;
 }
 
 bool Weichensteuerung::aktualisiereSignale(uint8_t port, uint8_t iq, uint8_t state){
