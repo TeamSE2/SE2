@@ -54,6 +54,9 @@ bool Uebergabesteuerung::aktualisiereSignale(uint8_t port, uint8_t iq, uint8_t s
 			case UEBERGABE_BEREIT:
 				execute = true;
 				break;
+			case NEXT:
+				execute = true;
+				break;
 			default:
 				break;
 		}
@@ -80,8 +83,8 @@ void Uebergabesteuerung::transitionenAusfuehren(){
 			printf("Uebergabe: 1:  GZ: %i, SENDE_1: %i, SENDE_2: %i, WARTE_U: %i\n",plaetze[GZ], plaetze[SENDE_1], plaetze[SENDE_2], plaetze[WARTE_U]);
 		}
 
-			if(plaetze[WARTE_U] && !plaetze[SENDE_1] && !plaetze[SENDE_2]){
-				ladeWerkstueck();
+			if(plaetze[WARTE_U] && !plaetze[SENDE_1] && SynBandEins::getInstance()->getSynNext()){
+				SynBandEins::getInstance()->dekrementSynNext();
 				plaetze[WARTE_U]--;
 				plaetze[SENDE_1] = 1;
 				SerielleSchnittstelle::getInstance().sendeNachricht(WERKSTUECK);
@@ -90,6 +93,7 @@ void Uebergabesteuerung::transitionenAusfuehren(){
 
 		if(plaetze[SENDE_1] && !plaetze[SENDE_2] && SynBandEins::getInstance()->getSynUebergabeBereit()){
 			SynBandEins::getInstance()->dekrementSynUebergabeBereit();
+			ladeWerkstueck();
 			plaetze[SENDE_1] = 0;
 			plaetze[SENDE_2] = 1;
 			SerielleSchnittstelle::getInstance().sendeWerkstueckDaten(temp_ws);
@@ -101,7 +105,9 @@ void Uebergabesteuerung::transitionenAusfuehren(){
 			plaetze[SENDE_2] = 0;
 			plaetze[GZ]++;
 			SynBandEins::getInstance()->inkrementSynUebergabeEnde();
+			SynBandEins::getInstance()->inkrementSynNext();
 			temp_ws = NULL;
+
 			printf("Uebergabe: 3:  GZ: %i, SENDE_1: %i, SENDE_2: %i, WARTE_U: %i\n",plaetze[GZ], plaetze[SENDE_1], plaetze[SENDE_2], plaetze[WARTE_U]);
 		}
 

@@ -81,6 +81,11 @@ void SynBandEins::inkrementSynUebergabeBereit(){
 	sendeZustandswechsel(UEBERGABE_BEREIT);
 }
 
+void SynBandEins::inkrementSynNext(){
+	syn[NEXT]++;
+	sendeZustandswechsel(NEXT);
+}
+
 void SynBandEins::sendeZustandswechsel(uint8_t iq){
 	PulsNachricht nachricht;
 	int *val = NULL;
@@ -109,6 +114,10 @@ void SynBandEins::dekrementSynUebergabeBereit(){
 	syn[UEBERGABE_BEREIT]--;
 }
 
+void SynBandEins::dekrementSynNext(){
+	syn[NEXT]--;
+}
+
 uint8_t SynBandEins::SynBandEins::getSynVerlassen(){
 	return syn[VERLASSEN];
 }
@@ -123,6 +132,10 @@ uint8_t SynBandEins::getSynUebergabeEnde(){
 
 uint8_t SynBandEins::getSynUebergabeBereit(){
 	return syn[UEBERGABE_BEREIT];
+}
+
+uint8_t SynBandEins::SynBandEins::getSynNext(){
+	return syn[NEXT];
 }
 
 void SynBandEins::pushWerkstueckWeiche(struct Werkstueck *element){
