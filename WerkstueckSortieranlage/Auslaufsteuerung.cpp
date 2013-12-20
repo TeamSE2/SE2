@@ -74,7 +74,7 @@ bool Auslaufsteuerung::aktualisiereSignale(uint8_t port, uint8_t iq, uint8_t sta
  	 }
 
  	 if(port == SYN_BAND_EINS){
- 		 if(iq == UEBERGABE_START){
+ 		 if(iq == UEBERGABE_ENDE){
  			 execute = true;
  		 }
  	 }
@@ -164,8 +164,8 @@ void Auslaufsteuerung::transitionenAusfuehren(){
 								,plaetze[GZ], plaetze[CHECK_1], plaetze[CHECK_2], plaetze[WENDEN_1], plaetze[WENDEN_2], plaetze[UEBERGABE], plaetze[WARTE_A]);
 		}
 
-		if(plaetze[UEBERGABE] && !plaetze[WARTE_A] && SynBandEins::getInstance()->getSynUebergabeStart()){
-			SynBandEins::getInstance()->dekrementSynUebergabeStart();
+		if(plaetze[UEBERGABE] && !plaetze[WARTE_A] && SynBandEins::getInstance()->getSynUebergabeEnde()){
+			SynBandEins::getInstance()->dekrementSynUebergabeEnde();
 			plaetze[UEBERGABE] = 0;
 			plaetze[WARTE_A] = 1;
 			SerielleSchnittstelle::getInstance().sendeNachricht(START_MOTOR);

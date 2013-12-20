@@ -186,6 +186,7 @@ void Weichensteuerung::transitionenAusfuehren(){
 			plaetze[TB_2] = 0;
 			plaetze[GZ]++;
 			sendeWerkstueck();
+			SynBandEins::getInstance()->inkrementSynUebergabeStart();
 			printf("Weiche: 7: FLANKE_P: %i, FLANKE_N: %i, SYN_FLANKE: % i,  \n"
 					"GZ: %i, CHECK: %i, TB_1: %i, TB_2: %i\n"
 					" \n",plaetze[FLANKE_P], plaetze[FLANKE_N], plaetze[SYN_FLANKE], plaetze[GZ],

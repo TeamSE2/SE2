@@ -48,7 +48,7 @@ bool Uebergabesteuerung::aktualisiereSignale(uint8_t port, uint8_t iq, uint8_t s
 
  	 if(port == SYN_BAND_EINS){
  		 switch (iq) {
-			case UEBERGABE_ENDE:
+			case UEBERGABE_START:
 				execute = true;
 				break;
 			case UEBERGABE_BEREIT:
@@ -72,11 +72,12 @@ void Uebergabesteuerung::schreibeSignale(){
 
 void Uebergabesteuerung::transitionenAusfuehren(){
 
-		if(plaetze[GZ] && !plaetze[SENDE_1] && eingang[LICHTSCHRANKE]){
+		if(plaetze[GZ] && !plaetze[SENDE_1] && SynBandEins::getInstance()->getSynUebergabeStart()){
 			ladeWerkstueck();
 			if(temp_ws != NULL){
 				plaetze[GZ] = 0;
 				plaetze[SENDE_1] = 1;
+				SynBandEins::getInstance()->dekrementSynUebergabeStart();
 				SerielleSchnittstelle::getInstance().sendeNachricht(WERKSTUECK);
 			}
 
@@ -96,7 +97,7 @@ void Uebergabesteuerung::transitionenAusfuehren(){
 			SynBandEins::getInstance()->dekrementSynUebergabeBereit();
 			plaetze[SENDE_2] = 0;
 			plaetze[GZ] = 1;
-			SynBandEins::getInstance()->inkrementSynUebergabeStart();
+			SynBandEins::getInstance()->inkrementSynUebergabeEnde();
 			temp_ws = NULL;
 			printf("Uebergabe: 3:  GZ: %i, SENDE_1: %i, SENDE_2: %i, WARTE_U: %i\n",plaetze[GZ], plaetze[SENDE_1], plaetze[SENDE_2], plaetze[WARTE_U]);
 		}
