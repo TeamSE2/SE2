@@ -177,7 +177,7 @@ void Auslaufsteuerung::transitionenAusfuehren(){
 		//todo: hier warten bis Werkstueck Band verlassen hat.
 		if(plaetze[WARTE_A] && !plaetze[GZ] && eingang[TIMER_INT]){
 			eingang[TIMER_INT] = 0;
-			SynBandEins::getInstance()->inkrementSynUebergabeEnde();
+//			SynBandEins::getInstance()->inkrementSynUebergabeEnde();
 			SynBandEins::getInstance()->inkrementSynVerlassen();
 			plaetze[WARTE_A] = 0;
 			plaetze[GZ] = 1;

@@ -40,7 +40,7 @@ bool Uebergabesteuerung::aktualisiereSignale(uint8_t port, uint8_t iq, uint8_t s
 	bool execute = false;
 
  	 if(port == P_B){
- 		 if(iq == LICHTSCHRANKE_AUSLAUF){
+ 		 if(iq == LICHTSCHRANKE_WEICHE){
  			 eingang[LICHTSCHRANKE] = state;
  			 execute = true;
  		 }
@@ -64,15 +64,15 @@ bool Uebergabesteuerung::aktualisiereSignale(uint8_t port, uint8_t iq, uint8_t s
 
 void Uebergabesteuerung::schreibeSignale(){
 
-	if(plaetze[SENDE_1] || plaetze[SENDE_2]){
-		SynBandEins::getInstance()->setMotorStop();
-	}
+//	if(plaetze[SENDE_1] || plaetze[SENDE_2]){
+//		SynBandEins::getInstance()->setMotorStop();
+//	}
 
 }
 
 void Uebergabesteuerung::transitionenAusfuehren(){
 
-		if(plaetze[GZ] && !plaetze[SENDE_1] && !eingang[LICHTSCHRANKE]){
+		if(plaetze[GZ] && !plaetze[SENDE_1] && eingang[LICHTSCHRANKE]){
 			ladeWerkstueck();
 			if(temp_ws != NULL){
 				plaetze[GZ] = 0;
@@ -92,21 +92,22 @@ void Uebergabesteuerung::transitionenAusfuehren(){
 			printf("Uebergabe: 2:  GZ: %i, SENDE_1: %i, SENDE_2: %i, WARTE_U: %i\n",plaetze[GZ], plaetze[SENDE_1], plaetze[SENDE_2], plaetze[WARTE_U]);
 		}
 
-		if (plaetze[SENDE_2] && !plaetze[WARTE_U] && SynBandEins::getInstance()->getSynUebergabeBereit()) {
+		if (plaetze[SENDE_2] && !plaetze[GZ] && SynBandEins::getInstance()->getSynUebergabeBereit()) {
 			SynBandEins::getInstance()->dekrementSynUebergabeBereit();
 			plaetze[SENDE_2] = 0;
-			plaetze[WARTE_U] = 1;
+			plaetze[GZ] = 1;
 			SynBandEins::getInstance()->inkrementSynUebergabeStart();
+			temp_ws = NULL;
 			printf("Uebergabe: 3:  GZ: %i, SENDE_1: %i, SENDE_2: %i, WARTE_U: %i\n",plaetze[GZ], plaetze[SENDE_1], plaetze[SENDE_2], plaetze[WARTE_U]);
 		}
 
-		if (plaetze[WARTE_U] && !plaetze[GZ] && SynBandEins::getInstance()->getSynUebergabeEnde()) {
-			plaetze[WARTE_U] = 0;
-			SynBandEins::getInstance()->dekrementSynUebergabeEnde();
-			plaetze[GZ] = 1;
-			printf("Uebergabe: 4:  GZ: %i, SENDE_1: %i, SENDE_2: %i, WARTE_U: %i\n",plaetze[GZ], plaetze[SENDE_1], plaetze[SENDE_2], plaetze[WARTE_U]);
-			temp_ws = NULL;
-		}
+//		if (plaetze[WARTE_U] && !plaetze[GZ] && SynBandEins::getInstance()->getSynUebergabeEnde()) {
+//			plaetze[WARTE_U] = 0;
+//			SynBandEins::getInstance()->dekrementSynUebergabeEnde();
+//			plaetze[GZ] = 1;
+//			printf("Uebergabe: 4:  GZ: %i, SENDE_1: %i, SENDE_2: %i, WARTE_U: %i\n",plaetze[GZ], plaetze[SENDE_1], plaetze[SENDE_2], plaetze[WARTE_U]);
+//
+//		}
 	}
 }
 
