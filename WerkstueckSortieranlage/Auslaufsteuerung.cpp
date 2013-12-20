@@ -43,23 +43,24 @@ void Auslaufsteuerung::initNetz(){
 
 void Auslaufsteuerung::ladeWerkstueck(){
 	temp_ws = SynBandEins::getInstance()->popWerkstueckAuslauf();
+	if(temp_ws != NULL){
+		if ((*temp_ws).typ == BOHRUNG_OBEN || (*temp_ws).typ == BOHRUNG_OBEN_METALL ) {
+			eingang[LOCH] = 1;
+		}else{
+			eingang[LOCH] = 0;
+		}
 
-	if ((*temp_ws).typ == BOHRUNG_OBEN || (*temp_ws).typ == BOHRUNG_OBEN_METALL ) {
-		eingang[LOCH] = 1;
-	}else{
-		eingang[LOCH] = 0;
+		if ((*temp_ws).typ == BOHRUNG_UNTEN_METALL || (*temp_ws).typ == BOHRUNG_OBEN_METALL ) {
+			eingang[METALL_A] = 1;
+		}else{
+			eingang[METALL_A] = 0;
+		}
+
+			printf("Werkstueck ID: %i \n"
+					"Metall: %i\n"
+					"Loch: %i\n"
+					, (*temp_ws).id, eingang[METALL_A], eingang[LOCH]);
 	}
-
-	if ((*temp_ws).typ == BOHRUNG_UNTEN_METALL || (*temp_ws).typ == BOHRUNG_OBEN_METALL ) {
-		eingang[METALL_A] = 1;
-	}else{
-		eingang[METALL_A] = 0;
-	}
-
-		printf("Werkstueck ID: %i \n"
-				"Metall: %i\n"
-				"Loch: %i\n"
-				, (*temp_ws).id, eingang[METALL_A], eingang[LOCH]);
 }
 
 bool Auslaufsteuerung::aktualisiereSignale(uint8_t port, uint8_t iq, uint8_t state){
@@ -106,81 +107,83 @@ void Auslaufsteuerung::schreibeSignale(){
 }
 
 void Auslaufsteuerung::transitionenAusfuehren(){
+	if(temp_ws != NULL){
+		if(plaetze[GZ] && !plaetze[CHECK_1] && !eingang[LICHTSCHRANKE_A]){
+			plaetze[GZ] = 0;
+			plaetze[CHECK_1] = 1;
+			ladeWerkstueck();
 
-	if(plaetze[GZ] && !plaetze[CHECK_1] && !eingang[LICHTSCHRANKE_A]){
-		plaetze[GZ] = 0;
-		plaetze[CHECK_1] = 1;
-		ladeWerkstueck();
+			printf("Auslauf: 1:  GZ: %i,CHECK_1: %i, CHECK_2: %i, WENDEN_1: %i, WENDEN_2: %i, UEBERGABE: %i, WARTE_A: %i\n"
+								,plaetze[GZ], plaetze[CHECK_1], plaetze[CHECK_2], plaetze[WENDEN_1], plaetze[WENDEN_2], plaetze[UEBERGABE], plaetze[WARTE_A]);
 
-		printf("Auslauf: 1:  GZ: %i,CHECK_1: %i, CHECK_2: %i, WENDEN_1: %i, WENDEN_2: %i, UEBERGABE: %i, WARTE_A: %i\n"
-							,plaetze[GZ], plaetze[CHECK_1], plaetze[CHECK_2], plaetze[WENDEN_1], plaetze[WENDEN_2], plaetze[UEBERGABE], plaetze[WARTE_A]);
+		}
 
+		if(plaetze[CHECK_1] && !plaetze[CHECK_2] && eingang[LOCH]){
+			plaetze[CHECK_1] = 0;
+			plaetze[CHECK_2] = 1;
+			printf("Auslauf: 2:  GZ: %i,CHECK_1: %i, CHECK_2: %i, WENDEN_1: %i, WENDEN_2: %i, UEBERGABE: %i, WARTE_A: %i\n"
+								,plaetze[GZ], plaetze[CHECK_1], plaetze[CHECK_2], plaetze[WENDEN_1], plaetze[WENDEN_2], plaetze[UEBERGABE], plaetze[WARTE_A]);
+
+		}
+
+		if(plaetze[CHECK_1] && !plaetze[WENDEN_1] && !eingang[LOCH]){
+			plaetze[CHECK_1] = 0;
+			plaetze[WENDEN_1] = 1;
+			printf("Auslauf: 3:  GZ: %i,CHECK_1: %i, CHECK_2: %i, WENDEN_1: %i, WENDEN_2: %i, UEBERGABE: %i, WARTE_A: %i\n"
+								,plaetze[GZ], plaetze[CHECK_1], plaetze[CHECK_2], plaetze[WENDEN_1], plaetze[WENDEN_2], plaetze[UEBERGABE], plaetze[WARTE_A]);
+		}
+
+		if(plaetze[CHECK_2] && !plaetze[WENDEN_1] && eingang[METALL_A]){
+			plaetze[CHECK_2] = 0;
+			plaetze[WENDEN_1] = 1;
+			printf("Auslauf: 4:  GZ: %i,CHECK_1: %i, CHECK_2: %i, WENDEN_1: %i, WENDEN_2: %i, UEBERGABE: %i, WARTE_A: %i\n"
+								,plaetze[GZ], plaetze[CHECK_1], plaetze[CHECK_2], plaetze[WENDEN_1], plaetze[WENDEN_2], plaetze[UEBERGABE], plaetze[WARTE_A]);
+		}
+
+		if(plaetze[CHECK_2] && !plaetze[UEBERGABE] && !eingang[METALL_A]){
+			plaetze[CHECK_2] = 0;
+			plaetze[UEBERGABE] = 1;
+			printf("Auslauf: 5:  GZ: %i,CHECK_1: %i, CHECK_2: %i, WENDEN_1: %i, WENDEN_2: %i, UEBERGABE: %i, WARTE_A: %i\n"
+								,plaetze[GZ], plaetze[CHECK_1], plaetze[CHECK_2], plaetze[WENDEN_1], plaetze[WENDEN_2], plaetze[UEBERGABE], plaetze[WARTE_A]);
+		}
+
+		if(plaetze[WENDEN_1] && !plaetze[WENDEN_2] && eingang[LICHTSCHRANKE_A]){
+			plaetze[WENDEN_1] = 0;
+			plaetze[WENDEN_2] = 1;
+			printf("6:  GZ: %i,CHECK_1: %i, CHECK_2: %i, WENDEN_1: %i, WENDEN_2: %i, UEBERGABE: %i, WARTE_A: %i\n"
+								,plaetze[GZ], plaetze[CHECK_1], plaetze[CHECK_2], plaetze[WENDEN_1], plaetze[WENDEN_2], plaetze[UEBERGABE], plaetze[WARTE_A]);
+		}
+
+		if(plaetze[WENDEN_2] && !plaetze[UEBERGABE] && !eingang[LICHTSCHRANKE_A]){
+			plaetze[WENDEN_2] = 0;
+			plaetze[UEBERGABE] = 1;
+			printf("Auslauf: 7:  GZ: %i,CHECK_1: %i, CHECK_2: %i, WENDEN_1: %i, WENDEN_2: %i, UEBERGABE: %i, WARTE_A: %i\n"
+								,plaetze[GZ], plaetze[CHECK_1], plaetze[CHECK_2], plaetze[WENDEN_1], plaetze[WENDEN_2], plaetze[UEBERGABE], plaetze[WARTE_A]);
+		}
+
+		if(plaetze[UEBERGABE] && !plaetze[WARTE_A] && SynBandEins::getInstance()->getSynUebergabeStart()){
+			SynBandEins::getInstance()->dekrementSynUebergabeStart();
+			plaetze[UEBERGABE] = 0;
+			plaetze[WARTE_A] = 1;
+			SerielleSchnittstelle::getInstance().sendeNachricht(START_MOTOR);
+			free(temp_ws);
+			temp_ws = NULL;
+			timer_id = Timer::starten(timer);
+			printf("Auslauf: 8:  GZ: %i,CHECK_1: %i, CHECK_2: %i, WENDEN_1: %i, WENDEN_2: %i, UEBERGABE: %i, WARTE_A: %i\n"
+								,plaetze[GZ], plaetze[CHECK_1], plaetze[CHECK_2], plaetze[WENDEN_1], plaetze[WENDEN_2], plaetze[UEBERGABE], plaetze[WARTE_A]);
+		}
+
+		//todo: hier warten bis Werkstueck Band verlassen hat.
+		if(plaetze[WARTE_A] && !plaetze[GZ] && eingang[TIMER_INT]){
+			eingang[TIMER_INT] = 0;
+			SynBandEins::getInstance()->inkrementSynUebergabeEnde();
+			SynBandEins::getInstance()->inkrementSynVerlassen();
+			plaetze[WARTE_A] = 0;
+			plaetze[GZ] = 1;
+	//		printf("Auslauf: 9:  GZ: %i,CHECK_1: %i, CHECK_2: %i, WENDEN_1: %i, WENDEN_2: %i, UEBERGABE: %i, WARTE_A: %i\n"
+	//							,plaetze[GZ], plaetze[CHECK_1], plaetze[CHECK_2], plaetze[WENDEN_1], plaetze[WENDEN_2], plaetze[UEBERGABE], plaetze[WARTE_A]);
+		}
 	}
-
-	if(plaetze[CHECK_1] && !plaetze[CHECK_2] && eingang[LOCH]){
-		plaetze[CHECK_1] = 0;
-		plaetze[CHECK_2] = 1;
-		printf("Auslauf: 2:  GZ: %i,CHECK_1: %i, CHECK_2: %i, WENDEN_1: %i, WENDEN_2: %i, UEBERGABE: %i, WARTE_A: %i\n"
-							,plaetze[GZ], plaetze[CHECK_1], plaetze[CHECK_2], plaetze[WENDEN_1], plaetze[WENDEN_2], plaetze[UEBERGABE], plaetze[WARTE_A]);
-
-	}
-
-	if(plaetze[CHECK_1] && !plaetze[WENDEN_1] && !eingang[LOCH]){
-		plaetze[CHECK_1] = 0;
-		plaetze[WENDEN_1] = 1;
-		printf("Auslauf: 3:  GZ: %i,CHECK_1: %i, CHECK_2: %i, WENDEN_1: %i, WENDEN_2: %i, UEBERGABE: %i, WARTE_A: %i\n"
-							,plaetze[GZ], plaetze[CHECK_1], plaetze[CHECK_2], plaetze[WENDEN_1], plaetze[WENDEN_2], plaetze[UEBERGABE], plaetze[WARTE_A]);
-	}
-
-	if(plaetze[CHECK_2] && !plaetze[WENDEN_1] && eingang[METALL_A]){
-		plaetze[CHECK_2] = 0;
-		plaetze[WENDEN_1] = 1;
-		printf("Auslauf: 4:  GZ: %i,CHECK_1: %i, CHECK_2: %i, WENDEN_1: %i, WENDEN_2: %i, UEBERGABE: %i, WARTE_A: %i\n"
-							,plaetze[GZ], plaetze[CHECK_1], plaetze[CHECK_2], plaetze[WENDEN_1], plaetze[WENDEN_2], plaetze[UEBERGABE], plaetze[WARTE_A]);
-	}
-
-	if(plaetze[CHECK_2] && !plaetze[UEBERGABE] && !eingang[METALL_A]){
-		plaetze[CHECK_2] = 0;
-		plaetze[UEBERGABE] = 1;
-		printf("Auslauf: 5:  GZ: %i,CHECK_1: %i, CHECK_2: %i, WENDEN_1: %i, WENDEN_2: %i, UEBERGABE: %i, WARTE_A: %i\n"
-							,plaetze[GZ], plaetze[CHECK_1], plaetze[CHECK_2], plaetze[WENDEN_1], plaetze[WENDEN_2], plaetze[UEBERGABE], plaetze[WARTE_A]);
-	}
-
-	if(plaetze[WENDEN_1] && !plaetze[WENDEN_2] && eingang[LICHTSCHRANKE_A]){
-		plaetze[WENDEN_1] = 0;
-		plaetze[WENDEN_2] = 1;
-		printf("6:  GZ: %i,CHECK_1: %i, CHECK_2: %i, WENDEN_1: %i, WENDEN_2: %i, UEBERGABE: %i, WARTE_A: %i\n"
-							,plaetze[GZ], plaetze[CHECK_1], plaetze[CHECK_2], plaetze[WENDEN_1], plaetze[WENDEN_2], plaetze[UEBERGABE], plaetze[WARTE_A]);
-	}
-
-	if(plaetze[WENDEN_2] && !plaetze[UEBERGABE] && !eingang[LICHTSCHRANKE_A]){
-		plaetze[WENDEN_2] = 0;
-		plaetze[UEBERGABE] = 1;
-		printf("Auslauf: 7:  GZ: %i,CHECK_1: %i, CHECK_2: %i, WENDEN_1: %i, WENDEN_2: %i, UEBERGABE: %i, WARTE_A: %i\n"
-							,plaetze[GZ], plaetze[CHECK_1], plaetze[CHECK_2], plaetze[WENDEN_1], plaetze[WENDEN_2], plaetze[UEBERGABE], plaetze[WARTE_A]);
-	}
-
-	if(plaetze[UEBERGABE] && !plaetze[WARTE_A] && SynBandEins::getInstance()->getSynUebergabeStart()){
-		SynBandEins::getInstance()->dekrementSynUebergabeStart();
-		plaetze[UEBERGABE] = 0;
-		plaetze[WARTE_A] = 1;
-		SerielleSchnittstelle::getInstance().sendeNachricht(START_MOTOR);
-		timer_id = Timer::starten(timer);
-		printf("Auslauf: 8:  GZ: %i,CHECK_1: %i, CHECK_2: %i, WENDEN_1: %i, WENDEN_2: %i, UEBERGABE: %i, WARTE_A: %i\n"
-							,plaetze[GZ], plaetze[CHECK_1], plaetze[CHECK_2], plaetze[WENDEN_1], plaetze[WENDEN_2], plaetze[UEBERGABE], plaetze[WARTE_A]);
-	}
-
-	//todo: hier warten bis Werkstueck Band verlassen hat.
-	if(plaetze[WARTE_A] && !plaetze[GZ] && eingang[TIMER_INT]){
-		eingang[TIMER_INT] = 0;
-		SynBandEins::getInstance()->inkrementSynUebergabeEnde();
-		SynBandEins::getInstance()->inkrementSynVerlassen();
-		plaetze[WARTE_A] = 0;
-		plaetze[GZ] = 1;
-//		printf("Auslauf: 9:  GZ: %i,CHECK_1: %i, CHECK_2: %i, WENDEN_1: %i, WENDEN_2: %i, UEBERGABE: %i, WARTE_A: %i\n"
-//							,plaetze[GZ], plaetze[CHECK_1], plaetze[CHECK_2], plaetze[WENDEN_1], plaetze[WENDEN_2], plaetze[UEBERGABE], plaetze[WARTE_A]);
-	}
-
 }
 
 void Auslaufsteuerung::execute(){

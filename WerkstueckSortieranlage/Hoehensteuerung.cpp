@@ -45,6 +45,7 @@ void Hoehensteuerung::ladeWerkstueck(){
 void Hoehensteuerung::sendeWerkstueck(){
 	SynBandEins::getInstance()->pushWerkstueckWeiche(temp_ws);
 	SynBandEins::getInstance()->pushWerkstueckDetektor(temp_ws);
+	temp_ws = NULL;
 }
 
 bool Hoehensteuerung::aktualisiereSignale(uint8_t port, uint8_t iq, uint8_t state){
@@ -98,48 +99,50 @@ void Hoehensteuerung::schreibeSignale(){
 }
 
 void Hoehensteuerung::transitionenAusfuehren(){
-	if (plaetze[GZ] && !plaetze[CHECK_T] && !eingang[LICHTSCHRANKE]) {
-		plaetze[GZ] = 0;
-		plaetze[CHECK_T] = 1;
-		printf("Hoehenmessung : 1:  GZ: %i, CHECK_T: %i, CHECK_L_1: %i, CHECK_L_2: %i,   \n",plaetze[GZ], plaetze[CHECK_T], plaetze[CHECK_L_1], plaetze[CHECK_L_2]);
-		ladeWerkstueck();
-	}
+	if(temp_ws != NULL){
+		if (plaetze[GZ] && !plaetze[CHECK_T] && !eingang[LICHTSCHRANKE]) {
+			plaetze[GZ] = 0;
+			plaetze[CHECK_T] = 1;
+			printf("Hoehenmessung : 1:  GZ: %i, CHECK_T: %i, CHECK_L_1: %i, CHECK_L_2: %i,   \n",plaetze[GZ], plaetze[CHECK_T], plaetze[CHECK_L_1], plaetze[CHECK_L_2]);
+			ladeWerkstueck();
+		}
 
-	if (plaetze[CHECK_T] && !plaetze[CHECK_L_2] && eingang[HOEHE]) {
-		plaetze[CHECK_T] = 0;
-		plaetze[CHECK_L_2] = 1;
-		printf("Hoehenmessung : 2:  GZ: %i, CHECK_T: %i, CHECK_L_1: %i, CHECK_L_2: %i,   \n",plaetze[GZ], plaetze[CHECK_T], plaetze[CHECK_L_1], plaetze[CHECK_L_2]);
-		printf("LS: %i, H: %i\n",eingang[LICHTSCHRANKE], eingang[HOEHE]);
-	}
+		if (plaetze[CHECK_T] && !plaetze[CHECK_L_2] && eingang[HOEHE]) {
+			plaetze[CHECK_T] = 0;
+			plaetze[CHECK_L_2] = 1;
+			printf("Hoehenmessung : 2:  GZ: %i, CHECK_T: %i, CHECK_L_1: %i, CHECK_L_2: %i,   \n",plaetze[GZ], plaetze[CHECK_T], plaetze[CHECK_L_1], plaetze[CHECK_L_2]);
+			printf("LS: %i, H: %i\n",eingang[LICHTSCHRANKE], eingang[HOEHE]);
+		}
 
-	if (plaetze[CHECK_T] && !plaetze[CHECK_L_1] && !eingang[HOEHE]) {
-		plaetze[CHECK_T] = 0;
-		plaetze[CHECK_L_1] = 1;
-		printf("Hoehenmessung : 3:  GZ: %i, CHECK_T: %i, CHECK_L_1: %i, CHECK_L_2: %i,   \n",plaetze[GZ], plaetze[CHECK_T], plaetze[CHECK_L_1], plaetze[CHECK_L_2]);
-		printf("LS: %i, H: %i\n",eingang[LICHTSCHRANKE], eingang[HOEHE]);
-	}
+		if (plaetze[CHECK_T] && !plaetze[CHECK_L_1] && !eingang[HOEHE]) {
+			plaetze[CHECK_T] = 0;
+			plaetze[CHECK_L_1] = 1;
+			printf("Hoehenmessung : 3:  GZ: %i, CHECK_T: %i, CHECK_L_1: %i, CHECK_L_2: %i,   \n",plaetze[GZ], plaetze[CHECK_T], plaetze[CHECK_L_1], plaetze[CHECK_L_2]);
+			printf("LS: %i, H: %i\n",eingang[LICHTSCHRANKE], eingang[HOEHE]);
+		}
 
-	if(plaetze[CHECK_L_1] && !plaetze[CHECK_L_2] && eingang[HOEHE]){
-		plaetze[CHECK_L_1] = 0;
-		plaetze[CHECK_L_2] = 1;
-		printf("Hoehenmessung : 4:  GZ: %i, CHECK_T: %i, CHECK_L_1: %i, CHECK_L_2: %i,   \n",plaetze[GZ], plaetze[CHECK_T], plaetze[CHECK_L_1], plaetze[CHECK_L_2]);
-		printf("LS: %i, H: %i\n",eingang[LICHTSCHRANKE], eingang[HOEHE]);
-	}
+		if(plaetze[CHECK_L_1] && !plaetze[CHECK_L_2] && eingang[HOEHE]){
+			plaetze[CHECK_L_1] = 0;
+			plaetze[CHECK_L_2] = 1;
+			printf("Hoehenmessung : 4:  GZ: %i, CHECK_T: %i, CHECK_L_1: %i, CHECK_L_2: %i,   \n",plaetze[GZ], plaetze[CHECK_T], plaetze[CHECK_L_1], plaetze[CHECK_L_2]);
+			printf("LS: %i, H: %i\n",eingang[LICHTSCHRANKE], eingang[HOEHE]);
+		}
 
-	if (plaetze[CHECK_L_1] && !plaetze[GZ] && eingang[LICHTSCHRANKE]) {
-		plaetze[CHECK_L_1] = 0;
-		plaetze[GZ] = 1;
-		sendeWerkstueck();
-		printf("Hoehenmessung : 5:  GZ: %i, CHECK_T: %i, CHECK_L_1: %i, CHECK_L_2: %i,   \n",plaetze[GZ], plaetze[CHECK_T], plaetze[CHECK_L_1], plaetze[CHECK_L_2]);
-		printf("LS: %i, H: %i\n",eingang[LICHTSCHRANKE], eingang[HOEHE]);
-	}
+		if (plaetze[CHECK_L_1] && !plaetze[GZ] && eingang[LICHTSCHRANKE]) {
+			plaetze[CHECK_L_1] = 0;
+			plaetze[GZ] = 1;
+			sendeWerkstueck();
+			printf("Hoehenmessung : 5:  GZ: %i, CHECK_T: %i, CHECK_L_1: %i, CHECK_L_2: %i,   \n",plaetze[GZ], plaetze[CHECK_T], plaetze[CHECK_L_1], plaetze[CHECK_L_2]);
+			printf("LS: %i, H: %i\n",eingang[LICHTSCHRANKE], eingang[HOEHE]);
+		}
 
-	if (plaetze[CHECK_L_2] && !plaetze[GZ] && eingang[LICHTSCHRANKE]) {
-		plaetze[CHECK_L_2] = 0;
-		plaetze[GZ] = 1;
-		printf("Hoehenmessung : 6:  GZ: %i, CHECK_T: %i, CHECK_L_1: %i, CHECK_L_2: %i,   \n",plaetze[GZ], plaetze[CHECK_T], plaetze[CHECK_L_1], plaetze[CHECK_L_2]);
-		sendeWerkstueck();
-		printf("LS: %i, H: %i\n",eingang[LICHTSCHRANKE], eingang[HOEHE]);
+		if (plaetze[CHECK_L_2] && !plaetze[GZ] && eingang[LICHTSCHRANKE]) {
+			plaetze[CHECK_L_2] = 0;
+			plaetze[GZ] = 1;
+			printf("Hoehenmessung : 6:  GZ: %i, CHECK_T: %i, CHECK_L_1: %i, CHECK_L_2: %i,   \n",plaetze[GZ], plaetze[CHECK_T], plaetze[CHECK_L_1], plaetze[CHECK_L_2]);
+			sendeWerkstueck();
+			printf("LS: %i, H: %i\n",eingang[LICHTSCHRANKE], eingang[HOEHE]);
+		}
 	}
 }
 

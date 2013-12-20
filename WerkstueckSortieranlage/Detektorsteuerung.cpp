@@ -63,29 +63,31 @@ void Detektorsteuerung::schreibeSignale(){
 
 void Detektorsteuerung::transitionenAusfuehren(){
 
-	if (plaetze[GZ] && !plaetze[CHECK_M] && !eingang[LICHTSCHRANKE]) {
-		plaetze[GZ] = 0;
-		plaetze[CHECK_M] = 1;
-		ladeWerkstueck();
-		printf("Detektor: 1: GZ: %i, CHECK_M: %i, WARTE: %i ",plaetze[GZ], plaetze[CHECK_M], plaetze[WARTE]);
-	}
+	if(temp_ws != NULL){
+		if (plaetze[GZ] && !plaetze[CHECK_M] && !eingang[LICHTSCHRANKE]) {
+			plaetze[GZ] = 0;
+			plaetze[CHECK_M] = 1;
+			ladeWerkstueck();
+			printf("Detektor: 1: GZ: %i, CHECK_M: %i, WARTE: %i ",plaetze[GZ], plaetze[CHECK_M], plaetze[WARTE]);
+		}
 
-	if (plaetze[CHECK_M] && !plaetze[GZ] && eingang[LICHTSCHRANKE]) {
-		plaetze[CHECK_M] = 0;
-		plaetze[GZ] = 1;
-		printf("Detektor: 2: GZ: %i, CHECK_M: %i, WARTE: %i ",plaetze[GZ], plaetze[CHECK_M], plaetze[WARTE]);
-	}
+		if (plaetze[CHECK_M] && !plaetze[GZ] && eingang[LICHTSCHRANKE]) {
+			plaetze[CHECK_M] = 0;
+			plaetze[GZ] = 1;
+			printf("Detektor: 2: GZ: %i, CHECK_M: %i, WARTE: %i ",plaetze[GZ], plaetze[CHECK_M], plaetze[WARTE]);
+		}
 
-	if (plaetze[CHECK_M] && !plaetze[WARTE] && eingang[METALL]) {
-		plaetze[CHECK_M] = 0;
-		plaetze[WARTE] = 1;
-		printf("Detektor: 3: GZ: %i, CHECK_M: %i, WARTE: %i ",plaetze[GZ], plaetze[CHECK_M], plaetze[WARTE]);
-	}
+		if (plaetze[CHECK_M] && !plaetze[WARTE] && eingang[METALL]) {
+			plaetze[CHECK_M] = 0;
+			plaetze[WARTE] = 1;
+			printf("Detektor: 3: GZ: %i, CHECK_M: %i, WARTE: %i ",plaetze[GZ], plaetze[CHECK_M], plaetze[WARTE]);
+		}
 
-	if (plaetze[WARTE] && !plaetze[GZ] && eingang[LICHTSCHRANKE]) {
-		plaetze[WARTE] = 0;
-		plaetze[GZ] = 1;
-		printf("Detektor: 4: GZ: %i, CHECK_M: %i, WARTE: %i ",plaetze[GZ], plaetze[CHECK_M], plaetze[WARTE]);
+		if (plaetze[WARTE] && !plaetze[GZ] && eingang[LICHTSCHRANKE]) {
+			plaetze[WARTE] = 0;
+			plaetze[GZ] = 1;
+			printf("Detektor: 4: GZ: %i, CHECK_M: %i, WARTE: %i ",plaetze[GZ], plaetze[CHECK_M], plaetze[WARTE]);
+		}
 	}
 }
 
