@@ -88,14 +88,14 @@ void Uebergabesteuerung::transitionenAusfuehren(){
 				ladeWerkstueck();
 				SynBandEins::getInstance()->dekrementSynUebergabeBereit();
 				plaetze[WARTE_U]--;
-				plaetze[SENDE_2] = 1;
+				plaetze[SENDE_1] = 1;
 				SerielleSchnittstelle::getInstance().sendeNachricht(WERKSTUECK);
 				printf("Uebergabe: 2:  GZ: %i, SENDE_1: %i, SENDE_2: %i, WARTE_U: %i\n",plaetze[GZ], plaetze[SENDE_1], plaetze[SENDE_2], plaetze[WARTE_U]);
 		}
 
 		if(plaetze[SENDE_1] && !plaetze[SENDE_2] && SynBandEins::getInstance()->getSynUebergabeBereit()){
 			SynBandEins::getInstance()->dekrementSynUebergabeBereit();
-			plaetze[SENDE_1]--;
+			plaetze[SENDE_1] = 0;
 			plaetze[SENDE_2] = 1;
 			SerielleSchnittstelle::getInstance().sendeWerkstueckDaten(temp_ws);
 			printf("Uebergabe: 2:  GZ: %i, SENDE_1: %i, SENDE_2: %i, WARTE_U: %i\n",plaetze[GZ], plaetze[SENDE_1], plaetze[SENDE_2], plaetze[WARTE_U]);
