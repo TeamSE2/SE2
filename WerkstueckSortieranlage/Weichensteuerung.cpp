@@ -88,7 +88,7 @@ bool Weichensteuerung::aktualisiereSignale(uint8_t port, uint8_t iq, uint8_t sta
 
 	 if(port == TIMER_PULSE_CODE){
  		 if(iq == timer_id[0] || iq == timer_id[1] || iq == timer_id[2]){
-			 eingang[TIMER_INT] = 1;
+			 eingang[TIMER_INT]++;
 			 execute = true;
 		 }
 	 }
@@ -186,7 +186,7 @@ void Weichensteuerung::transitionenAusfuehren(){
 		if(plaetze[TB_2] && plaetze[GZ] < ANZ_MARKEN_W && eingang[TIMER_INT]){
 			plaetze[TB_2] = 0;
 			plaetze[GZ]++;
-			eingang[TIMER_INT] = 0;
+			eingang[TIMER_INT]--;
 			sendeWerkstueck();
 			SynBandEins::getInstance()->inkrementSynUebergabeStart();
 
