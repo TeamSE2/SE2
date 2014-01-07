@@ -11,7 +11,7 @@
 #include "Timer.h"
 #include "Dispatcher.h"
 
-long Timer::new_id = 0;
+long Timer::new_id = 1;
 
 timermap Timer::timer;
 

@@ -29,10 +29,6 @@
 #define START_AD  0x10
 #define AIO_PORT_A (AIO_BASE + 0x02)
 
-//Werkstueck
-#define HOEHE_NORMAL 0
-#define HOEHE_LOCH 1
-
 namespace PetriNetzBandEins {
 
 class Hoehensteuerung: public Beobachter{
