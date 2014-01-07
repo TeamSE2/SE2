@@ -55,11 +55,6 @@ void Auslaufsteuerung::ladeWerkstueck(){
 		}else{
 			eingang[METALL_A] = 0;
 		}
-
-			printf("Werkstueck ID: %i \n"
-					"Metall: %i\n"
-					"Loch: %i\n"
-					, (*temp_ws).id, eingang[METALL_A], eingang[LOCH]);
 	}
 }
 
@@ -180,10 +175,11 @@ void Auslaufsteuerung::transitionenAusfuehren(){
 			eingang[TIMER_INT] = 0;
 //			SynBandEins::getInstance()->inkrementSynUebergabeEnde();
 			SynBandEins::getInstance()->inkrementSynVerlassen();
+			SynBandEins::getInstance()->printWerkstueck(temp_ws);
 			plaetze[WARTE_A] = 0;
 			plaetze[GZ] = 1;
-	//		printf("Auslauf: 9:  GZ: %i,CHECK_1: %i, CHECK_2: %i, WENDEN_1: %i, WENDEN_2: %i, UEBERGABE: %i, WARTE_A: %i\n"
-	//							,plaetze[GZ], plaetze[CHECK_1], plaetze[CHECK_2], plaetze[WENDEN_1], plaetze[WENDEN_2], plaetze[UEBERGABE], plaetze[WARTE_A]);
+			printf("Auslauf: 9:  GZ: %i,CHECK_1: %i, CHECK_2: %i, WENDEN_1: %i, WENDEN_2: %i, UEBERGABE: %i, WARTE_A: %i\n"
+								,plaetze[GZ], plaetze[CHECK_1], plaetze[CHECK_2], plaetze[WENDEN_1], plaetze[WENDEN_2], plaetze[UEBERGABE], plaetze[WARTE_A]);
 			free(temp_ws);
 			temp_ws = NULL;
 		}

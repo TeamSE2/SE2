@@ -10,6 +10,9 @@
 #ifndef WERKSTUECK_H
 #define WERKSTUECK_H
 
+#define HOEHE_LOCH 0
+#define HOEHE_NORMAL 1
+
 /**
  * Beschreibt den Typ von einem Werkstueck.
  *
@@ -39,7 +42,7 @@ typedef struct Werkstueck
 {
 	long id;
 	WerkstueckTyp typ;
-	float hoehen[2];
+	int hoehen[2];
 	int timer_id;
 } WerkstueckDaten;
 

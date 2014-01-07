@@ -1,6 +1,6 @@
 
 #include "Hoehensteuerung.h"
-
+#include "HWaccess.h"
 
 namespace PetriNetzBandEins{
 
@@ -127,6 +127,7 @@ void Hoehensteuerung::transitionenAusfuehren(){
 		if(plaetze[CHECK_L_1] && !plaetze[CHECK_L_2] && eingang[HOEHE]){
 			plaetze[CHECK_L_1] = 0;
 			plaetze[CHECK_L_2] = 1;
+			temp_ws->hoehen[HOEHE_NORMAL] = leseHoehe();
 			printf("Hoehenmessung : 4:  GZ: %i, CHECK_T: %i, CHECK_L_1: %i, CHECK_L_2: %i,   \n",plaetze[GZ], plaetze[CHECK_T], plaetze[CHECK_L_1], plaetze[CHECK_L_2]);
 			printf("LS: %i, H: %i\n",eingang[LICHTSCHRANKE], eingang[HOEHE]);
 		}
@@ -155,7 +156,24 @@ void Hoehensteuerung::execute(){
 }
 
 bool Hoehensteuerung::checkLoch(){
+	temp_ws->hoehen[HOEHE_LOCH] = leseHoehe();
+
 	return true;
+}
+
+int Hoehensteuerung::leseHoehe(){
+	int hoehe = -1;
+	int i;
+
+	out8(AIO_PORT_A, START_AD);
+	for(i = 0; 1 < 50; i++){
+		if (in8(AIO_BASE) & 1 << 7) {
+			hoehe = in16(AIO_PORT_A);
+			break;
+		}
+	}
+
+	return hoehe;
 }
 
 }

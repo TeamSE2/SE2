@@ -24,6 +24,14 @@
 #define HOEHE 1
 #define LOCH_H 2
 
+//Analog IO
+#define AIO_BASE 0x320
+#define START_AD  0x10
+#define AIO_PORT_A (AIO_BASE + 0x02)
+
+//Werkstueck
+#define HOEHE_NORMAL 0
+#define HOEHE_LOCH 1
 
 namespace PetriNetzBandEins {
 
@@ -46,6 +54,7 @@ private:
 	void schreibeSignale();
 	void transitionenAusfuehren();
 	bool checkLoch();
+	int leseHoehe();
 
 };
 

@@ -247,6 +247,28 @@ void SynBandEins::setAmpelGruenAus(){
 	ampel_gruen = false;
 }
 
+void SynBandEins::printWerkstueck(Werkstueck *ws){
+	int loch = 0;
+	int metall = 0;
+
+	if(ws != NULL){
+			if ((*ws).typ == BOHRUNG_OBEN || (*ws).typ == BOHRUNG_OBEN_METALL ) {
+				loch = 1;
+			}
+
+			if ((*ws).typ == BOHRUNG_UNTEN_METALL || (*ws).typ == BOHRUNG_OBEN_METALL ) {
+				metall = 1;
+			}
+
+				printf("Werkstueck ID      : %i \n"
+						"Metall             : %i \n"
+						"Loch oben          : %i \n"
+						"Loch hoehe         : %i \n"
+						"Werkstueck hoehe   : %i \n"
+						, (*ws).id, metall, loch, (*ws).hoehen[0], (*ws).hoehen[1]);
+		}
+}
+
 void SynBandEins::initialize(){
 	syn[NEXT] = 1;
 	signalConnectionID = HAL::getInstance().getInterruptController()->getSignalConnectionID();

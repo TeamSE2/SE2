@@ -62,6 +62,7 @@ public:
 	void setMotorStop();
 	void setResetLED();
 	void setAmpelGruenAus();
+	void printWerkstueck(Werkstueck *ws);
 
 	struct Werkstueck* popWerkstueckWeiche();
 	struct Werkstueck* popWerkstueckAuslauf();
