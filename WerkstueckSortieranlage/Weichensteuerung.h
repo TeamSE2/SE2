@@ -50,7 +50,8 @@ private:
 	uint8_t plaetze[ANZ_PLAETZE_W];
 	WerkstueckDaten *temp_ws;
 	timespec timer;
-	int timer_id;
+	int timer_id[ANZ_MARKEN_W];
+	static int timer_index;
 
 	static Weichensteuerung *instance;
 	Weichensteuerung();

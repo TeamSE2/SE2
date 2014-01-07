@@ -7,6 +7,7 @@
 	}
 
 	bool Beobachter::aktualisiereSignale(uint8_t port, uint8_t iq, uint8_t state){
+		return false;
 	}
 
 	void Beobachter::schreibeSignale(){

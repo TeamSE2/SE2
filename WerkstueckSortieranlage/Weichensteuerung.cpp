@@ -9,7 +9,7 @@
 
 
 namespace PetriNetzBandEins {
-
+int Weichensteuerung::timer_index = 0;
 Weichensteuerung *Weichensteuerung::instance = NULL;
 
 Weichensteuerung::Weichensteuerung() {
@@ -87,7 +87,7 @@ bool Weichensteuerung::aktualisiereSignale(uint8_t port, uint8_t iq, uint8_t sta
 	}
 
 	 if(port == TIMER_PULSE_CODE){
- 		 if(iq == timer_id){
+ 		 if(iq == timer_id[0] || iq == timer_id[1] || iq == timer_id[2]){
 			 eingang[TIMER_INT] = 1;
 			 execute = true;
 		 }
@@ -174,7 +174,8 @@ void Weichensteuerung::transitionenAusfuehren(){
 		if(plaetze[TB_1] && !plaetze[TB_2] && eingang[LICHTSCHRANKE]){
 			plaetze[TB_1] = 0;
 			plaetze[TB_2] = 1;
-			timer_id = Timer::starten(timer);
+			timer_id[timer_index] = Timer::starten(timer);
+			timer_index = (timer_index + 1) % ANZ_MARKEN_W;
 			printf("Weiche: 6: FLANKE_P: %i, FLANKE_N: %i, SYN_FLANKE: % i,  \n"
 					"GZ: %i, CHECK: %i, TB_1: %i, TB_2: %i\n"
 					" \n",plaetze[FLANKE_P], plaetze[FLANKE_N], plaetze[SYN_FLANKE], plaetze[GZ],
@@ -188,7 +189,8 @@ void Weichensteuerung::transitionenAusfuehren(){
 			eingang[TIMER_INT] = 0;
 			sendeWerkstueck();
 			SynBandEins::getInstance()->inkrementSynUebergabeStart();
-			printf("Weiche: 7: FLANKE_P: %i, FLANKE_N: %i, SYN_FLANKE: % i,  \n"
+
+						printf("Weiche: 7: FLANKE_P: %i, FLANKE_N: %i, SYN_FLANKE: % i,  \n"
 					"GZ: %i, CHECK: %i, TB_1: %i, TB_2: %i\n"
 					" \n",plaetze[FLANKE_P], plaetze[FLANKE_N], plaetze[SYN_FLANKE], plaetze[GZ],
 						plaetze[CHECK], plaetze[TB_1], plaetze[TB_2]);
