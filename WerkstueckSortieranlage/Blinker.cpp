@@ -19,15 +19,20 @@
  * Die Anzahl der Millisekunden wird in Mikrosekunden umgewandelt.
  */
 
-Blinker::Blinker(useconds_t millisekunden, uint8_t lampe)
+Blinker::Blinker(uint8_t lampe)
 {
-	mikrosekunden = millisekunden * 1000;
+	pthread_mutex_init(&mutex, NULL);
+	pthread_cond_init(&cond, NULL);
 
 	val = lampe;
+
+	ein = false;
 }
 
 Blinker::~Blinker()
 {
+	pthread_mutex_destroy(&mutex);
+	pthread_cond_destroy(&cond);
 }
 
 /**
@@ -46,9 +51,13 @@ void Blinker::execute(void *arg)
 {
 	while(!isStopped())
 	{
+		wait();
+
 		HAL::getInstance().set(PORT_A, val, true);
 
 		usleep(mikrosekunden);
+
+		wait();
 
 		HAL::getInstance().set(PORT_A, val, false);
 
@@ -58,4 +67,42 @@ void Blinker::execute(void *arg)
 
 void Blinker::shutdown()
 {
+}
+
+void Blinker::wait()
+{
+	pthread_mutex_lock(&mutex);
+
+	while(!ein)
+	{
+		pthread_cond_wait(&cond, &mutex);
+	}
+
+	pthread_mutex_unlock(&mutex);
+}
+
+void Blinker::starten(useconds_t millisekunden)
+{
+	pthread_mutex_lock(&mutex);
+
+	mikrosekunden = millisekunden * 1000;
+
+	ein = true;
+
+	pthread_cond_signal(&cond);
+
+	pthread_mutex_unlock(&mutex);
+}
+
+void Blinker::stoppen()
+{
+	pthread_mutex_lock(&mutex);
+
+	mikrosekunden = 0;
+
+	ein = false;
+
+	pthread_cond_signal(&cond);
+
+	pthread_mutex_unlock(&mutex);
 }

@@ -32,7 +32,7 @@ public:
 	void rot(bool ein);
 private:
 	Ampel();
-	void blinkerStopp(Blinker *blinker);
+	void blinker_loeschen(Blinker *blinker);
 	Blinker *gruenBlinker;
 	Blinker *gelbBlinker;
 	Blinker *rotBlinker;

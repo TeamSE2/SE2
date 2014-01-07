@@ -8,6 +8,7 @@
 #ifndef BLINKER_H
 #define BLINKER_H
 
+#include <pthread.h>
 #include <stdint.h>
 
 #include "Ampel.h"
@@ -27,9 +28,15 @@ public:
 	virtual void execute(void *arg);
 	virtual void shutdown();
 private:
-	Blinker(useconds_t millisekunden, uint8_t lampe);
+	Blinker(uint8_t lampe);
+	void starten(useconds_t millisekunden);
+	void stoppen();
+	void wait();
+	bool ein;
 	useconds_t mikrosekunden;
 	uint8_t val;
+	pthread_mutex_t mutex;
+	pthread_cond_t cond;
 friend class Ampel;
 };
 

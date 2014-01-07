@@ -9,6 +9,13 @@
 
 Ampel::Ampel()
 {
+	gruenBlinker = new Blinker(AMPEL_GRUEN);
+	gelbBlinker = new Blinker(AMPEL_GELB);
+	rotBlinker = new Blinker(AMPEL_ROT);
+
+	gruenBlinker->start(NULL);
+	gelbBlinker->start(NULL);
+	rotBlinker->start(NULL);
 }
 
 /**
@@ -19,9 +26,9 @@ Ampel::Ampel()
 
 Ampel::~Ampel()
 {
-	blinkerStopp(gruenBlinker);
-	blinkerStopp(gelbBlinker);
-	blinkerStopp(rotBlinker);
+	blinker_loeschen(gruenBlinker);
+	blinker_loeschen(gelbBlinker);
+	blinker_loeschen(rotBlinker);
 }
 
 /**
@@ -35,11 +42,7 @@ Ampel::~Ampel()
 
 void Ampel::gruenBlinken(int millisekunden)
 {
-	blinkerStopp(gruenBlinker);
-
-	gruenBlinker = new Blinker(millisekunden, AMPEL_GRUEN);
-
-	gruenBlinker->start(NULL);
+	gruenBlinker->starten(millisekunden);
 }
 
 /**
@@ -53,11 +56,7 @@ void Ampel::gruenBlinken(int millisekunden)
 
 void Ampel::gelbBlinken(int millisekunden)
 {
-	blinkerStopp(gelbBlinker);
-
-	gelbBlinker = new Blinker(millisekunden, AMPEL_GELB);
-
-	gelbBlinker->start(NULL);
+	gelbBlinker->starten(millisekunden);
 }
 
 /**
@@ -71,11 +70,7 @@ void Ampel::gelbBlinken(int millisekunden)
 
 void Ampel::rotBlinken(int millisekunden)
 {
-	blinkerStopp(rotBlinker);
-
-	rotBlinker = new Blinker(millisekunden, AMPEL_ROT);
-
-	rotBlinker->start(NULL);
+	rotBlinker->starten(millisekunden);
 }
 
 /**
@@ -89,7 +84,7 @@ void Ampel::rotBlinken(int millisekunden)
 
 void Ampel::gruen(bool ein)
 {
-	blinkerStopp(gruenBlinker);
+	gruenBlinker->stoppen();
 
 	HAL::getInstance().set(PORT_A, AMPEL_GRUEN, ein);
 }
@@ -105,7 +100,7 @@ void Ampel::gruen(bool ein)
 
 void Ampel::gelb(bool ein)
 {
-	blinkerStopp(gelbBlinker);
+	gelbBlinker->stoppen();
 
 	HAL::getInstance().set(PORT_A, AMPEL_GELB, ein);
 }
@@ -121,7 +116,7 @@ void Ampel::gelb(bool ein)
 
 void Ampel::rot(bool ein)
 {
-	blinkerStopp(rotBlinker);
+	rotBlinker->stoppen();
 
 	HAL::getInstance().set(PORT_A, AMPEL_ROT, ein);
 }
@@ -136,13 +131,10 @@ void Ampel::rot(bool ein)
  * Das Objekt wird geloescht.
  */
 
-void Ampel::blinkerStopp(Blinker *blinker)
+void Ampel::blinker_loeschen(Blinker *blinker)
 {
-	if(blinker != NULL)
-	{
-		blinker->stop();
-//		blinker->join();
+	blinker->stop();
+	blinker->join();
 
-		delete blinker;
-	}
+	delete blinker;
 }
