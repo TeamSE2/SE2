@@ -12,6 +12,7 @@
 
 #define HOEHE_LOCH 0
 #define HOEHE_NORMAL 1
+#include <stdint.h>
 
 /**
  * Beschreibt den Typ von einem Werkstueck.
@@ -42,7 +43,7 @@ typedef struct Werkstueck
 {
 	long id;
 	WerkstueckTyp typ;
-	int hoehen[2];
+	uint16_t hoehen[2];
 	int timer_id;
 } WerkstueckDaten;
 
