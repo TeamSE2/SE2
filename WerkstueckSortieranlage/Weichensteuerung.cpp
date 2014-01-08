@@ -47,8 +47,8 @@ void Weichensteuerung::initNetz(){
 
 void Weichensteuerung::ladeWerkstueck(){
 	temp_ws = SynBandEins::getInstance()->popWerkstueckWeiche();
-	if(temp_ws != NULL){
-		if ((*temp_ws).typ == ZU_FLACH) {
+	if(*temp_ws[0] != NULL){
+		if ((*temp_ws[0]).typ == ZU_FLACH) {
 			eingang[HOEHE] = 0;
 		}else{
 			eingang[HOEHE] = 1;
@@ -59,7 +59,7 @@ void Weichensteuerung::ladeWerkstueck(){
 void Weichensteuerung::sendeWerkstueck(){
 	SynBandEins::getInstance()->pushWerkstueckAuslauf(temp_ws);
 	SynBandEins::getInstance()->pushWerkstueckUebergabe(temp_ws);
-	temp_ws = NULL;
+	temp_ws[1] = NULL;
 }
 
 bool Weichensteuerung::aktualisiereSignale(uint8_t port, uint8_t iq, uint8_t state){
@@ -166,6 +166,8 @@ void Weichensteuerung::transitionenAusfuehren(){
 		if(plaetze[CHECK] && !plaetze[TB_1] && eingang[HOEHE]){
 			plaetze[CHECK] = 0;
 			plaetze[TB_1] = 1;
+			*temp_ws[1] = *temp_ws[0];
+			*temp_ws[0] = NULL;
 			printf("Weiche: 5: FLANKE_P: %i, FLANKE_N: %i, SYN_FLANKE: % i,  \n"
 					"GZ: %i, CHECK: %i, TB_1: %i, TB_2: %i\n"
 					" \n",plaetze[FLANKE_P], plaetze[FLANKE_N], plaetze[SYN_FLANKE], plaetze[GZ],

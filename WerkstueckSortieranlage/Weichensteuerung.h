@@ -18,7 +18,7 @@
 #include "Dispatcher.h"
 
 //init
-#define ANZ_MARKEN_W 3
+#define ANZ_MARKEN_W 2
 #define ANZ_PLAETZE_W 8
 #define ANZ_EINGAENGE_W 4
 // Plaetze
@@ -48,10 +48,10 @@ public:
 private:
 	uint8_t eingang[ANZ_EINGAENGE_W];
 	uint8_t plaetze[ANZ_PLAETZE_W];
-	WerkstueckDaten *temp_ws;
+	WerkstueckDaten *temp_ws[ANZ_MARKEN_W];
 	timespec timer;
 	int timer_id[ANZ_MARKEN_W];
-	static int timer_index;
+	int timer_index;
 
 	static Weichensteuerung *instance;
 	Weichensteuerung();

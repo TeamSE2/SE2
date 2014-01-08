@@ -25,8 +25,6 @@ LIBS+=ioaccess cpt_terminal ph fonts
 #===== EXTRA_SRCVPATH - a space-separated list of directories to search for source files.
 EXTRA_SRCVPATH+=$(PROJECT_ROOT)
 
-#===== CCFLAGS - add the flags to the C compiler command line. 
-CCFLAGS+=-DSIMULATION
 
 include $(MKFILES_ROOT)/qmacros.mk
 ifndef QNX_INTERNAL
