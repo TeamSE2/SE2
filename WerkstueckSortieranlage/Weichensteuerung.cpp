@@ -193,7 +193,15 @@ void Weichensteuerung::transitionenAusfuehren(){
 						plaetze[CHECK], plaetze[TB_1], plaetze[TB_2]);
 		}
 
-
+		// todo: hier Timer Implementieren
+		if(plaetze[TB_2] && plaetze[GZ] < ANZ_MARKEN_W && eingang[TIMER_INT]){
+			plaetze[TB_2]--;
+			plaetze[GZ]++;
+			printf("Weiche: 7: FLANKE_P: %i, FLANKE_N: %i, SYN_FLANKE: % i,  \n"
+					"GZ: %i, CHECK: %i, TB_1: %i, TB_2: %i\n"
+					" \n",plaetze[FLANKE_P], plaetze[FLANKE_N], plaetze[SYN_FLANKE], plaetze[GZ],
+						plaetze[CHECK], plaetze[TB_1], plaetze[TB_2]);
+		}
 	}
 
 }
