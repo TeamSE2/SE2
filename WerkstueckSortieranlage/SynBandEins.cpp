@@ -233,7 +233,7 @@ void SynBandEins::aktualisiereSignale(){
 		timer_stop = true;
 	}
 
-	if(timer_stop){
+	if(timer_stop && !motor_stop){
 		Timer::alle_fortsetzen();
 		timer_stop = false;
 	}
