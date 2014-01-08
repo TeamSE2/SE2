@@ -79,6 +79,7 @@ private:
 
 	int signalConnectionID;
 	bool motor_stop;
+	bool timer_stop;
 	bool reset_led_an;
 	bool ampel_gruen;
 	pthread_mutex_t mutex[ANZ_SYN];

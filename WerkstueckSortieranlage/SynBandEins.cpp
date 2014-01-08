@@ -223,12 +223,19 @@ void SynBandEins::resetSignale(){
 	motor_stop = false;
 	reset_led_an = false;
 	ampel_gruen = true;
+	timer_stop = false;
 }
 
 void SynBandEins::aktualisiereSignale(){
 	HAL::getInstance().getMotor()->stopp(motor_stop);
 	if(motor_stop){
 		Timer::alle_anhalten();
+		timer_stop = true;
+	}
+
+	if(timer_stop){
+		Timer::alle_fortsetzen();
+		timer_stop = false;
 	}
 
 	HAL::getInstance().getBedienpanel()->led_Resettaste(reset_led_an);
