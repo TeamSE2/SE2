@@ -223,7 +223,7 @@ void SynBandEins::resetSignale(){
 	motor_stop = false;
 	reset_led_an = false;
 	ampel_gruen = true;
-	timer_stop = false;
+//	timer_stop = false;
 }
 
 void SynBandEins::aktualisiereSignale(){
