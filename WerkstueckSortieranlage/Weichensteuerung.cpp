@@ -9,7 +9,6 @@
 
 
 namespace PetriNetzBandEins {
-int Weichensteuerung::timer_index = 0;
 Weichensteuerung *Weichensteuerung::instance = NULL;
 
 Weichensteuerung::Weichensteuerung() {
@@ -46,8 +45,8 @@ void Weichensteuerung::initNetz(){
 }
 
 void Weichensteuerung::ladeWerkstueck(){
-	temp_ws = SynBandEins::getInstance()->popWerkstueckWeiche();
-	if(*temp_ws[0] != NULL){
+	temp_ws[0] = SynBandEins::getInstance()->popWerkstueckWeiche();
+	if(temp_ws[0] != NULL){
 		if ((*temp_ws[0]).typ == ZU_FLACH) {
 			eingang[HOEHE] = 0;
 		}else{
@@ -57,8 +56,8 @@ void Weichensteuerung::ladeWerkstueck(){
 }
 
 void Weichensteuerung::sendeWerkstueck(){
-	SynBandEins::getInstance()->pushWerkstueckAuslauf(temp_ws);
-	SynBandEins::getInstance()->pushWerkstueckUebergabe(temp_ws);
+	SynBandEins::getInstance()->pushWerkstueckAuslauf(temp_ws[1]);
+	SynBandEins::getInstance()->pushWerkstueckUebergabe(temp_ws[1]);
 	temp_ws[1] = NULL;
 }
 
@@ -167,7 +166,7 @@ void Weichensteuerung::transitionenAusfuehren(){
 			plaetze[CHECK] = 0;
 			plaetze[TB_1] = 1;
 			*temp_ws[1] = *temp_ws[0];
-			*temp_ws[0] = NULL;
+			temp_ws[0] = NULL;
 			printf("Weiche: 5: FLANKE_P: %i, FLANKE_N: %i, SYN_FLANKE: % i,  \n"
 					"GZ: %i, CHECK: %i, TB_1: %i, TB_2: %i\n"
 					" \n",plaetze[FLANKE_P], plaetze[FLANKE_N], plaetze[SYN_FLANKE], plaetze[GZ],
