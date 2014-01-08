@@ -65,7 +65,14 @@ void Weichensteuerung::sendeWerkstueck(){
 	SynBandEins::getInstance()->pushWerkstueckAuslauf(temp_ws[toggle]);
 	SynBandEins::getInstance()->pushWerkstueckUebergabe(temp_ws[toggle]);
 
+	toggle = (toggle + 1) % ANZ_MARKEN_W;
+}
+
+void Weichensteuerung::entferneWerkstueck(){
+	static int toggle = 0;
+
 	temp_ws[toggle] = NULL;
+
 	toggle = (toggle + 1) % ANZ_MARKEN_W;
 }
 
@@ -183,10 +190,10 @@ void Weichensteuerung::transitionenAusfuehren(){
 		if(plaetze[TB_1] && plaetze[TB_2] < ANZ_MARKEN_W && eingang[LICHTSCHRANKE]){
 			plaetze[TB_1] = 0;
 			plaetze[TB_2]++;
-			timer_id[timer_index] = Timer::starten(timer);
-			timer_index = (timer_index + 1) % ANZ_MARKEN_W;
 			sendeWerkstueck();
 			SynBandEins::getInstance()->inkrementSynUebergabeStart();
+			timer_id[timer_index] = Timer::starten(timer);
+			timer_index = (timer_index + 1) % ANZ_MARKEN_W;
 			printf("Weiche: 6: FLANKE_P: %i, FLANKE_N: %i, SYN_FLANKE: % i,  \n"
 					"GZ: %i, CHECK: %i, TB_1: %i, TB_2: %i\n"
 					" \n",plaetze[FLANKE_P], plaetze[FLANKE_N], plaetze[SYN_FLANKE], plaetze[GZ],
@@ -197,6 +204,8 @@ void Weichensteuerung::transitionenAusfuehren(){
 		if(plaetze[TB_2] && plaetze[GZ] < ANZ_MARKEN_W && eingang[TIMER_INT]){
 			plaetze[TB_2]--;
 			plaetze[GZ]++;
+			eingang[TIMER_INT]--;
+			entferneWerkstueck();
 			printf("Weiche: 7: FLANKE_P: %i, FLANKE_N: %i, SYN_FLANKE: % i,  \n"
 					"GZ: %i, CHECK: %i, TB_1: %i, TB_2: %i\n"
 					" \n",plaetze[FLANKE_P], plaetze[FLANKE_N], plaetze[SYN_FLANKE], plaetze[GZ],

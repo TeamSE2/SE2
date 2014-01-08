@@ -57,6 +57,7 @@ private:
 	Weichensteuerung();
 	void ladeWerkstueck();
 	void sendeWerkstueck();
+	void entferneWerkstueck();
 	void schreibeSignale();
 	void transitionenAusfuehren();
 };
