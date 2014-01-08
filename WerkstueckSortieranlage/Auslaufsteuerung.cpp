@@ -26,7 +26,7 @@ Auslaufsteuerung* Auslaufsteuerung::getInstance(){
 }
 
 void Auslaufsteuerung::initNetz(){
-	plaetze[GZ] = 1;
+	plaetze[GZ] = ANZ_MARKEN_A;
 	plaetze[CHECK_1] = 0;
 	plaetze[CHECK_2] = 0;
 	plaetze[WENDEN_1] = 0;
@@ -101,12 +101,29 @@ void Auslaufsteuerung::schreibeSignale(){
 
 void Auslaufsteuerung::transitionenAusfuehren(){
 
-		if(plaetze[GZ] && !plaetze[CHECK_1] && !eingang[LICHTSCHRANKE_A]){
+
+
+	//Flanken detektor
+	if(plaetze[FLANKE_P_A] && !plaetze[FLANKE_N_A] && !eingang[LICHTSCHRANKE_A]){
+		plaetze[FLANKE_P_A] = 0;
+		plaetze[SYN_FLANKE_A]= 1;
+		plaetze[FLANKE_N_A] = 1;
+	}
+
+	if(plaetze[FLANKE_N_A] && !plaetze[FLANKE_P_A] && eingang[LICHTSCHRANKE_A] ){
+		plaetze[FLANKE_N_A] = 0;
+		plaetze[FLANKE_P_A] = 1;
+	}
+
+
+
+		if(plaetze[GZ] && plaetze[CHECK_1] < ANZ_MARKEN_A && eingang[SYN_FLANKE_A]){
 			ladeWerkstueck();
 			if(temp_ws != NULL){
-				plaetze[GZ] = 0;
-				plaetze[CHECK_1] = 1;
+				plaetze[GZ]--;
+				plaetze[CHECK_1]++;
 			}
+			plaetze[SYN_FLANKE_A] = 0;
 
 			printf("Auslauf: 1:  GZ: %i,CHECK_1: %i, CHECK_2: %i, WENDEN_1: %i, WENDEN_2: %i, UEBERGABE: %i, WARTE_A: %i\n"
 								,plaetze[GZ], plaetze[CHECK_1], plaetze[CHECK_2], plaetze[WENDEN_1], plaetze[WENDEN_2], plaetze[UEBERGABE], plaetze[WARTE_A]);
@@ -169,13 +186,13 @@ void Auslaufsteuerung::transitionenAusfuehren(){
 		}
 
 		//todo: hier warten bis Werkstueck Band verlassen hat.
-		if(plaetze[WARTE_A] && !plaetze[GZ] && eingang[TIMER_INT]){
+		if(plaetze[WARTE_A] && plaetze[GZ] < ANZ_MARKEN_A && eingang[TIMER_INT]){
 			eingang[TIMER_INT] = 0;
 //			SynBandEins::getInstance()->inkrementSynUebergabeEnde();
 			SynBandEins::getInstance()->inkrementSynVerlassen();
 //			SynBandEins::getInstance()->printWerkstueck(temp_ws);
 			plaetze[WARTE_A] = 0;
-			plaetze[GZ] = 1;
+			plaetze[GZ]++;
 			printf("Auslauf: 9:  GZ: %i,CHECK_1: %i, CHECK_2: %i, WENDEN_1: %i, WENDEN_2: %i, UEBERGABE: %i, WARTE_A: %i\n"
 								,plaetze[GZ], plaetze[CHECK_1], plaetze[CHECK_2], plaetze[WENDEN_1], plaetze[WENDEN_2], plaetze[UEBERGABE], plaetze[WARTE_A]);
 			free(temp_ws);

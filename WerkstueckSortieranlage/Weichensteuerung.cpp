@@ -145,8 +145,8 @@ void Weichensteuerung::transitionenAusfuehren(){
 		// Weiche
 		if(plaetze[SYN_FLANKE] && plaetze[GZ] && !plaetze[CHECK]){
 			ladeWerkstueck();
+			plaetze[SYN_FLANKE] = 0;
 			if(temp_ws[0] != NULL || temp_ws[1] != NULL){
-				plaetze[SYN_FLANKE] = 0;
 				plaetze[GZ]--;
 				plaetze[CHECK] = 1;
 			}
