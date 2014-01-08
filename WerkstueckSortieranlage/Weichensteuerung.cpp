@@ -130,7 +130,7 @@ void Weichensteuerung::transitionenAusfuehren(){
 		// Weiche
 		if(plaetze[SYN_FLANKE] && plaetze[GZ] && !plaetze[CHECK]){
 			ladeWerkstueck();
-			if(temp_ws != NULL){
+			if(temp_ws[0] != NULL){
 				plaetze[SYN_FLANKE] = 0;
 				plaetze[GZ]--;
 				plaetze[CHECK] = 1;
@@ -142,7 +142,7 @@ void Weichensteuerung::transitionenAusfuehren(){
 					" \n",plaetze[FLANKE_P], plaetze[FLANKE_N], plaetze[SYN_FLANKE], plaetze[GZ],
 						plaetze[CHECK], plaetze[TB_1], plaetze[TB_2]);
 		}
-	if(temp_ws != NULL){
+	if(temp_ws[0] != NULL || temp_ws[1] != NULL){
 		if(plaetze[CHECK] && !plaetze[CHECK_R] && eingang[LICHTSCHRANKE] && !eingang[HOEHE]){
 			plaetze[CHECK] = 0;
 			plaetze[CHECK_R] = 1;
