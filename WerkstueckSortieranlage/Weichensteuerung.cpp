@@ -45,20 +45,28 @@ void Weichensteuerung::initNetz(){
 }
 
 void Weichensteuerung::ladeWerkstueck(){
-	temp_ws[0] = SynBandEins::getInstance()->popWerkstueckWeiche();
-	if(temp_ws[0] != NULL){
-		if ((*temp_ws[0]).typ == ZU_FLACH) {
+	static int toggle = 0;
+
+	temp_ws[toggle] = SynBandEins::getInstance()->popWerkstueckWeiche();
+	if(temp_ws[toggle] != NULL){
+		if ((*temp_ws[toggle]).typ == ZU_FLACH) {
 			eingang[HOEHE] = 0;
 		}else{
 			eingang[HOEHE] = 1;
 		}
+
+		toggle = (toggle + 1) % 2;
 	}
 }
 
 void Weichensteuerung::sendeWerkstueck(){
-	SynBandEins::getInstance()->pushWerkstueckAuslauf(temp_ws[1]);
-	SynBandEins::getInstance()->pushWerkstueckUebergabe(temp_ws[1]);
-	temp_ws[1] = NULL;
+	static int toggle = 0;
+
+	SynBandEins::getInstance()->pushWerkstueckAuslauf(temp_ws[toggle]);
+	SynBandEins::getInstance()->pushWerkstueckUebergabe(temp_ws[toggle]);
+
+	temp_ws[toggle] = NULL;
+	toggle = (toggle + 1) % 2;
 }
 
 bool Weichensteuerung::aktualisiereSignale(uint8_t port, uint8_t iq, uint8_t state){
@@ -166,8 +174,6 @@ void Weichensteuerung::transitionenAusfuehren(){
 		if(plaetze[CHECK] && !plaetze[TB_1] && eingang[HOEHE]){
 			plaetze[CHECK] = 0;
 			plaetze[TB_1] = 1;
-			temp_ws[1] = temp_ws[0];
-			temp_ws[0] = NULL;
 			printf("Weiche: 5: FLANKE_P: %i, FLANKE_N: %i, SYN_FLANKE: % i,  \n"
 					"GZ: %i, CHECK: %i, TB_1: %i, TB_2: %i\n"
 					" \n",plaetze[FLANKE_P], plaetze[FLANKE_N], plaetze[SYN_FLANKE], plaetze[GZ],
@@ -177,40 +183,19 @@ void Weichensteuerung::transitionenAusfuehren(){
 		if(plaetze[TB_1] && plaetze[TB_2] < ANZ_MARKEN_W && eingang[LICHTSCHRANKE]){
 			plaetze[TB_1] = 0;
 			plaetze[TB_2]++;
-			sendeWerkstueck();
-			SynBandEins::getInstance()->inkrementSynUebergabeStart();
 			timer_id[timer_index] = Timer::starten(timer);
 			timer_index = (timer_index + 1) % ANZ_MARKEN_W;
+			sendeWerkstueck();
+			SynBandEins::getInstance()->inkrementSynUebergabeStart();
 			printf("Weiche: 6: FLANKE_P: %i, FLANKE_N: %i, SYN_FLANKE: % i,  \n"
 					"GZ: %i, CHECK: %i, TB_1: %i, TB_2: %i\n"
 					" \n",plaetze[FLANKE_P], plaetze[FLANKE_N], plaetze[SYN_FLANKE], plaetze[GZ],
 						plaetze[CHECK], plaetze[TB_1], plaetze[TB_2]);
 		}
 
-//		// todo: hier Timer Implementieren
-//		if(plaetze[TB_2] && plaetze[GZ] < ANZ_MARKEN_W && eingang[TIMER_INT]){
-//			plaetze[TB_2]--;
-//			plaetze[GZ]++;
-//			eingang[TIMER_INT]--;
-//
-//						printf("Weiche: 7: FLANKE_P: %i, FLANKE_N: %i, SYN_FLANKE: % i,  \n"
-//					"GZ: %i, CHECK: %i, TB_1: %i, TB_2: %i\n"
-//					" \n",plaetze[FLANKE_P], plaetze[FLANKE_N], plaetze[SYN_FLANKE], plaetze[GZ],
-//						plaetze[CHECK], plaetze[TB_1], plaetze[TB_2]);
-//		}
+
 	}
 
-	// todo: hier Timer Implementieren
-	if(plaetze[TB_2] && plaetze[GZ] < ANZ_MARKEN_W && eingang[TIMER_INT]){
-		plaetze[TB_2]--;
-		plaetze[GZ]++;
-		eingang[TIMER_INT]--;
-
-					printf("Weiche: 7: FLANKE_P: %i, FLANKE_N: %i, SYN_FLANKE: % i,  \n"
-				"GZ: %i, CHECK: %i, TB_1: %i, TB_2: %i\n"
-				" \n",plaetze[FLANKE_P], plaetze[FLANKE_N], plaetze[SYN_FLANKE], plaetze[GZ],
-					plaetze[CHECK], plaetze[TB_1], plaetze[TB_2]);
-	}
 }
 
 void Weichensteuerung::execute(){
