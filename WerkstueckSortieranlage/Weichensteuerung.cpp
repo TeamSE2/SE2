@@ -55,7 +55,7 @@ void Weichensteuerung::ladeWerkstueck(){
 			eingang[HOEHE] = 1;
 		}
 
-		toggle = (toggle + 1) % 2;
+		toggle = (toggle + 1) % ANZ_MARKEN_W;
 	}
 }
 
@@ -66,7 +66,7 @@ void Weichensteuerung::sendeWerkstueck(){
 	SynBandEins::getInstance()->pushWerkstueckUebergabe(temp_ws[toggle]);
 
 	temp_ws[toggle] = NULL;
-	toggle = (toggle + 1) % 2;
+	toggle = (toggle + 1) % ANZ_MARKEN_W;
 }
 
 bool Weichensteuerung::aktualisiereSignale(uint8_t port, uint8_t iq, uint8_t state){
@@ -138,7 +138,7 @@ void Weichensteuerung::transitionenAusfuehren(){
 		// Weiche
 		if(plaetze[SYN_FLANKE] && plaetze[GZ] && !plaetze[CHECK]){
 			ladeWerkstueck();
-			if(temp_ws[0] != NULL){
+			if(temp_ws[0] != NULL || temp_ws[1] != NULL){
 				plaetze[SYN_FLANKE] = 0;
 				plaetze[GZ]--;
 				plaetze[CHECK] = 1;
