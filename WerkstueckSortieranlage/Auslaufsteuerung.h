@@ -10,8 +10,7 @@
 #include "Dispatcher.h"
 
 //init
-#define ANZ_MARKEN_A 2
-#define ANZ_PLAETZE_A 9
+#define ANZ_PLAETZE_A 7
 #define ANZ_EINGAENGE_A 4
 // Plaetze
 #define GZ 0
@@ -21,9 +20,6 @@
 #define WENDEN_2 4
 #define UEBERGABE 5
 #define WARTE_A 6
-#define FLANKE_P_A 7
-#define FLANKE_N_A 8
-#define SYN_FLANKE_A 9
 
 // Eingangs Signale
 #define METALL_A 0

@@ -30,6 +30,10 @@ void Einlaufsteuerung::initNetz(){
 	plaetze[EINLAUF] = 0;
 	plaetze[WARTE_E] = 0;
 	lichtschranke_einlauf = 1;
+	timer_int = 0;
+
+	timer.tv_nsec = 0;
+	timer.tv_sec = 1;
 }
 
 bool Einlaufsteuerung::aktualisiereSignale(uint8_t port, uint8_t iq, uint8_t state){
@@ -47,6 +51,13 @@ bool Einlaufsteuerung::aktualisiereSignale(uint8_t port, uint8_t iq, uint8_t sta
 			execute = true;
 		}
 	}
+
+	 if(port == TIMER_PULSE_CODE){
+ 		 if(iq == timer_id){
+			 timer_int = true;
+			 execute = true;
+		 }
+	 }
 
 	return execute;
 
@@ -72,6 +83,10 @@ void Einlaufsteuerung::schreibeSignale(){
 	}else{
 		HAL::getInstance().getMotor()->rechtslauf(true);
 	}
+
+	if(plaetze[MOTOR_STOP_E]){
+		SynBandEins::getInstance()->setMotorStop();
+	}
 }
 
 void Einlaufsteuerung::transitionenAusfuehren(){
@@ -93,6 +108,23 @@ void Einlaufsteuerung::transitionenAusfuehren(){
 		plaetze[WARTE_E]--;
 		SynBandEins::getInstance()->dekrementSynVerlassen();
 		plaetze[GZ]++;
+		printf("Einlauf: GZ: %i, EINLAUF: %i, WARTE_E: %i \n",plaetze[GZ], plaetze[EINLAUF], plaetze[WARTE_E]);
+
+	}
+
+	if (plaetze[MOTOR_STOP_E] && plaetze[GZ] <ANZ_MARKEN_E && SynBandEins::getInstance()->getSynVerlassen()) {
+		plaetze[MOTOR_STOP_E]--;
+		SynBandEins::getInstance()->dekrementSynVerlassen();
+		plaetze[VERLASSEN_E]++;
+		timer_id = Timer::starten(timer);
+		printf("Einlauf: GZ: %i, EINLAUF: %i, WARTE_E: %i \n",plaetze[GZ], plaetze[EINLAUF], plaetze[WARTE_E]);
+
+	}
+
+	if (plaetze[VERLASSEN_E] && plaetze[GZ] <ANZ_MARKEN_E && timer_int) {
+		plaetze[VERLASSEN_E]--;
+		plaetze[GZ]++;
+		timer_int = false;
 		printf("Einlauf: GZ: %i, EINLAUF: %i, WARTE_E: %i \n",plaetze[GZ], plaetze[EINLAUF], plaetze[WARTE_E]);
 
 	}

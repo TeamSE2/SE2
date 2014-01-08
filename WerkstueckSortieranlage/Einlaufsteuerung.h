@@ -11,7 +11,7 @@
 #include "HAL.h"
 
 //init
-#define ANZ_PLAETZE_E 3
+#define ANZ_PLAETZE_E 5
 #define ANZ_EINGABE_E 2
 #define ANZ_MARKEN_E 6
 // Ausgangs Signale
@@ -21,6 +21,8 @@
 #define GZ 0
 #define EINLAUF 1
 #define WARTE_E 2
+#define MOTOR_STOP_E 3
+#define VERLASSEN_E 4
 
 namespace PetriNetzBandEins {
 
@@ -36,6 +38,9 @@ private:
 	static long werkstueck_id;
 	//Schaltbedingungen
 	bool lichtschranke_einlauf;
+	bool timer_int;
+	int timer_id;
+	timespec timer;
 	uint8_t plaetze[ANZ_PLAETZE_E];
 
 	Einlaufsteuerung();
