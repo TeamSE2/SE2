@@ -88,6 +88,7 @@ bool Weichensteuerung::aktualisiereSignale(uint8_t port, uint8_t iq, uint8_t sta
 
 	 if(port == TIMER_PULSE_CODE){
  		 if(iq == timer_id[0] || iq == timer_id[1] || iq == timer_id[2]){
+ 			 cout << "test" << endl;
 			 eingang[TIMER_INT]++;
 			 execute = true;
 		 }
@@ -171,9 +172,9 @@ void Weichensteuerung::transitionenAusfuehren(){
 						plaetze[CHECK], plaetze[TB_1], plaetze[TB_2]);
 		}
 
-		if(plaetze[TB_1] && !plaetze[TB_2] && eingang[LICHTSCHRANKE]){
+		if(plaetze[TB_1] && plaetze[TB_2] < ANZ_MARKEN_W && eingang[LICHTSCHRANKE]){
 			plaetze[TB_1] = 0;
-			plaetze[TB_2] = 1;
+			plaetze[TB_2]++;
 			timer_id[timer_index] = Timer::starten(timer);
 			timer_index = (timer_index + 1) % ANZ_MARKEN_W;
 			printf("Weiche: 6: FLANKE_P: %i, FLANKE_N: %i, SYN_FLANKE: % i,  \n"
@@ -184,7 +185,7 @@ void Weichensteuerung::transitionenAusfuehren(){
 
 		// todo: hier Timer Implementieren
 		if(plaetze[TB_2] && plaetze[GZ] < ANZ_MARKEN_W && eingang[TIMER_INT]){
-			plaetze[TB_2] = 0;
+			plaetze[TB_2]--;
 			plaetze[GZ]++;
 			eingang[TIMER_INT]--;
 			sendeWerkstueck();
