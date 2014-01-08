@@ -95,38 +95,34 @@ void Einlaufsteuerung::transitionenAusfuehren(){
 		plaetze[GZ]--;
 		plaetze[EINLAUF] = 1;
 		registriereWerkstueck();
-		printf("Einlauf: GZ: %i, EINLAUF: %i, WARTE_E: %i \n",plaetze[GZ], plaetze[EINLAUF], plaetze[WARTE_E]);
+		printf("Einlauf: GZ: %i, EINLAUF: %i, WARTE_E: %i MOTOR_STOP: %i, VERLASSEN: %i \n",plaetze[GZ], plaetze[EINLAUF], plaetze[WARTE_E], plaetze[MOTOR_STOP_E], plaetze[VERLASSEN_E]);
 	}
 
 	if(plaetze[EINLAUF] && lichtschranke_einlauf){
 		plaetze[EINLAUF] = 0;
 		plaetze[WARTE_E]++;
-		printf("Einlauf: GZ: %i, EINLAUF: %i, WARTE_E: %i \n",plaetze[GZ], plaetze[EINLAUF], plaetze[WARTE_E]);
-	}
+		printf("Einlauf: GZ: %i, EINLAUF: %i, WARTE_E: %i MOTOR_STOP: %i, VERLASSEN: %i \n",plaetze[GZ], plaetze[EINLAUF], plaetze[WARTE_E], plaetze[MOTOR_STOP_E], plaetze[VERLASSEN_E]);	}
 
 	if (plaetze[WARTE_E] && SynBandEins::getInstance()->getSynVerlassen()) {
 		plaetze[WARTE_E]--;
 		SynBandEins::getInstance()->dekrementSynVerlassen();
 		plaetze[GZ]++;
-		printf("Einlauf: GZ: %i, EINLAUF: %i, WARTE_E: %i \n",plaetze[GZ], plaetze[EINLAUF], plaetze[WARTE_E]);
-
+		printf("Einlauf: GZ: %i, EINLAUF: %i, WARTE_E: %i MOTOR_STOP: %i, VERLASSEN: %i \n",plaetze[GZ], plaetze[EINLAUF], plaetze[WARTE_E], plaetze[MOTOR_STOP_E], plaetze[VERLASSEN_E]);
 	}
 
-	if (plaetze[MOTOR_STOP_E] && plaetze[GZ] <ANZ_MARKEN_E && SynBandEins::getInstance()->getSynVerlassen()) {
+	if (plaetze[MOTOR_STOP_E] && plaetze[VERLASSEN_E] <ANZ_MARKEN_E && SynBandEins::getInstance()->getSynVerlassen()) {
 		plaetze[MOTOR_STOP_E]--;
 		SynBandEins::getInstance()->dekrementSynVerlassen();
 		plaetze[VERLASSEN_E]++;
 		timer_id = Timer::starten(timer);
-		printf("Einlauf: GZ: %i, EINLAUF: %i, WARTE_E: %i \n",plaetze[GZ], plaetze[EINLAUF], plaetze[WARTE_E]);
-
+		printf("Einlauf: GZ: %i, EINLAUF: %i, WARTE_E: %i MOTOR_STOP: %i, VERLASSEN: %i \n",plaetze[GZ], plaetze[EINLAUF], plaetze[WARTE_E], plaetze[MOTOR_STOP_E], plaetze[VERLASSEN_E]);
 	}
 
 	if (plaetze[VERLASSEN_E] && plaetze[GZ] <ANZ_MARKEN_E && timer_int) {
 		plaetze[VERLASSEN_E]--;
 		plaetze[GZ]++;
 		timer_int = false;
-		printf("Einlauf: GZ: %i, EINLAUF: %i, WARTE_E: %i \n",plaetze[GZ], plaetze[EINLAUF], plaetze[WARTE_E]);
-
+		printf("Einlauf: GZ: %i, EINLAUF: %i, WARTE_E: %i MOTOR_STOP: %i, VERLASSEN: %i \n",plaetze[GZ], plaetze[EINLAUF], plaetze[WARTE_E], plaetze[MOTOR_STOP_E], plaetze[VERLASSEN_E]);
 	}
 }
 
