@@ -46,6 +46,7 @@ void SynBandEins::resetNetz(){
 	queueClear(queue_hoehenmessung);
 	queueClear(queue_detektor);
 	queueClear(queue_uebergabe);
+	timer_stop = false;
 	resetSignale();
 
 	Einlaufsteuerung::getInstance()->initNetz();
@@ -228,7 +229,8 @@ void SynBandEins::resetSignale(){
 
 void SynBandEins::aktualisiereSignale(){
 	HAL::getInstance().getMotor()->stopp(motor_stop);
-	if(motor_stop){
+
+	if(!timer_stop && motor_stop){
 		Timer::alle_anhalten();
 		timer_stop = true;
 	}
@@ -280,7 +282,7 @@ void SynBandEins::initialize(){
 	syn[NEXT] = 1;
 	signalConnectionID = HAL::getInstance().getInterruptController()->getSignalConnectionID();
 	HAL::getInstance().getAmpel()->gruen(true);
-
+	timer_stop = false;
 
 
 	Auslaufsteuerung::getInstance();
