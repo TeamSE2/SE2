@@ -21,7 +21,7 @@ SynBandEins::~SynBandEins(){
 	delete Detektorsteuerung::getInstance();
 	delete Uebergabesteuerung::getInstance();
 	delete Auslaufsteuerung::getInstance();
-	delete Fehlersteuerung::getInstance();
+//	delete Fehlersteuerung::getInstance();
 //	delete Notaussteuerung::getInstance();
 
 }
@@ -88,6 +88,11 @@ void SynBandEins::inkrementSynNext(){
 	sendeZustandswechsel(NEXT);
 }
 
+void SynBandEins::inkrementSynMotorStop(){
+	syn[MOTOR_STOP]++;
+	sendeZustandswechsel(MOTOR_STOP);
+}
+
 void SynBandEins::sendeZustandswechsel(uint8_t iq){
 	PulsNachricht nachricht;
 	int *val = NULL;
@@ -120,6 +125,10 @@ void SynBandEins::dekrementSynNext(){
 	syn[NEXT]--;
 }
 
+void SynBandEins::dekrementSynMotorStop(){
+	syn[MOTOR_STOP]--;
+}
+
 uint8_t SynBandEins::SynBandEins::getSynVerlassen(){
 	return syn[VERLASSEN];
 }
@@ -138,6 +147,10 @@ uint8_t SynBandEins::getSynUebergabeBereit(){
 
 uint8_t SynBandEins::SynBandEins::getSynNext(){
 	return syn[NEXT];
+}
+
+uint8_t SynBandEins::SynBandEins::getSynMotorStop(){
+	return syn[MOTOR_STOP];
 }
 
 void SynBandEins::pushWerkstueckWeiche(struct Werkstueck *element){

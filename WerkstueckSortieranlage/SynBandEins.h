@@ -17,12 +17,13 @@
 #include "Notaussteuerung.h"
 
 // Laufband 1 Synchronisations Plaetze
-#define ANZ_SYN 5
+#define ANZ_SYN 6
 #define VERLASSEN 0
 #define UEBERGABE_START 1
 #define UEBERGABE_ENDE 2
 #define UEBERGABE_BEREIT 3
 #define NEXT 4
+#define MOTOR_STOP 5
 
 using namespace std;
 namespace PetriNetzBandEins{
@@ -39,18 +40,21 @@ public:
 	void inkrementSynUebergabeEnde();
 	void inkrementSynUebergabeBereit();
 	void inkrementSynNext();
+	void inkrementSynMotorStop();
 
 	void dekrementSynVerlassen();
 	void dekrementSynUebergabeStart();
 	void dekrementSynUebergabeEnde();
 	void dekrementSynUebergabeBereit();
 	void dekrementSynNext();
+	void dekrementSynMotorStop();
 
 	uint8_t getSynVerlassen();
 	uint8_t getSynUebergabeStart();
 	uint8_t getSynUebergabeEnde();
 	uint8_t getSynUebergabeBereit();
 	uint8_t getSynNext();
+	uint8_t getSynMotorStop();
 
 	void pushWerkstueckWeiche(struct Werkstueck *element);
 	void pushWerkstueckAuslauf(struct Werkstueck *element);

@@ -47,8 +47,15 @@ bool Einlaufsteuerung::aktualisiereSignale(uint8_t port, uint8_t iq, uint8_t sta
 	}
 
 	if(port == SYN_BAND_EINS){
-		if(iq == VERLASSEN){
-			execute = true;
+		switch (iq) {
+			case VERLASSEN:
+				execute = true;
+				break;
+			case MOTOR_STOP:
+				execute = true;
+				break;
+			default:
+				break;
 		}
 	}
 
@@ -101,12 +108,20 @@ void Einlaufsteuerung::transitionenAusfuehren(){
 	if(plaetze[EINLAUF] && lichtschranke_einlauf){
 		plaetze[EINLAUF] = 0;
 		plaetze[WARTE_E]++;
-		printf("Einlauf: GZ: %i, EINLAUF: %i, WARTE_E: %i MOTOR_STOP: %i, VERLASSEN: %i \n",plaetze[GZ], plaetze[EINLAUF], plaetze[WARTE_E], plaetze[MOTOR_STOP_E], plaetze[VERLASSEN_E]);	}
+		printf("Einlauf: GZ: %i, EINLAUF: %i, WARTE_E: %i MOTOR_STOP: %i, VERLASSEN: %i \n",plaetze[GZ], plaetze[EINLAUF], plaetze[WARTE_E], plaetze[MOTOR_STOP_E], plaetze[VERLASSEN_E]);
+	}
 
-	if (plaetze[WARTE_E] && SynBandEins::getInstance()->getSynVerlassen()) {
+	if (plaetze[WARTE_E] && plaetze[GZ] < ANZ_MARKEN_E && SynBandEins::getInstance()->getSynVerlassen()) {
 		plaetze[WARTE_E]--;
 		SynBandEins::getInstance()->dekrementSynVerlassen();
 		plaetze[GZ]++;
+		printf("Einlauf: GZ: %i, EINLAUF: %i, WARTE_E: %i MOTOR_STOP: %i, VERLASSEN: %i \n",plaetze[GZ], plaetze[EINLAUF], plaetze[WARTE_E], plaetze[MOTOR_STOP_E], plaetze[VERLASSEN_E]);
+	}
+
+	if (plaetze[WARTE_E] && plaetze[MOTOR_STOP_E] < ANZ_MARKEN_E && SynBandEins::getInstance()->getSynMotorStop()) {
+		plaetze[WARTE_E]--;
+		SynBandEins::getInstance()->dekrementSynMotorStop();
+		plaetze[MOTOR_STOP_E]++;
 		printf("Einlauf: GZ: %i, EINLAUF: %i, WARTE_E: %i MOTOR_STOP: %i, VERLASSEN: %i \n",plaetze[GZ], plaetze[EINLAUF], plaetze[WARTE_E], plaetze[MOTOR_STOP_E], plaetze[VERLASSEN_E]);
 	}
 

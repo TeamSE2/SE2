@@ -125,7 +125,7 @@ void Auslaufsteuerung::transitionenAusfuehren(){
 		if(plaetze[CHECK_1] && !plaetze[WENDEN_1] && !eingang[LOCH]){
 			plaetze[CHECK_1] = 0;
 			plaetze[WENDEN_1] = 1;
-			SynBandEins::getInstance()->inkrementSynVerlassen();
+			SynBandEins::getInstance()->inkrementSynMotorStop();
 			printf("Auslauf: 3:  GZ: %i,CHECK_1: %i, CHECK_2: %i, WENDEN_1: %i, WENDEN_2: %i, UEBERGABE: %i, WARTE_A: %i\n"
 								,plaetze[GZ], plaetze[CHECK_1], plaetze[CHECK_2], plaetze[WENDEN_1], plaetze[WENDEN_2], plaetze[UEBERGABE], plaetze[WARTE_A]);
 		}
@@ -133,7 +133,7 @@ void Auslaufsteuerung::transitionenAusfuehren(){
 		if(plaetze[CHECK_2] && !plaetze[WENDEN_1] && eingang[METALL_A]){
 			plaetze[CHECK_2] = 0;
 			plaetze[WENDEN_1] = 1;
-			SynBandEins::getInstance()->inkrementSynVerlassen();
+			SynBandEins::getInstance()->inkrementSynMotorStop();
 			printf("Auslauf: 4:  GZ: %i,CHECK_1: %i, CHECK_2: %i, WENDEN_1: %i, WENDEN_2: %i, UEBERGABE: %i, WARTE_A: %i\n"
 								,plaetze[GZ], plaetze[CHECK_1], plaetze[CHECK_2], plaetze[WENDEN_1], plaetze[WENDEN_2], plaetze[UEBERGABE], plaetze[WARTE_A]);
 		}
@@ -156,6 +156,7 @@ void Auslaufsteuerung::transitionenAusfuehren(){
 		if(plaetze[WENDEN_2] && !plaetze[UEBERGABE] && !eingang[LICHTSCHRANKE_A]){
 			plaetze[WENDEN_2] = 0;
 			plaetze[UEBERGABE] = 1;
+			SynBandEins::getInstance()->inkrementSynMotorStop();
 			SynBandEins::getInstance()->inkrementSynVerlassen();
 			printf("Auslauf: 7:  GZ: %i,CHECK_1: %i, CHECK_2: %i, WENDEN_1: %i, WENDEN_2: %i, UEBERGABE: %i, WARTE_A: %i\n"
 								,plaetze[GZ], plaetze[CHECK_1], plaetze[CHECK_2], plaetze[WENDEN_1], plaetze[WENDEN_2], plaetze[UEBERGABE], plaetze[WARTE_A]);

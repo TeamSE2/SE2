@@ -12,7 +12,7 @@
 
 //init
 #define ANZ_PLAETZE_E 5
-#define ANZ_EINGABE_E 2
+#define ANZ_EINGAENGE_E 3
 #define ANZ_MARKEN_E 6
 // Ausgangs Signale
 #define RECHTSLAUF 1
@@ -23,6 +23,7 @@
 #define WARTE_E 2
 #define MOTOR_STOP_E 3
 #define VERLASSEN_E 4
+//Eingaenge
 
 namespace PetriNetzBandEins {
 
@@ -41,6 +42,7 @@ private:
 	bool timer_int;
 	int timer_id;
 	timespec timer;
+	uint8_t eingang[ANZ_EINGAENGE_E];
 	uint8_t plaetze[ANZ_PLAETZE_E];
 
 	Einlaufsteuerung();
